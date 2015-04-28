@@ -14,7 +14,7 @@ describe 'job triggers, ', type: :feature do
 
   after :all do
     expect(Helpers::DemoRepo.delete_branch_cmd(
-             'auto-trigger-demo')).to pass_execution
+             'trigger-test')).to pass_execution
   end
 
   before :each do
@@ -25,9 +25,8 @@ describe 'job triggers, ', type: :feature do
   end
 
   describe 'the "Trigger-Demo" job ' do
-    it 'is created once a branch matching /.*trigger.*/ is updated ' do
-      expect(Helpers::DemoRepo.create_a_new_branch_and_commit_cmd(
-               'auto-trigger-demo', 'A new commit for demonstration')) \
+    it 'is created once a branch matching /trigger-test/ is created' do
+      expect(Helpers::DemoRepo.create_new_branch('trigger-test')) \
         .to pass_execution
 
       wait_until { all('#commits-table tbody tr').count > 0 }

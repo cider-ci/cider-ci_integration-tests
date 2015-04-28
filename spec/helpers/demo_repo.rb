@@ -26,6 +26,13 @@ module Helpers
           '&& git update-server-info'
       end
 
+      def create_new_branch(branch_name)
+        'cd ../demo-project-bash && git stash ' \
+          '&& git reset --hard && git checkout v3' \
+          "&& git branch #{branch_name} " \
+          '&& git update-server-info'
+      end
+
       def delete_branch_cmd(branch_name)
         'cd ../demo-project-bash && git stash ' \
           '&& git reset --hard ' \
