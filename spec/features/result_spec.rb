@@ -1,11 +1,12 @@
 require 'spec_helper'
 require 'json_roa/client'
+require 'uri'
 
-describe 'The job-result', type: :feature do
+describe 'The Result', type: :feature do
   before :all do
     setup_signin_waitforcommits
-    run_job_on_last_commit 'Result-Demo'
-    wait_for_job_state 'Result-Demo', 'passed'
+    run_job_on_last_commit 'Result Demo'
+    wait_for_job_state 'Result Demo', 'passed'
     @job_id = find('#job')['data-id']
   end
 
@@ -32,8 +33,8 @@ describe 'The job-result', type: :feature do
       job_name = first('.job')['data-name']
       repo_name = first('.repository')['data-name']
       branch_name = first('.branch')['data-name']
-      visit '/cider-ci/ui/public' \
-        "/#{repo_name}/#{branch_name}/#{job_name}/summary.svg"
+      visit URI.encode('/cider-ci/ui/public' \
+        "/#{repo_name}/#{branch_name}/#{job_name}/summary.svg")
       expect(first('.job-info')).to have_content /#{job_name}:\s+\d+\.\d+%/
     end
   end

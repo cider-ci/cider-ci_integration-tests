@@ -3,7 +3,7 @@ module Helpers
     class << self
       def setup_demo_repo
         Helpers::ConfigurationManagement.invoke_ruby \
-          "Repository.find_or_initialize_by(name: 'DemoRepoBash') " \
+          "Repository.find_or_initialize_by(name: 'Demo Project') " \
           '.update_attributes! ' \
           "origin_uri: '#{Capybara.app_host}/cider-ci/demo-project-bash/'," \
           'git_fetch_and_update_interval: 5, ' \

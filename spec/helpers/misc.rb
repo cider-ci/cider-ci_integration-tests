@@ -1,4 +1,6 @@
 require 'timeout'
+require 'json_roa/client'
+
 module Helpers
   module Misc
     def wait_until(wait_time = 60)
@@ -54,7 +56,7 @@ module Helpers
 
     def api_connection
       base_url = "#{Capybara.app_host}/cider-ci/api"
-      JSON_ROA::Client.connect base_url  do |conn|
+      ::JSON_ROA::Client.connect base_url  do |conn|
         conn.basic_auth('adam', 'password')
         conn.ssl.verify = false
       end

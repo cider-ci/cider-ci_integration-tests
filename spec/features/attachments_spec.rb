@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe 'the job "Attachments-Demo" creates ', type: :feature do
+describe 'the job "Attachments Demo" creates ', type: :feature do
   before :all do
     setup_signin_waitforcommits
-    run_job_on_last_commit 'Attachments-Demo'
-    wait_for_job_state 'Attachments-Demo', 'passed'
+    run_job_on_last_commit 'Attachments Demo'
+    wait_for_job_state 'Attachments Demo', 'passed'
     @job_id = find('#job')['data-id']
   end
 

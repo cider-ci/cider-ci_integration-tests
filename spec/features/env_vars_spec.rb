@@ -10,13 +10,13 @@
 #
 require 'spec_helper'
 
-describe 'the job "Submodule Demo" ', type: :feature do
+describe 'the job "Environment Variables Demo" ', type: :feature do
   before :all do
     setup_signin_waitforcommits
   end
   it 'passes' do
     sign_in_as 'adam'
-    run_job_on_last_commit 'Submodule Demo'
-    wait_for_job_state 'Submodule Demo', 'passed'
+    run_job_on_last_commit 'Environment Variables Demo'
+    wait_for_job_state 'Environment Variables Demo', 'passed'
   end
 end
