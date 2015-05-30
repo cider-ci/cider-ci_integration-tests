@@ -34,11 +34,12 @@ module Helpers
       end
 
       def delete_branch_cmd(branch_name)
-        'cd ../demo-project-bash && git stash ' \
-          '&& git reset --hard ' \
-          '&& git checkout v3' \
-          "&& git branch -D #{branch_name} " \
-          '&& git update-server-info'
+        'cd ../demo-project-bash; '\
+          'git stash; ' \
+          'git reset --hard; ' \
+          'git checkout v3;' \
+          "git branch -D '#{branch_name}'; " \
+          'git update-server-info'
       end
     end
   end

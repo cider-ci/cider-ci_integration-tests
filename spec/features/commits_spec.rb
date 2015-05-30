@@ -17,7 +17,7 @@ describe 'Setting up the demo repository', type: :feature do
   it 'lets us filter the commits' do
     click_on 'Commits'
     find('input#repository_names').set('demo')
-    find('.ui-autocomplete').find('a', text: 'DemoRepoBash').click
+    find('.ui-autocomplete').find('a', text: 'Demo Project').click
     find('input#branch_names').set('ma')
     find('.ui-autocomplete').find('a', text: 'master').click
     find('input#commit_text').set('Initial')
