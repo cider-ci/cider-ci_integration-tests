@@ -11,6 +11,11 @@ task-defaults:
     screenshots:
       glob: 'integration-tests/tmp/capybara/*.png'
       content-type: image/png
+    logs:
+      glob: '**/*.log'
+      content-type: text/plain
+    configs: '**/*.yml'
+      content-type: text/yaml
 
   environment-variables:
     RAILS_ENV: test
@@ -50,9 +55,6 @@ task-defaults:
       max: 8799
 
   scripts:
-
-    start-vnc:
-      body: tightvncserver ":$DISPLAY"  -geometry 1024x768 -rfbport "$DISPLAY"  -interface '127.0.0.1'
 
     configure-database: 
       body: |
@@ -118,178 +120,184 @@ task-defaults:
           -d '{"scope":"client","configure":".*","write":".*","read":".*"}'
 
     bundle-ui:
+      exclusive-executor-resource: bundler
       body: cd user-interface && bundle
 
-    create-database:
-      body: cd user-interface && bundle exec rake db:reset 
-      dependencies:
-      - type: script
-        name: configure-database
-        states: [passed]
-      - type: script
-        name: bundle-ui
-        states: [passed]
-
-    run-reverse-proxy:
-      body: cd reverse-proxy && lein trampoline run
-      dependencies:
-      - type: script
-        name: configure
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    run-api: 
-      body: cd api && lein trampoline run
-      dependencies:
-      - type: script
-        name: configure
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-      - type: script
-        name: create-database
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    run-builder: 
-      body: cd builder && lein trampoline run
-      dependencies:
-      - type: script
-        name: configure
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-      - type: script
-        name: create-database
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    run-dispatcher: 
-      body: cd dispatcher && lein trampoline run
-      dependencies:
-      - type: script
-        name: configure
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-      - type: script
-        name: create-database
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    run-repository: 
-      body: cd repository && lein trampoline run
-      dependencies:
-      - type: script
-        name: configure
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-      - type: script
-        name: create-database
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    run-storage: 
-      body: cd storage && lein trampoline run
-      dependencies:
-      - type: script
-        name: configure
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-      - type: script
-        name: create-database
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    run-ui:
-      body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
-      dependencies:
-      - type: script
-        name: bundle-ui
-        states: [passed]
-      - type: script
-        name: create-database 
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-      terminators:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-      ignore-state: true
-
-    bundle: 
-      body: cd integration-tests && bundle
-
-    test:
-      body: cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
-      dependencies:
-      - type: script
-        name: bundle
-        states: [passed]
-      - type: script
-        name: create-rabbitmq-vhost
-        states: [passed]
-
-    delete-rabbitmq-vhost: 
-      body: |
-        curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
-          -XDELETE "http://localhost:55672/api/vhosts/cider-ci_test_${CIDER_CI_TRAIL_ID}" 
-      ignore-state: true
-      dependencies:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    delete-database: 
-      body: |
-        cd user-interface \
-        && bundle exec rake db:pg:terminate_connections db:drop
-      ignore-state: true
-      dependencies:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-    stop-vnc:
-      type: post_process
-      body: tightvncserver -kill ":$DISPLAY" -clean
-      dependencies:
-      - type: script
-        name: test
-        states: [passed, failed, skipped]
-
-tasks:
-  spec/features/attachments_spec.rb:
-    environment-variables:
-      CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
-
-#_cider-ci_generate-tasks: 
-#  include-match: spec/.*_spec.rb
-
+#    start-vnc:
+#      body: tightvncserver ":$DISPLAY"  -geometry 1024x768 -rfbport "$DISPLAY"  -interface '127.0.0.1'
+#
+#
+#    create-database:
+#      body: cd user-interface && bundle exec rake db:reset 
+#      dependencies:
+#      - type: script
+#        name: configure-database
+#        states: [passed]
+#      - type: script
+#        name: bundle-ui
+#        states: [passed]
+#
+#    run-reverse-proxy:
+#      body: cd reverse-proxy && lein trampoline run
+#      dependencies:
+#      - type: script
+#        name: configure
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    run-api: 
+#      body: cd api && lein trampoline run
+#      dependencies:
+#      - type: script
+#        name: configure
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#      - type: script
+#        name: create-database
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    run-builder: 
+#      body: cd builder && lein trampoline run
+#      dependencies:
+#      - type: script
+#        name: configure
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#      - type: script
+#        name: create-database
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    run-dispatcher: 
+#      body: cd dispatcher && lein trampoline run
+#      dependencies:
+#      - type: script
+#        name: configure
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#      - type: script
+#        name: create-database
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    run-repository: 
+#      body: cd repository && lein trampoline run
+#      dependencies:
+#      - type: script
+#        name: configure
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#      - type: script
+#        name: create-database
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    run-storage: 
+#      body: cd storage && lein trampoline run
+#      dependencies:
+#      - type: script
+#        name: configure
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#      - type: script
+#        name: create-database
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    run-ui:
+#      body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
+#      dependencies:
+#      - type: script
+#        name: bundle-ui
+#        states: [passed]
+#      - type: script
+#        name: create-database 
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#      terminators:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#      ignore-state: true
+#
+#    bundle: 
+#      exclusive-executor-resource: bundler
+#      body: cd integration-tests && bundle
+#
+#    test:
+#      body: cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
+#      dependencies:
+#      - type: script
+#        name: bundle
+#        states: [passed]
+#      - type: script
+#        name: create-rabbitmq-vhost
+#        states: [passed]
+#
+#    delete-rabbitmq-vhost: 
+#      body: |
+#        curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
+#          -XDELETE "http://localhost:55672/api/vhosts/cider-ci_test_${CIDER_CI_TRAIL_ID}" 
+#      ignore-state: true
+#      dependencies:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    delete-database: 
+#      body: |
+#        cd user-interface \
+#        && bundle exec rake db:pg:terminate_connections db:drop
+#      ignore-state: true
+#      dependencies:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#    stop-vnc:
+#      type: post_process
+#      body: tightvncserver -kill ":$DISPLAY" -clean
+#      dependencies:
+#      - type: script
+#        name: test
+#        states: [passed, failed, skipped]
+#
+#tasks:
+#  spec/features/attachments_spec.rb:
+#    environment-variables:
+#      CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
+#
+##_cider-ci_generate-tasks: 
+##  include-match: spec/.*_spec.rb
+#
