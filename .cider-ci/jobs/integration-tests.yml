@@ -22,10 +22,18 @@ task-defaults:
     RAILS_ENV: test
 
   ports: 
-    DISPLAY:
+    XVNC_PORT:
       inet_address: "localhost"
       min: 5900
       max: 5999
+    EXECUTOR_HTTP_PORT: 
+      inet_address: "localhost"
+      min: 8100
+      max: 8799
+    EXECUTOR_HTTPS_PORT: 
+      inet_address: "localhost"
+      min: 8100
+      max: 8799
     REVERSE_PROXY_HTTP_PORT: 
       inet_address: "localhost"
       min: 8100
@@ -57,6 +65,35 @@ task-defaults:
 
   scripts: 
 
+### executor ##############################################
+
+    configure-executor:
+      body: |
+        #!/usr/bin/env ruby
+        require 'yaml'
+        config = YAML.load_file 'executor/config/config_default.yml'
+        config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
+        config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
+        config['nrepl']['enabled']=false 
+        File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
+
+    run-executor: 
+      body: cd executor && lein trampoline run
+      start-when:
+      - script: configure-executor
+      terminate-when:
+      - script: test
+        states: [aborted, passed, failed, skipped]
+      ignore-state: true
+
+    executor-is-running:
+      body: until curl --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do sleep 1; done
+      start-when:
+      - script: run-api
+        states: [executing]
+
+### configure services ####################################
+
     configure-database: 
       body: |
         #!/usr/bin/env ruby
@@ -71,6 +108,7 @@ task-defaults:
               'password' =>  ENV['PGPASSWORD'],
               'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
         File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
+
 
     configure: 
       body: |
@@ -109,8 +147,8 @@ task-defaults:
         # 
         File.open('config/config.yml','w') { |file| file.write config.to_yaml }
 
-    build-ui-js:
-      body: cd user-interface && npm run build
+
+###########################################################
 
     run-reverse-proxy:
       body: cd reverse-proxy && lein run
@@ -136,22 +174,13 @@ task-defaults:
           -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/permissions/cider-ci_test_${CIDER_CI_TRIAL_ID}/${RABBITMQ_USER}" \
           -d '{"scope":"client","configure":".*","write":".*","read":".*"}'
 
-    bundle: 
-      exclusive-executor-resource: bundler
-      body: cd integration-tests && bundle
-
-    bundle-ui:
-      exclusive-executor-resource: bundler
-      body: cd user-interface && bundle
-
-    start-vnc:
-      body: tightvncserver ":$DISPLAY"  -geometry 1024x768 -rfbport "$DISPLAY"  -interface '127.0.0.1'
-
     create-database:
-      body: cd user-interface && bundle exec rake db:reset 
+      body: cd user-interface && bundle exec rake db:reset db:pg:truncate_tables
       start-when:
       - script: bundle-ui
       - script: configure-database
+
+### run services ##########################################
 
     delay-bootstorm:
       exclusive-executor-resource: bootstorm
@@ -225,6 +254,14 @@ task-defaults:
       - script: run-storage
         states: [executing]
 
+### UI ####################################################
+
+    build-ui-js:
+      body: cd user-interface && npm run build
+
+    bundle-ui:
+      exclusive-executor-resource: bundler
+      body: cd user-interface && bundle
 
     run-ui:
       <<: *run-service-default 
@@ -241,13 +278,22 @@ task-defaults:
       - script: run-ui
         states: [executing]
 
+### test ##################################################
 
-    test: 
-      body: sleep 10 && exit 1
+    bundle: 
+      exclusive-executor-resource: bundler
+      body: cd integration-tests && bundle
+
+    start-vnc:
+      body: tightvncserver ":$XVNC_PORT"  -geometry 1024x768 -rfbport "$XVNC_PORT"  -interface '127.0.0.1'
+
+    test:
+      body: DISPLAY=":$XVNC_PORT" cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
       start-when: 
       - script: start-vnc
       - script: bundle
       - script: bundle-ui
+      - script: executor-is-running
       - script: api-is-running
       - script: builder-is-running
       - script: dispatcher-is-running
@@ -255,45 +301,33 @@ task-defaults:
       - script: storage-is-running
       - script: ui-is-running
 
-#
-#    test:
-#      body: cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
-#      dependencies:
-#      - type: script
-#        name: bundle
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#
-#    delete-rabbitmq-vhost: 
-#      body: |
-#        curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
-#          -XDELETE "http://localhost:55672/api/vhosts/cider-ci_test_${CIDER_CI_TRAIL_ID}" 
-#      ignore-state: true
-#      dependencies:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    delete-database: 
-#      body: |
-#        cd user-interface \
-#        && bundle exec rake db:pg:terminate_connections db:drop
-#      ignore-state: true
-#      dependencies:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    stop-vnc:
-#      type: post_process
-#      body: tightvncserver -kill ":$DISPLAY" -clean
-#      dependencies:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
+
+    delete-rabbitmq-vhost: 
+      body: |
+        curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
+          -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}" 
+      ignore-state: true
+      start-when: 
+      - script: test
+        states: [aborted, passed, failed, skipped]
+
+    delete-database: 
+      body: |
+        cd user-interface \
+        && bundle exec rake db:pg:terminate_connections \
+        && bundle exec rake db:pg:terminate_connections db:drop
+      ignore-state: true
+      start-when: 
+      - script: test
+        states: [aborted, passed, failed, skipped]
+
+    stop-vnc:
+      body: tightvncserver -kill ":$XVNC_PORT" -clean
+      ignore-state: true
+      start-when: 
+      - script: test
+        states: [aborted, passed, failed, skipped]
+
 tasks:
   spec/features/attachments_spec.rb:
     environment-variables:
