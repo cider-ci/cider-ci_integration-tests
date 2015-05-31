@@ -14,7 +14,8 @@ task-defaults:
     logs:
       glob: '**/*.log'
       content-type: text/plain
-    configs: '**/*.yml'
+    configs: 
+      glob: '**/*.yml'
       content-type: text/yaml
 
   environment-variables:
@@ -54,23 +55,22 @@ task-defaults:
       min: 8100
       max: 8799
 
-  scripts:
+  scripts: 
 
     configure-database: 
       body: |
         #!/usr/bin/env ruby
         require 'yaml'
         config = \
-          { test: 
-            { adapter: 'postgresql',
-              encoding: 'unicode',
-              host: 'localhost',
-              pool: 3,
-              username: ENV['PGUSER'],
-              password: ENV['PGPASSWORD'],
-              database: "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
+          { 'test' => 
+            { 'adapter' => 'postgresql',
+              'encoding' => 'unicode',
+              'host' => 'localhost',
+              'pool' => 3,
+              'username' => ENV['PGUSER'],
+              'password' =>  ENV['PGPASSWORD'],
+              'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
         File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
-
 
     configure: 
       body: |
@@ -79,181 +79,182 @@ task-defaults:
         config = YAML.load_file 'config/config_default.yml'
         # database
         config['database']['user']= ENV['PGUSER']
-        config['database']['user']= ENV['PGPASSWORD']
-        config['database']['subname']= "//localhost:5432/#cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"
+        config['database']['password']= ENV['PGPASSWORD']
+        config['database']['subname']= "//localhost:5432/cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"
         # messaging
-        config['messaging']['connection']['vhost']= "cider-ci_test_#{ENV['CIDER_CI_TRAIL_ID']}"
-        config['messaging']['connection']['username']= ENV['RABBIMQ_USER']
-        config['messaging']['connection']['password']= ENV['RABBIMQ_PASSWORD']
+        config['messaging']['connection']['vhost']= "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"
+        config['messaging']['connection']['username']= ENV['RABBITMQ_USER']
+        config['messaging']['connection']['password']= ENV['RABBITMQ_PASSWORD']
         # reverse-proxy
         config['server_base_url']= "http://localhost:#{ENV['REVERSE_PROXY_HTTP_PORT']}"
-        config['reverse_proxy']['http']['port']=ENV['REVERSE_PROXY_HTTP_PORT']
+        config['reverse_proxy']['http']['port']= Integer(ENV['REVERSE_PROXY_HTTP_PORT'])
         config['reverse_proxy']['nrepl']['enabled']=false 
         # api
-        config['services']['api']['http']['port']= ENV['API_HTTP_PORT']
+        config['services']['api']['http']['port']= Integer(ENV['API_HTTP_PORT'])
         config['services']['api']['nrepl']['enabled']= false
         # builder
-        config['services']['builder']['http']['port']= ENV['BUILDER_HTTP_PORT']
+        config['services']['builder']['http']['port']= Integer(ENV['BUILDER_HTTP_PORT'])
         config['services']['builder']['nrepl']['enabled']= false
         # dispatcher
-        config['services']['dispatcher']['http']['port']= ENV['DISPATCHER_HTTP_PORT']
+        config['services']['dispatcher']['http']['port']= Integer(ENV['DISPATCHER_HTTP_PORT'])
         config['services']['dispatcher']['nrepl']['enabled']= false
         # repository
-        config['services']['repository']['http']['port']= ENV['REPOSITORY_HTTP_PORT']
+        config['services']['repository']['http']['port']= Integer(ENV['REPOSITORY_HTTP_PORT'])
         config['services']['repository']['nrepl']['enabled']= false
         # storage
-        config['services']['storage']['http']['port']= ENV['STORAGE_HTTP_PORT']
+        config['services']['storage']['http']['port']= Integer(ENV['STORAGE_HTTP_PORT'])
         config['services']['storage']['nrepl']['enabled']= false
         # ui
-        config['services']['ui']['http']['port']= ENV['UI_HTTP_PORT']
-      
+        config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
+        # 
         File.open('config/config.yml','w') { |file| file.write config.to_yaml }
 
+    build-ui-js:
+      body: cd user-interface && npm run build
+
+    run-reverse-proxy:
+      body: cd reverse-proxy && lein run
+      start-when:
+      - script: configure
+      terminate-when:
+      - script: test
+        states: [aborted, passed, failed, skipped]
+      ignore-state: true
 
     create-rabbitmq-vhost: 
       body: |
-        curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
-          -XPUT "http://localhost:55672/api/vhosts/cider-ci_test_${CIDER_CI_TRAIL_ID}" \
+        curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
+          -H "content-type:application/json" \
+          -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}" \
         &&  \
-        curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
-          -XPUT "http://localhost:55672/api/permisions/cider-ci_test_${CIDER_CI_TRAIL_ID}/${RABBITMQ_USER}" \
+        curl --fail --silent --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
+          -H "content-type:application/json" \
+          "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/" | python -m json.tool \
+        &&  \
+        curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
+          -H "content-type:application/json" \
+          -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/permissions/cider-ci_test_${CIDER_CI_TRIAL_ID}/${RABBITMQ_USER}" \
           -d '{"scope":"client","configure":".*","write":".*","read":".*"}'
+
+    bundle: 
+      exclusive-executor-resource: bundler
+      body: cd integration-tests && bundle
 
     bundle-ui:
       exclusive-executor-resource: bundler
       body: cd user-interface && bundle
 
-#    start-vnc:
-#      body: tightvncserver ":$DISPLAY"  -geometry 1024x768 -rfbport "$DISPLAY"  -interface '127.0.0.1'
-#
-#
-#    create-database:
-#      body: cd user-interface && bundle exec rake db:reset 
-#      dependencies:
-#      - type: script
-#        name: configure-database
-#        states: [passed]
-#      - type: script
-#        name: bundle-ui
-#        states: [passed]
-#
-#    run-reverse-proxy:
-#      body: cd reverse-proxy && lein trampoline run
-#      dependencies:
-#      - type: script
-#        name: configure
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    run-api: 
-#      body: cd api && lein trampoline run
-#      dependencies:
-#      - type: script
-#        name: configure
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#      - type: script
-#        name: create-database
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    run-builder: 
-#      body: cd builder && lein trampoline run
-#      dependencies:
-#      - type: script
-#        name: configure
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#      - type: script
-#        name: create-database
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    run-dispatcher: 
-#      body: cd dispatcher && lein trampoline run
-#      dependencies:
-#      - type: script
-#        name: configure
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#      - type: script
-#        name: create-database
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    run-repository: 
-#      body: cd repository && lein trampoline run
-#      dependencies:
-#      - type: script
-#        name: configure
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#      - type: script
-#        name: create-database
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    run-storage: 
-#      body: cd storage && lein trampoline run
-#      dependencies:
-#      - type: script
-#        name: configure
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#      - type: script
-#        name: create-database
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#
-#    run-ui:
-#      body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
-#      dependencies:
-#      - type: script
-#        name: bundle-ui
-#        states: [passed]
-#      - type: script
-#        name: create-database 
-#        states: [passed]
-#      - type: script
-#        name: create-rabbitmq-vhost
-#        states: [passed]
-#      terminators:
-#      - type: script
-#        name: test
-#        states: [passed, failed, skipped]
-#      ignore-state: true
-#
-#    bundle: 
-#      exclusive-executor-resource: bundler
-#      body: cd integration-tests && bundle
+    start-vnc:
+      body: tightvncserver ":$DISPLAY"  -geometry 1024x768 -rfbport "$DISPLAY"  -interface '127.0.0.1'
+
+    create-database:
+      body: cd user-interface && bundle exec rake db:reset 
+      start-when:
+      - script: bundle-ui
+      - script: configure-database
+
+    delay-bootstorm:
+      exclusive-executor-resource: bootstorm
+      body: sleep 30
+      start-when: 
+      - script: create-database
+      - script: start-vnc
+      - script: bundle
+      - script: bundle-ui
+      - script: create-rabbitmq-vhost
+
+    run-api: &run-service-default
+      body: cd api && lein trampoline run
+      start-when:
+      - script: delay-bootstorm
+        states: [executing, passed]
+      - script: create-database
+      - script: create-rabbitmq-vhost
+      terminate-when:
+      - script: test
+        states: [aborted, passed, failed, skipped]
+      ignore-state: true
+
+    api-is-running:
+      body: until curl --silent --fail --user x:secret -I  http://localhost:${API_HTTP_PORT}/cider-ci/api/status; do sleep 1; done
+      start-when:
+      - script: run-api
+        states: [executing]
+
+
+    run-builder: 
+      <<: *run-service-default 
+      body: cd builder && lein trampoline run
+
+    builder-is-running:
+      body: until curl --silent --fail --user x:secret -I  http://localhost:${BUILDER_HTTP_PORT}/cider-ci/builder/status; do sleep 1; done
+      start-when:
+      - script: run-builder
+        states: [executing]
+
+
+    run-dispatcher: 
+      <<: *run-service-default 
+      body: cd dispatcher && lein trampoline run
+
+    dispatcher-is-running:
+      body: until curl --silent --fail --user x:secret -I  http://localhost:${DISPATCHER_HTTP_PORT}/cider-ci/dispatcher/status; do sleep 1; done
+      start-when:
+      - script: run-dispatcher
+        states: [executing]
+
+
+    run-repository: 
+      <<: *run-service-default 
+      body: cd repository && lein trampoline run
+
+    repository-is-running:
+      body: until curl --silent --fail --user x:secret -I  http://localhost:${REPOSITORY_HTTP_PORT}/cider-ci/repositories/status; do sleep 1; done
+      start-when:
+      - script: run-repository
+        states: [executing]
+
+
+    run-storage: 
+      <<: *run-service-default 
+      body: cd storage && lein trampoline run
+
+    storage-is-running:
+      body: until curl --silent --fail --user x:secret -I  http://localhost:${STORAGE_HTTP_PORT}/cider-ci/storage/status; do sleep 1; done
+      start-when:
+      - script: run-storage
+        states: [executing]
+
+
+    run-ui:
+      <<: *run-service-default 
+      body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
+      start-when:
+      - script: build-ui-js
+      - script: bundle-ui
+      - script: create-database
+      - script: create-rabbitmq-vhost
+
+    ui-is-running:
+      body: until curl --silent --fail --user x:secret -I  http://localhost:${UI_HTTP_PORT}/cider-ci/ui/public; do sleep 1; done
+      start-when:
+      - script: run-ui
+        states: [executing]
+
+
+    test: 
+      body: sleep 10 && exit 1
+      start-when: 
+      - script: start-vnc
+      - script: bundle
+      - script: bundle-ui
+      - script: api-is-running
+      - script: builder-is-running
+      - script: dispatcher-is-running
+      - script: repository-is-running
+      - script: storage-is-running
+      - script: ui-is-running
+
 #
 #    test:
 #      body: cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
@@ -293,11 +294,11 @@ task-defaults:
 #        name: test
 #        states: [passed, failed, skipped]
 #
-#tasks:
-#  spec/features/attachments_spec.rb:
-#    environment-variables:
-#      CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
-#
+tasks:
+  spec/features/attachments_spec.rb:
+    environment-variables:
+      CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
+
 ##_cider-ci_generate-tasks: 
 ##  include-match: spec/.*_spec.rb
 #

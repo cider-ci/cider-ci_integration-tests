@@ -37,9 +37,13 @@ RSpec.configure do |config|
   config.include Helpers::Misc
   config.include Helpers::Users
 
+
+  port = Integer(ENV['REVERSE_PROXY_HTTP_PORT'].present? && 
+                 ENV['REVERSE_PROXY_HTTP_PORT'] || '8888')
+
   Capybara.current_driver = :selenium
-  Capybara.app_host = 'http://localhost:8888'
-  Capybara.server_port = 8888
+  Capybara.app_host = "http://localhost:#{port}"
+  Capybara.server_port = port
 
   if ENV['FIREFOX_ESR_PATH'].present?
     Selenium::WebDriver::Firefox.path = ENV['FIREFOX_ESR_PATH']
@@ -47,8 +51,8 @@ RSpec.configure do |config|
 
   config.before(:all) do |_example|
     Capybara.current_driver = :selenium
-    Capybara.app_host = 'http://localhost:8888'
-    Capybara.server_port = 8888
+    Capybara.app_host = "http://localhost:#{port}"
+    Capybara.server_port = port
 
     $logger = Logger.new(STDOUT)
     $logger.level = Logger::WARN
@@ -56,8 +60,8 @@ RSpec.configure do |config|
 
   config.before(:each) do |example|
     Capybara.current_driver = :selenium
-    Capybara.app_host = 'http://localhost:8888'
-    Capybara.server_port = 8888
+    Capybara.app_host = "http://localhost:#{port}"
+    Capybara.server_port = port
   end
 
   # rspec-expectations config goes here. You can use an alternate
