@@ -134,5 +134,32 @@ RSpec.configure do |config|
     # test failures related to randomization by passing the same `--seed` value
     # as the one that triggered the failure.
     Kernel.srand config.seed
+
+
+
+    config.after(:each) do |example|
+      unless example.exception.nil?
+        take_screenshot
+      end
+    end
+
+    def take_screenshot(screenshot_dir = nil, name = nil)
+      screenshot_dir ||=  File.join(Dir.pwd, "tmp")
+      Dir.mkdir screenshot_dir rescue nil
+      name ||= "screenshot_#{Time.zone.now.iso8601.gsub(/:/, '-')}.png"
+      path = File.join(screenshot_dir, name)
+      case Capybara.current_driver
+      when :selenium, :selenium_chrome
+        page.driver.browser.save_screenshot(path) rescue nil
+      when :poltergeist
+        page.driver.render(path, full: true) rescue nil
+      else
+        Rails
+        .logger
+        .warn "Taking screenshots is not implemented for \
+        #{Capybara.current_driver}."
+      end
+    end
+
   end
 end

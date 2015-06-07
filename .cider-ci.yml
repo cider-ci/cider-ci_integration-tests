@@ -1,6 +1,2 @@
-jobs: 
-  Integration-Tests: 
-    description: |
-      This is for convenience only (to look at the included ci file). 
-      The job must be run from the master project.
-    _cider-ci_include: .cider-ci/jobs/integration-tests.yml
+_cider-ci_include: 
+  - .cider-ci/jobs/integration-tests.yml

@@ -1,11 +1,16 @@
 module Helpers
   module DemoRepo
     class << self
+
+      def origin_uri
+        "#{Dir.pwd}/../demo-project-bash/"
+      end
+
       def setup_demo_repo
         Helpers::ConfigurationManagement.invoke_ruby \
           "Repository.find_or_initialize_by(name: 'Demo Project') " \
           '.update_attributes! ' \
-          "origin_uri: '#{Capybara.app_host}/cider-ci/demo-project-bash/'," \
+          "origin_uri: '#{origin_uri}', "\
           'git_fetch_and_update_interval: 5, ' \
           'public_view_permission: true'
         git_update_server_info
