@@ -42,6 +42,8 @@ module Helpers
 
     def run_job_on_last_commit(job_name)
       click_on 'Commits'
+      # first(.... runs often into timeouts; wait_until before
+      wait_until{ all('a.show-commit').count > 0 }
       first('a.show-commit').click
       click_on 'Run job'
       find(".runnable-job[data-name='#{job_name}']")

@@ -146,7 +146,7 @@ RSpec.configure do |config|
     def take_screenshot(screenshot_dir = nil, name = nil)
       screenshot_dir ||=  File.join(Dir.pwd, "tmp")
       Dir.mkdir screenshot_dir rescue nil
-      name ||= "screenshot_#{Time.zone.now.iso8601.gsub(/:/, '-')}.png"
+      name ||= "screenshot_#{Time.now.iso8601.gsub(/:/, '-')}.png"
       path = File.join(screenshot_dir, name)
       case Capybara.current_driver
       when :selenium, :selenium_chrome
