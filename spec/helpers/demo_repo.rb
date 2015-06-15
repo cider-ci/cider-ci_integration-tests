@@ -23,7 +23,7 @@ module Helpers
 
       def create_a_new_branch_and_commit_cmd(branch_name, message)
         'cd ../demo-project-bash && git stash ' \
-          '&& git reset --hard && git checkout v3' \
+          '&& git reset --hard && git checkout master' \
           "&& git checkout -b #{branch_name} " \
           "&& echo '#{message}' >> BLAH.md " \
           '&& git add . ' \
@@ -33,7 +33,7 @@ module Helpers
 
       def create_new_branch(branch_name)
         'cd ../demo-project-bash && git stash ' \
-          '&& git reset --hard && git checkout v3' \
+          '&& git reset --hard && git checkout master' \
           "&& git branch #{branch_name} " \
           '&& git update-server-info'
       end
@@ -42,7 +42,7 @@ module Helpers
         'cd ../demo-project-bash; '\
           'git stash; ' \
           'git reset --hard; ' \
-          'git checkout v3;' \
+          'git checkout master;' \
           "git branch -D '#{branch_name}'; " \
           'git update-server-info'
       end
