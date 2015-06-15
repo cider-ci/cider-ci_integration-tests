@@ -106,14 +106,13 @@ jobs:
             start-when:
             - script: configure-executor
             terminate-when:
-            - script: test
+            - script: shutdown
               states: [aborted, passed, failed, skipped]
-            ignore-state: true
 
           executor-is-running:
             body: until curl --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do sleep 1; done
             start-when:
-            - script: run-api
+            - script: run-executor
               states: [executing]
 
       ### configure services ####################################
@@ -176,13 +175,12 @@ jobs:
 
           run-reverse-proxy:
             timeout: 600
-            body: cd reverse-proxy && lein run
+            body: cd reverse-proxy && lein trampoline run
             start-when:
             - script: configure
             terminate-when:
-            - script: test
+            - script: shutdown
               states: [aborted, passed, failed, skipped]
-            ignore-state: true
 
           create-rabbitmq-vhost: 
             body: |
@@ -225,9 +223,8 @@ jobs:
             - script: create-database
             - script: create-rabbitmq-vhost
             terminate-when:
-            - script: test
+            - script: shutdown
               states: [aborted, passed, failed, skipped]
-            ignore-state: true
 
           api-is-running:
             body: until curl --silent --fail --user x:secret -I  http://localhost:${API_HTTP_PORT}/cider-ci/api/status; do sleep 1; done
@@ -344,13 +341,31 @@ jobs:
             - script: ui-is-running
 
 
+      ### shutdown & cleanup ####################################
+
+          shutdown:
+            body: |
+              curl -X POST --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown 
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${API_HTTP_PORT}/cider-ci/api/shutdown 
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${BUILDER_HTTP_PORT}/cider-ci/builder/shutdown
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${DISPATCHER_HTTP_PORT}/cider-ci/dispatcher/shutdown 
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${REPOSITORY_HTTP_PORT}/cider-ci/repositories/shutdown
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${STORAGE_HTTP_PORT}/cider-ci/storage/shutdown
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${REVERSE_PROXY_HTTP_PORT}/shutdown
+              kill -INT $(lsof -t -wni tcp:${UI_HTTP_PORT})
+              sleep 5
+            start-when: 
+            - script: test
+              states: [aborted, passed, failed, skipped]
+
+
           delete-rabbitmq-vhost: 
             body: |
               curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
                 -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}" 
             ignore-state: true
             start-when: 
-            - script: test
+            - script: shutdown
               states: [aborted, passed, failed, skipped]
 
           delete-database: 
@@ -360,20 +375,21 @@ jobs:
               && bundle exec rake db:pg:terminate_connections db:drop
             ignore-state: true
             start-when: 
-            - script: test
+            - script: shutdown
               states: [aborted, passed, failed, skipped]
 
           stop-vnc:
             body: tightvncserver -kill ":$XVNC_PORT" -clean
             ignore-state: true
             start-when: 
-            - script: test
+            - script: shutdown
               states: [aborted, passed, failed, skipped]
 
-#      tasks:
-#        spec/features/attachments_spec.rb:
-#          environment-variables:
-#            CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
+#     tasks:
+#       spec/features/attachments_spec.rb:
+#         environment-variables:
+#           CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
+
 
       _cider-ci_generate-tasks: 
         include-match: spec/.*_spec.rb
