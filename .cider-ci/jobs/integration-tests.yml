@@ -1,5 +1,5 @@
-jobs: 
-  Integration-Tests: 
+jobs:
+  Integration-Tests:
     description: |
       This job must be run from the master project Cider-CI!
 
@@ -9,9 +9,9 @@ jobs:
 
       task-defaults:
 
-        git-options: 
-          submodules: 
-            clone: True 
+        git-options:
+          submodules:
+            clone: True
             timeout: 60
 
         max-auto-trials: 3
@@ -35,59 +35,59 @@ jobs:
           ui-logs:
             glob: 'user-interface/log/*.log'
             content-type: text/plain
-          config: 
+          config:
             glob: 'config/*.yml'
             content-type: text/yaml
-          executor-config: 
+          executor-config:
             glob: 'executor/config/*.yml'
             content-type: text/yaml
 
         environment-variables:
           RAILS_ENV: test
 
-        ports: 
+        ports:
           XVNC_PORT:
             inet_address: "localhost"
             min: 5900
             max: 5999
-          EXECUTOR_HTTP_PORT: 
+          EXECUTOR_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          EXECUTOR_HTTPS_PORT: 
+          EXECUTOR_HTTPS_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          REVERSE_PROXY_HTTP_PORT: 
+          REVERSE_PROXY_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          API_HTTP_PORT: 
+          API_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          BUILDER_HTTP_PORT: 
+          BUILDER_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          DISPATCHER_HTTP_PORT: 
+          DISPATCHER_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          REPOSITORY_HTTP_PORT: 
+          REPOSITORY_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          STORAGE_HTTP_PORT: 
+          STORAGE_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
-          UI_HTTP_PORT: 
+          UI_HTTP_PORT:
             inet_address: "localhost"
             min: 8100
             max: 8799
 
-        scripts: 
+        scripts:
 
       ### executor ##############################################
 
@@ -98,10 +98,10 @@ jobs:
               config = YAML.load_file 'executor/config/config_default.yml'
               config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
               config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
-              config['nrepl']['enabled']=false 
+              config['nrepl']['enabled']=false
               File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
 
-          run-executor: 
+          run-executor:
             body: cd executor && lein trampoline run
             start-when:
             - script: configure-executor
@@ -117,12 +117,12 @@ jobs:
 
       ### configure services ####################################
 
-          configure-database: 
+          configure-database:
             body: |
               #!/usr/bin/env ruby
               require 'yaml'
               config = \
-                { 'test' => 
+                { 'test' =>
                   { 'adapter' => 'postgresql',
                     'encoding' => 'unicode',
                     'host' => 'localhost',
@@ -133,7 +133,7 @@ jobs:
               File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
 
 
-          configure: 
+          configure:
             body: |
               #!/usr/bin/env ruby
               require 'yaml'
@@ -149,7 +149,7 @@ jobs:
               # reverse-proxy
               config['server_base_url']= "http://localhost:#{ENV['REVERSE_PROXY_HTTP_PORT']}"
               config['reverse_proxy']['http']['port']= Integer(ENV['REVERSE_PROXY_HTTP_PORT'])
-              config['reverse_proxy']['nrepl']['enabled']=false 
+              config['reverse_proxy']['nrepl']['enabled']=false
               # api
               config['services']['api']['http']['port']= Integer(ENV['API_HTTP_PORT'])
               config['services']['api']['nrepl']['enabled']= false
@@ -167,7 +167,7 @@ jobs:
               config['services']['storage']['nrepl']['enabled']= false
               # ui
               config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
-              # 
+              #
               File.open('config/config.yml','w') { |file| file.write config.to_yaml }
 
 
@@ -182,7 +182,7 @@ jobs:
             - script: shutdown
               states: [aborted, passed, failed, skipped]
 
-          create-rabbitmq-vhost: 
+          create-rabbitmq-vhost:
             body: |
               curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
                 -H "content-type:application/json" \
@@ -208,7 +208,7 @@ jobs:
           delay-bootstorm:
             exclusive-executor-resource: bootstorm
             body: sleep 10
-            start-when: 
+            start-when:
             - script: create-database
             - script: start-vnc
             - script: bundle
@@ -233,8 +233,8 @@ jobs:
               states: [executing]
 
 
-          run-builder: 
-            <<: *run-service-default 
+          run-builder:
+            <<: *run-service-default
             body: cd builder && lein trampoline run
 
           builder-is-running:
@@ -244,8 +244,8 @@ jobs:
               states: [executing]
 
 
-          run-dispatcher: 
-            <<: *run-service-default 
+          run-dispatcher:
+            <<: *run-service-default
             body: cd dispatcher && lein trampoline run
 
           dispatcher-is-running:
@@ -255,8 +255,8 @@ jobs:
               states: [executing]
 
 
-          run-repository: 
-            <<: *run-service-default 
+          run-repository:
+            <<: *run-service-default
             body: cd repository && lein trampoline run
 
           repository-is-running:
@@ -266,8 +266,8 @@ jobs:
               states: [executing]
 
 
-          run-storage: 
-            <<: *run-service-default 
+          run-storage:
+            <<: *run-service-default
             body: cd storage && lein trampoline run
 
           storage-is-running:
@@ -286,7 +286,7 @@ jobs:
             body: cd user-interface && bundle
 
           run-ui:
-            <<: *run-service-default 
+            <<: *run-service-default
             body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
             timeout: 600
             start-when:
@@ -303,9 +303,9 @@ jobs:
 
 
       ### reclone demo repo ###################################################
-          reclone-demo-repo: 
+          reclone-demo-repo:
             body:  |
-              #!/usr/bin/env bash 
+              #!/usr/bin/env bash
               COMMIT_ID=$(git submodule status -- demo-project-bash | cut -d ' ' -f 2)
               rm -rf demo-project-bash
               git clone http://github.com/cider-ci/cider-ci_demo-project-bash.git demo-project-bash
@@ -317,7 +317,7 @@ jobs:
 
       ### test ##################################################
 
-          bundle: 
+          bundle:
             exclusive-executor-resource: bundler
             body: cd integration-tests && bundle
 
@@ -327,7 +327,7 @@ jobs:
           test:
             body: export DISPLAY=":$XVNC_PORT" && cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
             #body: echo "" > READY! && sleep 300
-            start-when: 
+            start-when:
             - script: reclone-demo-repo
             - script: start-vnc
             - script: bundle
@@ -345,43 +345,43 @@ jobs:
 
           shutdown:
             body: |
-              curl -X POST --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown 
-              curl -X POST --silent --fail --user x:secret -I  http://localhost:${API_HTTP_PORT}/cider-ci/api/shutdown 
+              curl -X POST --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${API_HTTP_PORT}/cider-ci/api/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${BUILDER_HTTP_PORT}/cider-ci/builder/shutdown
-              curl -X POST --silent --fail --user x:secret -I  http://localhost:${DISPATCHER_HTTP_PORT}/cider-ci/dispatcher/shutdown 
+              curl -X POST --silent --fail --user x:secret -I  http://localhost:${DISPATCHER_HTTP_PORT}/cider-ci/dispatcher/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${REPOSITORY_HTTP_PORT}/cider-ci/repositories/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${STORAGE_HTTP_PORT}/cider-ci/storage/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${REVERSE_PROXY_HTTP_PORT}/shutdown
               kill -INT $(lsof -t -wni tcp:${UI_HTTP_PORT})
               sleep 5
-            start-when: 
+            start-when:
             - script: test
               states: [aborted, passed, failed, skipped]
 
 
-          delete-rabbitmq-vhost: 
+          delete-rabbitmq-vhost:
             body: |
               curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
-                -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}" 
+                -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}"
             ignore-state: true
-            start-when: 
+            start-when:
             - script: shutdown
               states: [aborted, passed, failed, skipped]
 
-          delete-database: 
+          delete-database:
             body: |
               cd user-interface \
               && bundle exec rake db:pg:terminate_connections \
               && bundle exec rake db:pg:terminate_connections db:drop
             ignore-state: true
-            start-when: 
+            start-when:
             - script: shutdown
               states: [aborted, passed, failed, skipped]
 
           stop-vnc:
             body: tightvncserver -kill ":$XVNC_PORT" -clean
             ignore-state: true
-            start-when: 
+            start-when:
             - script: shutdown
               states: [aborted, passed, failed, skipped]
 
@@ -391,6 +391,6 @@ jobs:
 #           CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
 
 
-      _cider-ci_generate-tasks: 
+      _cider-ci_generate-tasks:
         include-match: spec/.*_spec.rb
-      
+

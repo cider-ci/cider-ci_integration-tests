@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 
 gem 'pry'
 gem 'rubocop'
-gem 'activesupport', '~> 4.1.9'
+gem 'activesupport'
 gem 'addressable'
 gem 'capybara'
 gem 'faraday'
