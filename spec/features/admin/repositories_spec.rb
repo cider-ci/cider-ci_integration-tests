@@ -13,7 +13,7 @@ feature 'Admin manages Repositories', type: :feature do
     click_on 'Repositories'
     click_on 'Add a new repository'
     find('input#repository_name').set 'TestRepo'
-    find('input#repository_origin_uri').set \
+    find('input#repository_git_url').set \
       'https://github.com/cider-ci/cider-ci_demo-project-bash.git'
     click_on 'Create'
     expect(page).to have_content 'created'

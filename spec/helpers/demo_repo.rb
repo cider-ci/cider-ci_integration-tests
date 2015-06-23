@@ -2,7 +2,7 @@ module Helpers
   module DemoRepo
     class << self
 
-      def origin_uri
+      def git_url
         "#{Dir.pwd}/../demo-project-bash/"
       end
 
@@ -10,7 +10,7 @@ module Helpers
         Helpers::ConfigurationManagement.invoke_ruby \
           "Repository.find_or_initialize_by(name: 'Demo Project') " \
           '.update_attributes! ' \
-          "origin_uri: '#{origin_uri}', "\
+          "git_url: '#{git_url}', "\
           'git_fetch_and_update_interval: 5, ' \
           'public_view_permission: true'
         git_update_server_info
