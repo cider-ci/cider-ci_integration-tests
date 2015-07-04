@@ -13,16 +13,15 @@ describe 'the job "Contexts Demo"', type: :feature do
     click_on('Filter')
 
     expect(
-      find('td', text: "Earth Check").find(:xpath, '..')['data-state']
+      find('td', text: 'Earth Check').find(:xpath, '..')['data-state']
     ).to be == 'passed'
 
     expect(
-      find('td', text: "Io Check").find(:xpath, '..')['data-state']
+      find('td', text: 'Io Check').find(:xpath, '..')['data-state']
     ).to be == 'passed'
 
     expect(
-      first('td', text: "Jupiter Check").find(:xpath, '..')['data-state']
+      first('td', text: 'Jupiter Check').find(:xpath, '..')['data-state']
     ).to be == 'passed'
-
   end
 end

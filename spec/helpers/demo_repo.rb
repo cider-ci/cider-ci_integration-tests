@@ -1,7 +1,6 @@
 module Helpers
   module DemoRepo
     class << self
-
       def git_url
         "#{Dir.pwd}/../demo-project-bash/"
       end

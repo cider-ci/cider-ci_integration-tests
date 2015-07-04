@@ -37,8 +37,7 @@ RSpec.configure do |config|
   config.include Helpers::Misc
   config.include Helpers::Users
 
-
-  port = Integer(ENV['REVERSE_PROXY_HTTP_PORT'].present? && 
+  port = Integer(ENV['REVERSE_PROXY_HTTP_PORT'].present? &&
                  ENV['REVERSE_PROXY_HTTP_PORT'] || '8888')
 
   Capybara.current_driver = :selenium
@@ -135,16 +134,12 @@ RSpec.configure do |config|
     # as the one that triggered the failure.
     Kernel.srand config.seed
 
-
-
     config.after(:each) do |example|
-      unless example.exception.nil?
-        take_screenshot
-      end
+      take_screenshot unless example.exception.nil?
     end
 
     def take_screenshot(screenshot_dir = nil, name = nil)
-      screenshot_dir ||=  File.join(Dir.pwd, "tmp")
+      screenshot_dir ||= File.join(Dir.pwd, 'tmp')
       Dir.mkdir screenshot_dir rescue nil
       name ||= "screenshot_#{Time.now.iso8601.gsub(/:/, '-')}.png"
       path = File.join(screenshot_dir, name)
@@ -154,10 +149,8 @@ RSpec.configure do |config|
       when :poltergeist
         page.driver.render(path, full: true) rescue nil
       else
-        Rails
-        .logger
-        .warn "Taking screenshots is not implemented for \
-        #{Capybara.current_driver}."
+        Rails.logger.warn 'Taking screenshots is not implemented for ' \
+        "#{Capybara.current_driver}."
       end
     end
 

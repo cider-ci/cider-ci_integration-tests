@@ -18,38 +18,35 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
     click_on('Filter')
 
     expect(
-      find('td', text: "Comprehensive").find(:xpath, '..')['data-state']
+      find('td', text: 'Comprehensive').find(:xpath, '..')['data-state']
     ).to be == 'passed'
 
     expect(
-      first('td', text: "Fail").find(:xpath, '..')['data-state']
+      first('td', text: 'Fail').find(:xpath, '..')['data-state']
     ).to be == 'failed'
 
     expect(
-      first('td', text: "Fail but ignore").find(:xpath, '..')['data-state']
+      first('td', text: 'Fail but ignore').find(:xpath, '..')['data-state']
     ).to be == 'passed'
 
     expect(
-      first('td', text: "Skip").find(:xpath, '..')['data-state']
+      first('td', text: 'Skip').find(:xpath, '..')['data-state']
     ).to be == 'failed'
 
     expect(
-      first('td', text: "Skip but ignore").find(:xpath, '..')['data-state']
+      first('td', text: 'Skip but ignore').find(:xpath, '..')['data-state']
     ).to be == 'passed'
 
     expect(
-      first('td', text: "Start on Skipped").find(:xpath, '..')['data-state']
+      first('td', text: 'Start on Skipped').find(:xpath, '..')['data-state']
     ).to be == 'passed'
 
     expect(
-      first('td', text: "Termination").find(:xpath, '..')['data-state']
+      first('td', text: 'Termination').find(:xpath, '..')['data-state']
     ).to be == 'failed'
-
-
   end
 
   it 'the scripts for the task "Comprehensive" are in proper order and state' do
-
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
@@ -62,9 +59,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
       %w(passed failed passed skipped)
   end
 
-
   it 'the scripts for the task "Termination" are in proper order and state' do
-
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
@@ -76,6 +71,4 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
     expect(all('li.script').map { |e| e['data-state'] }).to be == \
       %w(passed failed)
   end
-
-
 end

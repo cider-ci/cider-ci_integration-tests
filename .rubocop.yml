@@ -19,10 +19,19 @@ Lint/AssignmentInCondition:
 Lint/UnusedBlockArgument:
   Enabled: false
 
+# Offense count: 1
+Metrics/AbcSize:
+  Max: 20
+
 # Offense count: 12
 # Configuration parameters: AllowURI, URISchemes.
 Metrics/LineLength:
-  Max: 80
+  Max: 90
+
+# Offense count: 1
+# Configuration parameters: CountComments.
+Metrics/MethodLength:
+  Max: 13
 
 # Offense count: 1
 Style/AccessorMethodName:
@@ -40,6 +49,16 @@ Style/FileName:
 # Offense count: 2
 # Configuration parameters: AllowedVariables.
 Style/GlobalVars:
+  Enabled: false
+
+# Offense count: 1
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle, SupportedStyles, AllowInnerSlashes.
+Style/RegexpLiteral:
+  Enabled: false
+
+# Offense count: 3
+Style/RescueModifier:
   Enabled: false
 
 # Offense count: 1
