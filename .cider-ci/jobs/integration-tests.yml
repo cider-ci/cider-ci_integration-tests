@@ -3,6 +3,10 @@ jobs:
     description: |
       This job must be run from the master project Cider-CI!
 
+    run-on:
+    - type: branch
+      include-match: ^.*$
+
     context:
       script-defaults:
         timeout: 300
@@ -301,19 +305,10 @@ jobs:
             - script: run-ui
               states: [executing]
 
+      ### the demo repo must not reference objects ##############
 
-      ### reclone demo repo ###################################################
-          reclone-demo-repo:
-            body:  |
-              #!/usr/bin/env bash
-              COMMIT_ID=$(git submodule status -- demo-project-bash | cut -d ' ' -f 2)
-              rm -rf demo-project-bash
-              git clone http://github.com/cider-ci/cider-ci_demo-project-bash.git demo-project-bash
-              cd demo-project-bash
-              git reset --hard ${COMMIT_ID}
-              git branch -D test
-              git checkout -b test
-              git update-server-info
+          repack-demo-repo:
+            body: cd demo-project-bash && git repack -a
 
       ### test ##################################################
 
@@ -328,7 +323,7 @@ jobs:
             body: export DISPLAY=":$XVNC_PORT" && cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
             #body: echo "" > READY! && sleep 300
             start-when:
-            - script: reclone-demo-repo
+            - script: repack-demo-repo
             - script: start-vnc
             - script: bundle
             - script: bundle-ui

@@ -2,7 +2,7 @@ module Helpers
   module DemoRepo
     class << self
       def git_url
-        "#{Dir.pwd}/../demo-project-bash/"
+        "#{Capybara.app_host}/cider-ci/demo-project-bash/"
       end
 
       def setup_demo_repo
@@ -17,7 +17,7 @@ module Helpers
 
       def git_update_server_info
         `cd ../demo-project-bash && git update-server-info`
-        fail 'git update-server-info' unless $?.exitstatus == 0
+        fail 'git_update_server_info' unless $?.exitstatus == 0
       end
 
       def create_a_new_branch_and_commit_cmd(branch_name, message)

@@ -1,2 +1,0 @@
-_cider-ci_include:
-  - .cider-ci/jobs/integration-tests.yml

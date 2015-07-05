@@ -135,7 +135,12 @@ RSpec.configure do |config|
     Kernel.srand config.seed
 
     config.after(:each) do |example|
+      cleanup
       take_screenshot unless example.exception.nil?
+    end
+
+    def cleanup
+      Helpers::DemoExecutor.cleanup
     end
 
     def take_screenshot(screenshot_dir = nil, name = nil)
