@@ -320,8 +320,10 @@ jobs:
             body: tightvncserver ":$XVNC_PORT"  -geometry 1024x768 -rfbport "$XVNC_PORT"  -interface '0.0.0.0'
 
           test:
-            body: export DISPLAY=":$XVNC_PORT" && cd integration-tests && bundle exec rspec $CIDER_CI_TASK_FILE
-            #body: echo "" > READY! && sleep 300
+            body: |
+              export DISPLAY=":$XVNC_PORT" \
+              && cd integration-tests \
+              && bundle exec rspec $CIDER_CI_TASK_FILE
             start-when:
             - script: repack-demo-repo
             - script: start-vnc
@@ -334,6 +336,15 @@ jobs:
             - script: repository-is-running
             - script: storage-is-running
             - script: ui-is-running
+
+          shutdown-delay:
+            start-when:
+            - script: test
+              states: [aborted, passed, failed, skipped]
+            body: |
+              if [ ! -z ${SHUTDOWN_DELAY} ]; then
+                sleep ${SHUTDOWN_DELAY}
+              fi
 
 
       ### shutdown & cleanup ####################################
@@ -350,8 +361,8 @@ jobs:
               kill -INT $(lsof -t -wni tcp:${UI_HTTP_PORT})
               sleep 5
             start-when:
-            - script: test
-              states: [aborted, passed, failed, skipped]
+              - script: shutdown-delay
+                states: [aborted, passed, failed, skipped]
 
 
           delete-rabbitmq-vhost:
@@ -380,12 +391,16 @@ jobs:
             - script: shutdown
               states: [aborted, passed, failed, skipped]
 
-#     tasks:
-#       spec/features/attachments_spec.rb:
-#         environment-variables:
-#           CIDER_CI_TASK_FILE: spec/features/attachments_spec.rb
-
-
       _cider-ci_generate-tasks:
         include-match: spec/.*_spec.rb
 
+#     tasks:
+#
+#        isolated-bogus-json-test:
+#          scripts:
+#            test:
+#              body: |
+#                export DISPLAY=":$XVNC_PORT" \
+#                && cd integration-tests \
+#                && bundle exec rspec ./spec/features/project-configuration_spec.rb:90
+#
