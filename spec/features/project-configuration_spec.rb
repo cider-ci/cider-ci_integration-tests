@@ -43,7 +43,7 @@ describe 'Project-Configuration', type: :feature do
     demo_repo.chdir do
       config_files.each do |file|
         if File.exist?(file)
-          (system("git rm \"#{file}\"") or (raise 'git rm failed'))
+          (system("git rm \"#{file}\"") || (fail 'git rm failed'))
         end
       end
     end
