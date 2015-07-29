@@ -1,10 +1,3 @@
-# # Testing Triggers and Dependency declaration of Jobs
-#
-# The jobs we use here are declared in the [`.cider-ci.yml`
-# dotfile](https://github.com/cider-ci/cider-ci_demo-project-bash/blob/master/.cider-ci.yml)
-# of the [Bash Demo Project for
-# Cider-CI](https://github.com/cider-ci/cider-ci_demo-project-bash).
-#
 require 'spec_helper'
 
 describe 'Jobs - Dependencies and Triggers, ', type: :feature do
