@@ -10,7 +10,7 @@ module Helpers
           "Repository.find_or_initialize_by(name: 'Demo Project') " \
           '.update_attributes! ' \
           "git_url: '#{git_url}', "\
-          'git_fetch_and_update_interval: 5, ' \
+          'git_fetch_and_update_interval: 1, ' \
           'public_view_permission: true'
         git_update_server_info
       end
