@@ -7,7 +7,7 @@ module Helpers
         request = RestClient::Request.new(
           method: :post,
           url: Capybara.app_host +
-            '/cider-ci/ui/configuration_management/invoke',
+            '/cider-ci/ui/configuration_management_backdoor/invoke',
           user: 'management',
           password: 'secret',
           verify_ssl: false,
@@ -20,7 +20,7 @@ module Helpers
         request = RestClient::Request.new(
           method: :post,
           url: Capybara.app_host +
-            '/cider-ci/ui/configuration_management/invoke',
+            '/cider-ci/ui/configuration_management_backdoor/invoke',
           user: 'management',
           password: 'secret',
           verify_ssl: false,
