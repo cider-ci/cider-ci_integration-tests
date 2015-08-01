@@ -20,7 +20,6 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
 
   describe 'the dependent job' do
     it 'is created once the prerequisite in the submodule has passed' do
-
       click_on 'Commits'
       first('a.run-a-job').click
       expect(page).not_to have_content dependent_name
