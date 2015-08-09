@@ -9,7 +9,6 @@ end
 
 shared_context :executor_pull_mode do
   before :each do
-
     Helpers::DemoExecutor.configure_demo_executor
     Helpers::ConfigurationManagement.invoke_ruby(
       'Executor.first.update_attributes! base_url: nil')
