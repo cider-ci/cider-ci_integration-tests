@@ -50,8 +50,8 @@ module Helpers
         .find('a,button', text: 'Run').click
     end
 
-    def wait_for_job_state(job_name, state)
-      wait_until do
+    def wait_for_job_state(job_name, state, options = { wait_time:  60 })
+      wait_until options[:wait_time] do
         all(".job[data-name='#{job_name}'][data-state='#{state}']").present?
       end
     end

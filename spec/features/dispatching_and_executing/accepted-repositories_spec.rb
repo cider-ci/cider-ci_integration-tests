@@ -23,5 +23,5 @@ end
 
 describe 'Dispatching and running in ', type: :feature do
   include_context :run_in_push_and_pull_mode,
-    :accepted_repositories
+                  :accepted_repositories
 end
