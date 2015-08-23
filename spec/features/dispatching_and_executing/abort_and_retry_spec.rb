@@ -1,8 +1,8 @@
 require 'spec_helper'
 require 'shared/push_and_pull'
 
-# TODO push and pull
-# TODO make orphan stuff work for deleted branches
+# TODO: push and pull
+# TODO: make orphan stuff work for deleted branches
 describe 'Abort and retry a job', type: :feature do
   let :abort_and_retry_job do
     'Abort and Retry Demo'

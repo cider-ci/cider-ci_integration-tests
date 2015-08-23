@@ -17,7 +17,7 @@ describe 'the job "Attachments Demo" creates ', type: :feature do
       visit path_to_job(@job_id)
       click_on 'Tree-Attachments'
       click_on 'tree-attachment'
-      expect(page).to have_content '/tmp/a-tree-attachment.txt'
+      expect(page).to have_content './tmp/a-tree-attachment.txt'
       find('#open-content').click
       expect(page).to have_content 'I am a tree attachment!'
     end

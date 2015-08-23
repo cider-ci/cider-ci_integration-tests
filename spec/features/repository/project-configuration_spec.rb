@@ -82,7 +82,7 @@ describe 'Project-Configuration', type: :feature do
           demo_repo.commit(message)
           update_server_info demo_repo
           sign_in_as 'adam'
-          click_on 'Commits'
+          click_on_first 'Workspace'
           wait_until { page.has_content? message }
           tree_id = demo_repo.object('test').gtree.sha
           puts tree_id
@@ -112,7 +112,7 @@ describe 'Project-Configuration', type: :feature do
           demo_repo.commit(message)
           update_server_info demo_repo
           sign_in_as 'adam'
-          click_on 'Commits'
+          click_on_first 'Workspace'
           wait_until { page.has_content? message }
           tree_id = demo_repo.object('test').gtree.sha
           puts tree_id
@@ -157,7 +157,7 @@ describe 'Project-Configuration', type: :feature do
         demo_repo.commit(message)
         update_server_info demo_repo
         sign_in_as 'adam'
-        click_on 'Commits'
+        click_on_first 'Workspace'
         wait_until { page.has_content? message }
         tree_id = demo_repo.object('test').gtree.sha
         conn.get "repositories/project-configuration/#{tree_id}"
@@ -203,7 +203,7 @@ describe 'Project-Configuration', type: :feature do
         demo_repo.commit('Remove configuration file')
         update_server_info demo_repo
         sign_in_as 'adam'
-        click_on 'Commits'
+        click_on_first 'Workspace'
         wait_until { page.has_content? 'Remove configuration file' }
         tree_id = demo_repo.object('test').gtree.sha
         conn.get "repositories/project-configuration/#{tree_id}"
@@ -228,7 +228,7 @@ describe 'Project-Configuration', type: :feature do
         demo_repo.commit('Remove include cider-ci/jobs/attachments.yml')
         update_server_info demo_repo
         sign_in_as 'adam'
-        click_on 'Commits'
+        click_on_first 'Workspace'
         wait_until { page.has_content? 'Remove include' }
         tree_id = demo_repo.object('test').gtree.sha
         conn.get "repositories/project-configuration/#{tree_id}"

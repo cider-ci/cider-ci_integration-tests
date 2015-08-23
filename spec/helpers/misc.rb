@@ -10,6 +10,10 @@ module Helpers
       end
     end
 
+    def click_on_first(locator, options = {})
+      first(:link_or_button, locator, options).click
+    end
+
     def path_to_job(id)
       "/cider-ci/ui/workspace/jobs/#{id}"
     end
@@ -21,7 +25,7 @@ module Helpers
       Helpers::DemoExecutor.configure_demo_executor
 
       sign_in_as 'adam'
-      click_on 'Commits'
+      click_on 'Workspace'
       wait_until { all('#commits-table tbody tr').count > 0 }
     end
 
@@ -41,11 +45,9 @@ module Helpers
     end
 
     def run_job_on_last_commit(job_name)
-      click_on 'Commits'
-      # first(.... runs often into timeouts; wait_until before
+      click_on_first 'Workspace'
       wait_until { all('a.show-commit').count > 0 }
-      first('a.show-commit').click
-      click_on 'Run job'
+      click_on_first 'Run'
       find(".runnable-job[data-name='#{job_name}']")
         .find('a,button', text: 'Run').click
     end
