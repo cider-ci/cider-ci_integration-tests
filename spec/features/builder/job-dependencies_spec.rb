@@ -22,7 +22,7 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
     Helpers::ConfigurationManagement.invoke_sql 'DELETE FROM jobs'
     sign_in_as 'adam'
     # set_aggressive_reloading
-    click_on 'Commits'
+    click_on_first 'Workspace'
   end
 
   describe 'the prerequisite job ' do
