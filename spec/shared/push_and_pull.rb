@@ -23,13 +23,13 @@ shared_context :run_in_push_and_pull_mode do |example|
     setup_signin_waitforcommits
   end
 
-  describe 'push mode' do
-    include_context :executor_push_mode
+  describe 'pull mode' do
+    include_context :executor_pull_mode
     include_examples example
   end
 
-  describe 'pull mode' do
-    include_context :executor_pull_mode
+  describe 'push mode' do
+    include_context :executor_push_mode
     include_examples example
   end
 end
