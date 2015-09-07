@@ -8,10 +8,32 @@ jobs:
       include-match: ^.*$
 
     context:
+
+      _cider-ci_generate-tasks:
+        include-match: spec/.*_spec.rb
+
+#      tasks:
+#        isolated_env_test:
+#          environment-variables:
+#            CIDER_CI_TASK_FILE: spec/features/executor/env_vars_spec.rb
+#
       script-defaults:
         timeout: 300
 
       task-defaults:
+
+        traits:
+          bash: true
+          curl: true
+          git: true
+          leiningen: true
+          linux: true
+          maven: true
+          maven3: true
+          openjdk: true
+          postgresql: true
+          rbenv: true
+          ruby: true
 
         git-options:
           submodules:
@@ -24,11 +46,14 @@ jobs:
           screenshots:
             glob: 'integration-tests/tmp/*.png'
             content-type: image/png
-          dispatcher-logs:
-            glob: 'dispatcher/log/*.log'
-            content-type: text/plain
           builder-logs:
             glob: 'builder/log/*.log'
+            content-type: text/plain
+          executor-logs:
+            glob: 'executor/log/*.log'
+            content-type: text/plain
+          dispatcher-logs:
+            glob: 'dispatcher/log/*.log'
             content-type: text/plain
           repository-logs:
             glob: 'repository/log/*.log'
@@ -104,6 +129,7 @@ jobs:
               config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
               config['nrepl']['enabled']=false
               File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
+              File.open('executor/config/traits.txt','w') { |file| file.write "bash, linux," }
 
           run-executor:
             body: cd executor && lein trampoline run
@@ -391,16 +417,4 @@ jobs:
             - script: shutdown
               states: [aborted, passed, failed, skipped]
 
-      _cider-ci_generate-tasks:
-        include-match: spec/.*_spec.rb
 
-#     tasks:
-#
-#        isolated-bogus-json-test:
-#          scripts:
-#            test:
-#              body: |
-#                export DISPLAY=":$XVNC_PORT" \
-#                && cd integration-tests \
-#                && bundle exec rspec ./spec/features/project-configuration_spec.rb:90
-#
