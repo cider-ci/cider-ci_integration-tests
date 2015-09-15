@@ -140,7 +140,7 @@ jobs:
               states: [aborted, passed, failed, skipped]
 
           executor-is-running:
-            body: until curl --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do sleep 1; done
+            body: until curl --silent --fail --user 35cff40c-b4f8-4ca3-9217-d49c9c35f375:90b796aca99df1a74b172f3adee6f170fff3ea4e -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do sleep 1; done
             start-when:
             - script: run-executor
               states: [executing]
@@ -377,7 +377,7 @@ jobs:
 
           shutdown:
             body: |
-              curl -X POST --silent --fail --user x:5cfc3c91599a118ec0c67a6f2c15e7456cea71fa -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown
+              curl -X POST --silent --fail --user 35cff40c-b4f8-4ca3-9217-d49c9c35f375:90b796aca99df1a74b172f3adee6f170fff3ea4e -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${API_HTTP_PORT}/cider-ci/api/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${BUILDER_HTTP_PORT}/cider-ci/builder/shutdown
               curl -X POST --silent --fail --user x:secret -I  http://localhost:${DISPATCHER_HTTP_PORT}/cider-ci/dispatcher/shutdown
