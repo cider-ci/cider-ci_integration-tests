@@ -129,7 +129,7 @@ jobs:
               config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
               config['nrepl']['enabled']=false
               File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
-              File.open('executor/config/traits.txt','w') { |file| file.write "bash, linux," }
+              File.open('executor/config/traits.yml','w') { |file| file.write ["bash", "linux"].to_yaml }
 
           run-executor:
             body: cd executor && lein trampoline run
