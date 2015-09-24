@@ -1,7 +1,7 @@
 module Helpers
   module DemoExecutor
     class << self
-      ACCEPTED_REPOSITORIES_FILE = '../executor/config/accepted-repositories.txt'
+      ACCEPTED_REPOSITORIES_FILE = '../executor/config/accepted-repositories.yml'
       def configure_demo_executor
         port = Integer(ENV['EXECUTOR_HTTP_PORT'].present? &&
                        ENV['EXECUTOR_HTTP_PORT'] || '8883')
@@ -13,7 +13,7 @@ module Helpers
 
       def set_accepted_repositories(repos)
         File.open(ACCEPTED_REPOSITORIES_FILE, 'w') do |file|
-          file.write repos.join(",\n")
+          file.write repos.to_yaml
         end
       end
 
