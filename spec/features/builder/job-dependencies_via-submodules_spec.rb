@@ -21,10 +21,6 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
   describe 'the dependent job' do
     it 'is created once the prerequisite in the submodule has passed' do
       click_on_first 'Workspace'
-      first('a.run-a-job').click
-      expect(page).not_to have_content dependent_name
-
-      click_on 'Workspace'
       find('select#depth').select('Any depth')
       find('input#git_ref').set('b0c4d7')
       click_on('Filter')
