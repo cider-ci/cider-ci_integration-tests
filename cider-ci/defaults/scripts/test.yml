@@ -1,0 +1,28 @@
+### test ##################################################
+
+# the demo repo must not reference objects
+repack-demo-repo:
+  body: cd demo-project-bash && git repack -a
+
+
+bundle:
+  exclusive-executor-resource: bundler
+  body: cd integration-tests && bundle
+
+test:
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    cd integration-tests
+    bundle exec rspec $CIDER_CI_TASK_FILE
+  start-when:
+  - script: repack-demo-repo
+  - script: start-vnc
+  - script: bundle
+  - script: executor-is-running
+  - script: api-is-running
+  - script: builder-is-running
+  - script: dispatcher-is-running
+  - script: repository-is-running
+  - script: storage-is-running
+  - script: ui-is-running

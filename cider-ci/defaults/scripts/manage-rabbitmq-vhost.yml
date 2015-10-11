@@ -1,0 +1,27 @@
+create-rabbitmq-vhost:
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
+      -H "content-type:application/json" \
+      -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}"
+    curl --fail --silent --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
+      -H "content-type:application/json" \
+      "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/" | python -m json.tool
+    curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
+      -H "content-type:application/json" \
+      -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/permissions/cider-ci_test_${CIDER_CI_TRIAL_ID}/${RABBITMQ_USER}" \
+      -d '{"scope":"client","configure":".*","write":".*","read":".*"}'
+
+delete-rabbitmq-vhost:
+  body:
+    #!/usr/bin/env bash
+    set -eux
+    curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
+      -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}"
+  ignore-state: true
+  start-when:
+  - script: shutdown
+    states: [aborted, passed, failed, skipped]
+
+

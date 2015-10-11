@@ -1,0 +1,10 @@
+scripts:
+  _cider-ci_include:
+    - 'cider-ci/defaults/scripts/configure-services.yml'
+    - 'cider-ci/defaults/scripts/manage-database.yml'
+    - 'cider-ci/defaults/scripts/manage-rabbitmq-vhost.yml'
+    - 'cider-ci/defaults/scripts/manage-xvnc.yml'
+    - 'cider-ci/defaults/scripts/executor.yml'
+    - 'cider-ci/defaults/scripts/run-services.yml'
+    - 'cider-ci/defaults/scripts/test.yml'
+    - 'cider-ci/defaults/scripts/shutdown-and-cleanup.yml'

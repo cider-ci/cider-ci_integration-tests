@@ -1,0 +1,35 @@
+### executor ##############################################
+
+configure-executor:
+  body: |
+    #!/usr/bin/env ruby
+    require 'yaml'
+    config = YAML.load_file 'executor/config/config_default.yml'
+    config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
+    config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
+    config['nrepl']['enabled']=false
+    File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
+    File.open('executor/config/traits.yml','w') { |file| file.write ["bash", "linux"].to_yaml }
+
+run-executor:
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    cd executor
+    lein trampoline run
+  start-when:
+  - script: configure-executor
+  terminate-when:
+  - script: shutdown
+    states: [aborted, passed, failed, skipped]
+
+executor-is-running:
+  body: |
+    #!/usr/bin/env bash
+    set -ux
+    until curl --silent --fail --user 35cff40c-b4f8-4ca3-9217-d49c9c35f375:90b796aca99df1a74b172f3adee6f170fff3ea4e -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do
+      sleep 1;
+    done
+  start-when:
+  - script: run-executor
+    states: [executing]

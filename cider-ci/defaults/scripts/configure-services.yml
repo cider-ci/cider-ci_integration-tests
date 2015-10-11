@@ -1,0 +1,39 @@
+### configure
+
+configure:
+  body: |
+    #!/usr/bin/env ruby
+    require 'yaml'
+    config = YAML.load_file 'config/config_default.yml'
+    # database
+    config['database']['user']= ENV['PGUSER']
+    config['database']['password']= ENV['PGPASSWORD']
+    config['database']['subname']= "//localhost:5432/cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"
+    # messaging
+    config['messaging']['connection']['vhost']= "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"
+    config['messaging']['connection']['username']= ENV['RABBITMQ_USER']
+    config['messaging']['connection']['password']= ENV['RABBITMQ_PASSWORD']
+    # reverse-proxy
+    config['server_base_url']= "http://localhost:#{ENV['REVERSE_PROXY_HTTP_PORT']}"
+    config['reverse_proxy']['http']['port']= Integer(ENV['REVERSE_PROXY_HTTP_PORT'])
+    config['reverse_proxy']['nrepl']['enabled']=false
+    # api
+    config['services']['api']['http']['port']= Integer(ENV['API_HTTP_PORT'])
+    config['services']['api']['nrepl']['enabled']= false
+    # builder
+    config['services']['builder']['http']['port']= Integer(ENV['BUILDER_HTTP_PORT'])
+    config['services']['builder']['nrepl']['enabled']= false
+    # dispatcher
+    config['services']['dispatcher']['http']['port']= Integer(ENV['DISPATCHER_HTTP_PORT'])
+    config['services']['dispatcher']['nrepl']['enabled']= false
+    # repository
+    config['services']['repository']['http']['port']= Integer(ENV['REPOSITORY_HTTP_PORT'])
+    config['services']['repository']['nrepl']['enabled']= false
+    # storage
+    config['services']['storage']['http']['port']= Integer(ENV['STORAGE_HTTP_PORT'])
+    config['services']['storage']['nrepl']['enabled']= false
+    # ui
+    config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
+    #
+    File.open('config/config.yml','w') { |file| file.write config.to_yaml }
+

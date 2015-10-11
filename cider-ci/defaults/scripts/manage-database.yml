@@ -1,0 +1,35 @@
+configure-database:
+  body: |
+    #!/usr/bin/env ruby
+    require 'yaml'
+    config = \
+      { 'test' =>
+        { 'adapter' => 'postgresql',
+          'encoding' => 'unicode',
+          'host' => 'localhost',
+          'pool' => 3,
+          'username' => ENV['PGUSER'],
+          'password' =>  ENV['PGPASSWORD'],
+          'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
+    File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
+
+create-database:
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    cd user-interface
+    bundle exec rake db:reset db:pg:truncate_tables
+  start-when:
+  - script: bundle-ui
+  - script: configure-database
+
+delete-database:
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    cd user-interface
+    bundle exec rake db:pg:terminate_connections db:drop
+  ignore-state: true
+  start-when:
+  - script: shutdown
+    states: [aborted, passed, failed, skipped]

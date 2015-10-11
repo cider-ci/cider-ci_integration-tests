@@ -1,0 +1,30 @@
+jobs:
+  Integration-Tests:
+    description: |
+      This job must be run from the master project Cider-CI!
+
+    run-on:
+    - type: branch
+      include-match: ^.*$
+
+    context:
+
+      script-defaults:
+        environment-variables_process-templates: true
+        environment-variables:
+          DISPLAY: ":{{XVNC_PORT}}"
+        timeout: 300
+
+      task-defaults:
+
+        _cider-ci_include:
+          - cider-ci/defaults/misc.yml
+          - cider-ci/defaults/attachments.yml
+          - cider-ci/defaults/traits.yml
+          - cider-ci/defaults/ports.yml
+          - cider-ci/defaults/scripts.yml
+
+      _cider-ci_generate-tasks:
+        include-match: spec/.*_spec.rb
+
+
