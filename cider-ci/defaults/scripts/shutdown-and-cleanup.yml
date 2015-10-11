@@ -37,6 +37,7 @@ delete-rabbitmq-vhost:
     set -eux
     curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
       -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}"
+  ignore-abort: true
   ignore-state: true
   start-when:
   - script: shutdown
@@ -48,6 +49,7 @@ delete-database:
     set -eux
     cd user-interface
     bundle exec rake db:pg:terminate_connections db:drop
+  ignore-abort: true
   ignore-state: true
   start-when:
   - script: shutdown
@@ -58,6 +60,7 @@ stop-vnc:
     #!/usr/bin/env bash
     set -eux
     tightvncserver -kill "${DISPLAY}" -clean
+  ignore-abort: true
   ignore-state: true
   start-when:
   - script: shutdown

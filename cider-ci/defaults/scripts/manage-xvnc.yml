@@ -9,6 +9,7 @@ stop-vnc:
     #!/usr/bin/env bash
     set -eux
     tightvncserver -kill "${DISPLAY}" -clean
+  ignore-abort: true
   ignore-state: true
   start-when:
   - script: shutdown
