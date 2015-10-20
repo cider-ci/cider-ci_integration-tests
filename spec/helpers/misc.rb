@@ -5,7 +5,10 @@ module Helpers
   module Misc
     def wait_until(wait_time = 60)
       Timeout.timeout(wait_time) do
-        sleep(0.1) until value = yield
+        until value = yield
+          sleep(0.2)
+          visit current_url if current_url
+        end
         value
       end
     end

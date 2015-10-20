@@ -1,9 +1,11 @@
 git-options:
   submodules:
-    clone: True
+    clone:
+      exclude-match: deploy
     timeout: 60
 
-max-auto-trials: 3
+max-auto-trials: 5
 
 environment-variables:
   RAILS_ENV: test
+

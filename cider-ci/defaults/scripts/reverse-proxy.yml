@@ -1,0 +1,30 @@
+compile-reverse-proxy:
+  exclusive-executor-resource: compile-reverse-proxy
+  environment-variables:
+    SERVICE_DIRECTORY: reverse-proxy
+  body: integration-tests/cider-ci/bin/compile-service.sh
+  terminate-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]
+
+run-reverse-proxy:
+  timeout: 300
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    cd reverse-proxy
+    lein trampoline run
+  start-when:
+    - script: compile-reverse-proxy
+    - script: configure
+  terminate-when:
+    - script: reverse-proxy-shutdown
+      states: [aborted, passed, failed, skipped]
+
+
+reverse-proxy-shutdown:
+  timeout: 5
+  body: curl -X POST --silent --user x:secret -I  http://localhost:${REVERSE_PROXY_HTTP_PORT}/shutdown
+  start-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]

@@ -19,9 +19,12 @@ delete-rabbitmq-vhost:
     set -eux
     curl -i -u "$RABBITMQ_USER:$RABBITMQ_PASSWORD" -H "content-type:application/json" \
       -XDELETE "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}"
+  ignore-abort: true
   ignore-state: true
   start-when:
-  - script: shutdown
-    states: [aborted, passed, failed, skipped]
-
-
+    - script: create-rabbitmq-vhost
+      states: [aborted, passed, failed, skipped]
+    - script: services-down
+      states: [aborted, passed, failed, skipped]
+    - script: run-ui
+      states: [aborted, passed, failed, skipped]

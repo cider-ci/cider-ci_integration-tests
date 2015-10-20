@@ -15,7 +15,7 @@ describe 'the job "Attachments Demo" creates ', type: :feature do
   context 'a tree-attachment which' do
     it 'can be browsed via the UI' do
       visit path_to_job(@job_id)
-      click_on 'Tree-Attachments'
+      click_on 'Tree-Attachment'
       click_on 'tree-attachment'
       expect(page).to have_content './tmp/a-tree-attachment.txt'
       find('#open-content').click
@@ -51,7 +51,7 @@ describe 'the job "Attachments Demo" creates ', type: :feature do
       visit path_to_job(@job_id)
       first('tr.task a').click
       first('tr.trial a').click
-      click_on 'Attachments'
+      click_on 'Attachment'
       click_on 'trial-attachment'
       expect(page).to have_content '/tmp/a-trial-attachment.txt'
       find('#open-content').click

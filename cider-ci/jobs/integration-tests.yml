@@ -27,4 +27,7 @@ jobs:
       _cider-ci_generate-tasks:
         include-match: spec/.*_spec.rb
 
-
+#      tasks:
+#        spec/features/admin/repositories_spec.rb:
+#          environment-variables:
+#            CIDER_CI_TASK_FILE: spec/features/admin/repositories_spec.rb

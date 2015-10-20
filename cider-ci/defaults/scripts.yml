@@ -5,6 +5,7 @@ scripts:
     - 'cider-ci/defaults/scripts/manage-rabbitmq-vhost.yml'
     - 'cider-ci/defaults/scripts/manage-xvnc.yml'
     - 'cider-ci/defaults/scripts/executor.yml'
+    - 'cider-ci/defaults/scripts/reverse-proxy.yml'
     - 'cider-ci/defaults/scripts/run-services.yml'
     - 'cider-ci/defaults/scripts/test.yml'
-    - 'cider-ci/defaults/scripts/shutdown-and-cleanup.yml'
+    - 'cider-ci/defaults/scripts/run-ui.yml'

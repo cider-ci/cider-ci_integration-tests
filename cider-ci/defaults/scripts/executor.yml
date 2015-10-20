@@ -11,6 +11,16 @@ configure-executor:
     File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
     File.open('executor/config/traits.yml','w') { |file| file.write ["bash", "linux"].to_yaml }
 
+
+compile-executor:
+  exclusive-executor-resource: compile-executor
+  environment-variables:
+    SERVICE_DIRECTORY: executor
+  body: integration-tests/cider-ci/bin/compile-service.sh
+  terminate-when:
+    - script: shutdown-executor
+      states: [aborted, passed, failed, skipped]
+
 run-executor:
   body: |
     #!/usr/bin/env bash
@@ -18,12 +28,14 @@ run-executor:
     cd executor
     lein trampoline run
   start-when:
-  - script: configure-executor
+    - script: configure-executor
+    - script: compile-executor
   terminate-when:
-  - script: shutdown
-    states: [aborted, passed, failed, skipped]
+    - script: shutdown-executor
+      states: [aborted, passed, failed, skipped]
 
 executor-is-running:
+  timeout: 60
   body: |
     #!/usr/bin/env bash
     set -ux
@@ -31,5 +43,16 @@ executor-is-running:
       sleep 1;
     done
   start-when:
-  - script: run-executor
-    states: [executing]
+    - script: run-executor
+      states: [executing]
+  terminate-when:
+    - script: shutdown
+      states: [aborted, passed, failed, skipped]
+
+shutdown-executor:
+  body: |
+    set -eux
+    curl -X POST --silent --user 35cff40c-b4f8-4ca3-9217-d49c9c35f375:90b796aca99df1a74b172f3adee6f170fff3ea4e -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown
+  start-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]

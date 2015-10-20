@@ -1,49 +1,50 @@
-### run services ##########################################
+### run services ##############################################################
 
-run-reverse-proxy:
-  timeout: 600
-  body: |
-    #!/usr/bin/env bash
-    set -eux
-    cd reverse-proxy
-    lein trampoline run
+### common ####################################################################
+
+services-down:
+  body: echo "down"
   start-when:
-  - script: configure
+    - script: run-api
+      states: [aborted, passed, failed, skipped]
+    - script: run-builder
+      states: [aborted, passed, failed, skipped]
+    - script: run-dispatcher
+      states: [aborted, passed, failed, skipped]
+    - script: run-repository
+      states: [aborted, passed, failed, skipped]
+    - script: run-storage
+      states: [aborted, passed, failed, skipped]
+
+
+### the api also servers as a template ########################################
+
+compile-api: &compile-service
+  exclusive-executor-resource: compile-api
+  environment-variables:
+    SERVICE_DIRECTORY: api
+  body: integration-tests/cider-ci/bin/compile-service.sh
   terminate-when:
-  - script: shutdown
-    states: [aborted, passed, failed, skipped]
-
-
-delay-service-bootstorm:
-  exclusive-executor-resource: bootstorm
-  body: sleep 10
-  start-when:
-  - script: create-database
-  - script: create-rabbitmq-vhost
-
-
-### all the lein services are very similar ####################################
-
-
-# the api also servers as a template
+    - script: test
+      states: [aborted, passed, failed, skipped]
 
 run-api: &run-service-default
   environment-variables:
     SERVICE_DIRECTORY: api
   body: |
-    #!/usr/bin/env bash
     set -eux
-    cd "$SERVICE_DIRECTORY"
+    cd ${SERVICE_DIRECTORY}
     lein trampoline run
   start-when:
-  - script: delay-service-bootstorm
-  - script: create-database
-  - script: create-rabbitmq-vhost
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: compile-api
   terminate-when:
-  - script: shutdown
-    states: [aborted, passed, failed, skipped]
+    - script: api-shutdown
+      states: [aborted, passed, failed, skipped]
 
 api-is-running: &is-running-default
+  timeout: 60
   environment-variables:
     STATUS_URL: http://localhost:{{API_HTTP_PORT}}/cider-ci/api/status
   body: |
@@ -53,14 +54,41 @@ api-is-running: &is-running-default
       sleep 1;
     done
   start-when:
-  - script: run-api
-    states: [executing]
+    - script: run-api
+      states: [executing]
+  terminate-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]
 
+api-shutdown: &shutdown-default
+  timeout: 5
+  environment-variables:
+    SHUTDOWN_URL: http://localhost:{{API_HTTP_PORT}}/cider-ci/api/shutdown
+  body: |
+    set -eux
+    curl -X POST --silent --user x:secret -I "${SHUTDOWN_URL}"
+  start-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]
+
+
+### builder ###################################################################
+
+compile-builder:
+  <<: *compile-service
+  exclusive-executor-resource: compile-builder
+  environment-variables:
+    SERVICE_DIRECTORY: builder
+  body: integration-tests/cider-ci/bin/compile-service.sh
 
 run-builder:
   <<: *run-service-default
   environment-variables:
     SERVICE_DIRECTORY: builder
+  start-when:
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: compile-builder
 
 builder-is-running:
   environment-variables:
@@ -70,11 +98,29 @@ builder-is-running:
     states: [executing]
   <<: *is-running-default
 
+builder-shutdown:
+  <<: *shutdown-default
+  environment-variables:
+    SHUTDOWN_URL: http://localhost:{{BUILDER_HTTP_PORT}}/cider-ci/builder/shutdown
 
-run-dispatcher:
+
+### dispatcher ################################################################
+
+compile-dispatcher:
+  <<: *compile-service
+  exclusive-executor-resource: compile-dispatcher
   environment-variables:
     SERVICE_DIRECTORY: dispatcher
+  body: integration-tests/cider-ci/bin/compile-service.sh
+
+run-dispatcher:
   <<: *run-service-default
+  environment-variables:
+    SERVICE_DIRECTORY: dispatcher
+  start-when:
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: compile-dispatcher
 
 dispatcher-is-running:
   environment-variables:
@@ -84,11 +130,29 @@ dispatcher-is-running:
     states: [executing]
   <<: *is-running-default
 
+dispatcher-shutdown:
+  <<: *shutdown-default
+  environment-variables:
+    SHUTDOWN_URL: http://localhost:{{DISPATCHER_HTTP_PORT}}/cider-ci/dispatcher/shutdown
 
-run-repository:
+
+### repository ################################################################
+
+compile-repository:
+  <<: *compile-service
+  exclusive-executor-resource: compile-repository
   environment-variables:
     SERVICE_DIRECTORY: repository
+  body: integration-tests/cider-ci/bin/compile-service.sh
+
+run-repository:
   <<: *run-service-default
+  environment-variables:
+    SERVICE_DIRECTORY: repository
+  start-when:
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: compile-repository
 
 repository-is-running:
   environment-variables:
@@ -98,11 +162,29 @@ repository-is-running:
     states: [executing]
   <<: *is-running-default
 
+repository-shutdown:
+  <<: *shutdown-default
+  environment-variables:
+    SHUTDOWN_URL: http://localhost:{{REPOSITORY_HTTP_PORT}}/cider-ci/repositories/shutdown
 
-run-storage:
+
+### storage ###################################################################
+
+compile-storage:
+  <<: *compile-service
+  exclusive-executor-resource: compile-storage
   environment-variables:
     SERVICE_DIRECTORY: storage
+  body: integration-tests/cider-ci/bin/compile-service.sh
+
+run-storage:
   <<: *run-service-default
+  environment-variables:
+    SERVICE_DIRECTORY: storage
+  start-when:
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: compile-storage
 
 storage-is-running:
   environment-variables:
@@ -112,31 +194,7 @@ storage-is-running:
     states: [executing]
   <<: *is-running-default
 
-
-### the UI service is slightly different #####################################
-
-build-ui-js:
-  body: cd user-interface && npm run build
-
-bundle-ui:
-  exclusive-executor-resource: bundler
-  body: cd user-interface && bundle
-
-run-ui:
-  <<: *run-service-default
-  body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
-  timeout: 600
-  start-when:
-  - script: build-ui-js
-  - script: bundle-ui
-  - script: create-database
-  - script: create-rabbitmq-vhost
-
-ui-is-running:
+storage-shutdown:
+  <<: *shutdown-default
   environment-variables:
-    STATUS_URL: http://localhost:{{UI_HTTP_PORT}}/cider-ci/ui/public
-  start-when:
-  - script: run-ui
-    states: [executing]
-  <<: *is-running-default
-
+    SHUTDOWN_URL: http://localhost:{{STORAGE_HTTP_PORT}}/cider-ci/storage/shutdown

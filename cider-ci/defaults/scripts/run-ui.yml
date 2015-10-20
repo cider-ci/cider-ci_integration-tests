@@ -1,0 +1,61 @@
+
+build-ui-js:
+  exclusive-executor-resource: cider-ci-npm-build
+  body: |
+    set -eux
+    cd integration-tests
+    cider-ci/bin/build-ui-js.sh
+
+bundle-ui:
+  exclusive-executor-resource: bundler
+  body:
+    set -eux
+    cd user-interface
+    bundle
+
+precompile-assets:
+  exclusive-executor-resource: precompile-assets
+  body: |
+    set -eux
+    cd user-interface
+    ${CIDER_CI_WORKING_DIR}/integration-tests/cider-ci/bin/precompile-assets-with-caching.sh
+  start-when:
+    - script: bundle-ui
+    - script: build-ui-js
+
+run-ui:
+  body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
+  start-when:
+    - script: build-ui-js
+    - script: bundle-ui
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: precompile-assets
+  terminate-when:
+    - script: shutdown-ui
+      states: [aborted, passed, failed, skipped]
+
+ui-is-running:
+  timeout: 40
+  environment-variables:
+    STATUS_URL: http://localhost:{{UI_HTTP_PORT}}/cider-ci/ui/public
+  body: |
+    #!/usr/bin/env bash
+    set -eux
+    until curl --silent --fail --user x:secret -I  "${STATUS_URL}";  do
+      sleep 1;
+    done
+  start-when:
+    - script: run-ui
+      states: [executing]
+  terminate-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]
+
+shutdown-ui:
+  body: |
+    kill -INT $(lsof -t -wni tcp:${UI_HTTP_PORT})
+    sleep 1
+  start-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]

@@ -20,8 +20,12 @@ create-database:
     cd user-interface
     bundle exec rake db:reset db:pg:truncate_tables
   start-when:
-  - script: bundle-ui
-  - script: configure-database
+    - script: bundle-ui
+    - script: configure-database
+  terminate-when:
+    - script: test
+      states: [aborted, passed, failed, skipped]
+
 
 delete-database:
   body: |
@@ -30,6 +34,11 @@ delete-database:
     cd user-interface
     bundle exec rake db:pg:terminate_connections db:drop
   ignore-state: true
+  ignore-abort: true
   start-when:
-  - script: shutdown
-    states: [aborted, passed, failed, skipped]
+    - script: create-database
+      states: [aborted, passed, failed, skipped]
+    - script: services-down
+      states: [aborted, passed, failed, skipped]
+    - script: run-ui
+      states: [aborted, passed, failed, skipped]
