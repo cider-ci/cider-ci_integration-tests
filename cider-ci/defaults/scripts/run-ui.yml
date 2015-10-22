@@ -1,11 +1,3 @@
-
-build-ui-js:
-  exclusive-executor-resource: cider-ci-npm-build
-  body: |
-    set -eux
-    cd integration-tests
-    cider-ci/bin/build-ui-js.sh
-
 bundle-ui:
   exclusive-executor-resource: bundler
   body:
@@ -21,12 +13,10 @@ precompile-assets:
     ${CIDER_CI_WORKING_DIR}/integration-tests/cider-ci/bin/precompile-assets-with-caching.sh
   start-when:
     - script: bundle-ui
-    - script: build-ui-js
 
 run-ui:
   body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
   start-when:
-    - script: build-ui-js
     - script: bundle-ui
     - script: create-database
     - script: create-rabbitmq-vhost
