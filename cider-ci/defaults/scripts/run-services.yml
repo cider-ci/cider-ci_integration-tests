@@ -34,7 +34,9 @@ run-api: &run-service-default
   body: |
     set -eux
     cd ${SERVICE_DIRECTORY}
-    lein trampoline run
+    export LEIN_FAST_TRAMPOLINE=yes
+    lein with-profile production trampoline run
+
   start-when:
     - script: create-database
     - script: create-rabbitmq-vhost

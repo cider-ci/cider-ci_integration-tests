@@ -26,7 +26,8 @@ run-executor:
     #!/usr/bin/env bash
     set -eux
     cd executor
-    lein trampoline run
+    export LEIN_FAST_TRAMPOLINE=yes
+    lein with-profile production trampoline run
   start-when:
     - script: configure-executor
     - script: compile-executor
