@@ -41,12 +41,13 @@ run-api: &run-service-default
     - script: create-database
     - script: create-rabbitmq-vhost
     - script: compile-api
+    - script: configure
   terminate-when:
     - script: api-shutdown
       states: [aborted, passed, failed, skipped]
 
 api-is-running: &is-running-default
-  timeout: 60
+  timeout: 210
   environment-variables:
     STATUS_URL: http://localhost:{{API_HTTP_PORT}}/cider-ci/api/status
   body: |

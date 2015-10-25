@@ -5,39 +5,39 @@ ports:
     max: 5999
   EXECUTOR_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   EXECUTOR_HTTPS_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   REVERSE_PROXY_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   API_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   BUILDER_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   DISPATCHER_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   REPOSITORY_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   STORAGE_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
   UI_HTTP_PORT:
     inet_address: "localhost"
-    min: 8100
+    min: 4100
     max: 8799
 
 

@@ -26,4 +26,9 @@ trial-attachments:
   executor-config:
     glob: 'executor/config/*.yml'
     content-type: text/yaml
-
+  reverse-proxy-config:
+    glob: 'integration-tests/reverse-proxy/conf/*conf'
+    content-type: text/plain
+  reverse-proxy-logs:
+    glob: 'integration-tests/reverse-proxy/logs/*log'
+    content-type: text/plain

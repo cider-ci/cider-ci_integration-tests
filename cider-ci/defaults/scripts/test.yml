@@ -27,3 +27,5 @@ test:
   - script: repository-is-running
   - script: storage-is-running
   - script: ui-is-running
+  - script: run-reverse-proxy
+    states: ['executing']

@@ -1,2 +1,5 @@
-/tmp
 /docs
+/reverse-proxy/conf/httpd.conf
+/reverse-proxy/logs
+/reverse-proxy/tmp
+/tmp

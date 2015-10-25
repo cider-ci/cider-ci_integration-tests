@@ -9,3 +9,6 @@ max-auto-trials: 5
 environment-variables:
   RAILS_ENV: test
 
+templates:
+  - src: [integration-tests, cider-ci, templates, httpd.conf]
+    dest: [integration-tests, reverse-proxy, conf, httpd.conf]

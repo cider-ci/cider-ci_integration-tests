@@ -1,0 +1,15 @@
+
+windows:
+  - name: "Apache2"
+    id: 2
+    command: |
+      echo "Hello World!"
+  - id: 4
+    name: vim
+    command: |
+      vim
+    post_command_send_keys:
+      \\n
+  - id: 7
+    name: test
+    command: bundle exec rspec spec

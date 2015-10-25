@@ -26,7 +26,7 @@ run-ui:
       states: [aborted, passed, failed, skipped]
 
 ui-is-running:
-  timeout: 40
+  timeout: 210
   environment-variables:
     STATUS_URL: http://localhost:{{UI_HTTP_PORT}}/cider-ci/ui/public
   body: |

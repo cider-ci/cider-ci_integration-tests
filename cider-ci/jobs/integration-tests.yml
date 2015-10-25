@@ -30,4 +30,4 @@ jobs:
 #      tasks:
 #        spec/features/admin/repositories_spec.rb:
 #          environment-variables:
-#            CIDER_CI_TASK_FILE: spec/features/admin/repositories_spec.rb
+#            CIDER_CI_TASK_FILE: spec/features/builder/contexts_spec.rb
