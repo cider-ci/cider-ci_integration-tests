@@ -54,7 +54,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
     click_on('Comprehensive')
     first('tr.trial a').click
     expect(all('li.script').map { |e| e['data-name'] }).to be == \
-      ['Root',  'Failing',  'Start when "failing" failed',  'Start when "failing" passed']
+      ['Root',  'Failing', 'Start when "failing" failed',  'Start when "failing" passed']
     expect(all('li.script').map { |e| e['data-state'] }).to be == \
       %w(passed failed passed skipped)
   end
@@ -67,7 +67,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
     click_on('Termination')
     first('tr.trial a').click
     expect(all('li.script').map { |e| e['data-name'] }).to be == \
-      ['Initial',  'Terminate when initial finished']
+      ['Initial', 'Terminate when initial finished']
     expect(all('li.script').map { |e| e['data-state'] }).to be == \
       %w(passed failed)
   end

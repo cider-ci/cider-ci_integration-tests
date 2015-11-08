@@ -10,7 +10,7 @@ jobs:
     context:
 
       script-defaults:
-        environment-variables_process-templates: true
+        template-environment-variables: true
         environment-variables:
           DISPLAY: ":{{XVNC_PORT}}"
         timeout: 300

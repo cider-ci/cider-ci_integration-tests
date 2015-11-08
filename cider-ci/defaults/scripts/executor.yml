@@ -8,6 +8,7 @@ configure-executor:
     config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
     config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
     config['nrepl']['enabled']=false
+    config['max_load']= 2
     File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
     File.open('executor/config/traits.yml','w') { |file| file.write ["bash", "linux"].to_yaml }
 

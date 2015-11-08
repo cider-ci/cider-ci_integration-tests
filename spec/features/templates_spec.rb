@@ -27,6 +27,5 @@ describe 'the job "Templates Demo"', type: :feature do
     expect(
       find('td', text: 'Test Recursive Templating').find(:xpath, '..')['data-state']
     ).to be == 'passed'
-
   end
 end

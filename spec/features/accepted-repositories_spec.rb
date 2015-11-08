@@ -4,7 +4,7 @@ require 'shared/push_and_pull'
 shared_examples :accepted_repositories do
   it 'The job will not be dispatched unless ' \
     'the git_url is one of the accepted ones' do
-    job_name = 'Environment Variables Demo'
+    job_name = 'Contexts Demo'
     sign_in_as 'adam'
     Helpers::DemoExecutor.set_accepted_repositories \
       ['http://nonsense.com/blah']

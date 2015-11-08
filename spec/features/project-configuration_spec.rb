@@ -49,7 +49,7 @@ describe 'Project-Configuration', type: :feature do
     end
   end
 
-  context 'the response of getting the project-configuration '  do
+  context 'the response of getting the project-configuration ' do
     context 'of master' do
       let :response do
         setup_demo_repo

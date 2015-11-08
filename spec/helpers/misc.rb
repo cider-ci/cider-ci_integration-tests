@@ -54,15 +54,17 @@ module Helpers
         .find('a,button', text: 'Run').click
     end
 
-    def wait_for_job_state(job_name, state, options = { wait_time:  60 })
+    def wait_for_job_state(job_name, state,
+      options = { wait_time:  60, forbidden_terminal_states: %w(passed failed aborted) - [state] })
       wait_until options[:wait_time] do
+        expect(options[:forbidden_terminal_states]).not_to include first(".job[data-name='#{job_name}']")['data-state']
         all(".job[data-name='#{job_name}'][data-state='#{state}']").present?
       end
     end
 
     def api_connection
       base_url = "#{Capybara.app_host}/cider-ci/api"
-      ::JSON_ROA::Client.connect base_url  do |conn|
+      ::JSON_ROA::Client.connect base_url do |conn|
         conn.basic_auth('adam', 'password')
         conn.ssl.verify = false
       end

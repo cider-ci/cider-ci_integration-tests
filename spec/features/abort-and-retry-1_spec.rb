@@ -20,7 +20,6 @@ describe 'Abort and retry a job', type: :feature do
     expect(all('ul.trials li.trial').map { |x| x['data-state'] } \
            .all? { |x| x == 'aborted' }).to be true
     click_on 'Retry & Resume'
-    wait_for_job_state abort_and_retry_job, 'passed', wait_time: 90
+    wait_for_job_state abort_and_retry_job, 'passed', wait_time: 90, forbidden_terminal_states: []
   end
-
 end

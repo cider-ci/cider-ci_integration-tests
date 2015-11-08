@@ -15,7 +15,6 @@ describe 'The workspace page', type: :feature do
     end
 
     describe 'by branches' do
-
       it 'by string' do
         expect(all('tr.commit').size).to be >= 1
         find('input#branch_name').set 'gabeldigoo'
@@ -36,8 +35,7 @@ describe 'The workspace page', type: :feature do
       end
     end
 
-    describe  'by repositories ' do
-
+    describe 'by repositories ' do
       it 'by string' do
         expect(all('tr.commit').size).to be >= 1
         find('input#repository_name').set 'gabeldigoo'
