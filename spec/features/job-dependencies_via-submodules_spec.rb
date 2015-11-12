@@ -15,7 +15,7 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
 
   before :each do
     Helpers::ConfigurationManagement.invoke_sql 'DELETE FROM jobs'
-    sign_in_as 'adam'
+    sign_in_as 'admin'
   end
 
   describe 'the dependent job' do

@@ -6,7 +6,7 @@ run-reverse-proxy:
     cd integration-tests
     LD_LIBRARY_PATH=/usr/lib/apache2/modules/ /usr/sbin/apache2 -d reverse-proxy/ -f conf/httpd.conf -e info -DFOREGROUND
   terminate-when:
-    - script: reverse-proxy-shutdown
+    - script: shutdown-reverse-proxy
       states: [aborted, passed, failed, skipped]
 
 

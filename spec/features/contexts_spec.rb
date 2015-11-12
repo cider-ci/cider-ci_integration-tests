@@ -5,7 +5,7 @@ describe 'the job "Contexts Demo"', type: :feature do
     setup_signin_waitforcommits
   end
   it 'passes, and includes the defined tasks' do
-    sign_in_as 'adam'
+    sign_in_as 'admin'
     run_job_on_last_commit 'Contexts Demo'
     wait_for_job_state 'Contexts Demo', 'passed'
 

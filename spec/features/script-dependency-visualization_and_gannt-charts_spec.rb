@@ -15,7 +15,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
   end
 
   before :each do
-    sign_in_as 'adam'
+    sign_in_as 'admin'
     visit @comprehensive_trial_path
   end
 

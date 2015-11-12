@@ -40,7 +40,7 @@ describe 'The workspace page', type: :feature do
     click_on_first 'Cider-CI'
     # we are on the public page
     sign_out
-    sign_in_as 'adam'
+    sign_in_as 'admin'
     # I have been redirected to My Workspace
     expect(page).to have_content 'My Workspace'
     # the previously set filters are active

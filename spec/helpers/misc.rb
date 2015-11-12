@@ -6,7 +6,7 @@ module Helpers
     def wait_until(wait_time = 60)
       Timeout.timeout(wait_time) do
         until value = yield
-          sleep(0.2)
+          sleep(1)
           visit current_url if current_url
         end
         value
@@ -27,7 +27,7 @@ module Helpers
       Helpers::DemoRepo.setup_demo_repo
       Helpers::DemoExecutor.configure_demo_executor
 
-      sign_in_as 'adam'
+      sign_in_as 'admin'
       wait_until { all('#commits-table tbody tr').count > 0 }
     end
 
@@ -65,7 +65,7 @@ module Helpers
     def api_connection
       base_url = "#{Capybara.app_host}/cider-ci/api"
       ::JSON_ROA::Client.connect base_url do |conn|
-        conn.basic_auth('adam', 'password')
+        conn.basic_auth('admin', 'secret')
         conn.ssl.verify = false
       end
     end

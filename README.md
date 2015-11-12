@@ -25,6 +25,13 @@ from `reverse-proxy/conf/httpd_example.conf`.
 
     LD_LIBRARY_PATH=/opt/local/apache2/modules/ /opt/local/apache2/bin/apachectl -d reverse-proxy -e info -DFOREGROUND
 
+### General
+
+We have seen issues of randomly terminating reverse proxies. Those can be
+bypassed by starting the proxy within an infinite loop:
+
+    while true; do LD_LIBRARY_PATH=/opt/local/apache2/modules/ /opt/local/apache2/bin/apachectl -d reverse-proxy -e info -DFOREGROUND; done
+
 
 ## Copyright and License
 

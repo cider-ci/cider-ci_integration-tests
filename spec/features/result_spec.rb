@@ -50,7 +50,7 @@ describe 'The Result', type: :feature do
 
   describe 'in the JSON-ROA API Browser' do
     it 'can be reached via its job and has the value and summary properties' do
-      sign_in_as 'adam'
+      sign_in_as 'admin'
       click_on 'API Browser'
       api_click_on_relation_method 'job', 'GET'
       api_continue_with_url_parameters({ id: @job_id }.to_json)

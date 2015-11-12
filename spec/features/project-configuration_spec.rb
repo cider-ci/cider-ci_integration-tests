@@ -81,7 +81,7 @@ describe 'Project-Configuration', type: :feature do
           message = 'Write bogus in cider-ci.json'
           demo_repo.commit(message)
           update_server_info demo_repo
-          sign_in_as 'adam'
+          sign_in_as 'admin'
           click_on_first 'Workspace'
           wait_until { page.has_content? message }
           tree_id = demo_repo.object('test').gtree.sha
@@ -111,7 +111,7 @@ describe 'Project-Configuration', type: :feature do
           message = 'Write bogus in cider-ci.yml'
           demo_repo.commit(message)
           update_server_info demo_repo
-          sign_in_as 'adam'
+          sign_in_as 'admin'
           click_on_first 'Workspace'
           wait_until { page.has_content? message }
           tree_id = demo_repo.object('test').gtree.sha
@@ -156,7 +156,7 @@ describe 'Project-Configuration', type: :feature do
         message = "Use #{path} as configfile"
         demo_repo.commit(message)
         update_server_info demo_repo
-        sign_in_as 'adam'
+        sign_in_as 'admin'
         click_on_first 'Workspace'
         wait_until { page.has_content? message }
         tree_id = demo_repo.object('test').gtree.sha
@@ -202,7 +202,7 @@ describe 'Project-Configuration', type: :feature do
         demo_repo.remove('cider-ci.yml')
         demo_repo.commit('Remove configuration file')
         update_server_info demo_repo
-        sign_in_as 'adam'
+        sign_in_as 'admin'
         click_on_first 'Workspace'
         wait_until { page.has_content? 'Remove configuration file' }
         tree_id = demo_repo.object('test').gtree.sha
@@ -227,7 +227,7 @@ describe 'Project-Configuration', type: :feature do
         demo_repo.remove('cider-ci/jobs/attachments.yml')
         demo_repo.commit('Remove include cider-ci/jobs/attachments.yml')
         update_server_info demo_repo
-        sign_in_as 'adam'
+        sign_in_as 'admin'
         click_on_first 'Workspace'
         wait_until { page.has_content? 'Remove include' }
         tree_id = demo_repo.object('test').gtree.sha

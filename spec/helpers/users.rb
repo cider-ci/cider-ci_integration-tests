@@ -2,14 +2,14 @@ module Helpers
   module Users
     def self.create_users
       Helpers::ConfigurationManagement.invoke_ruby \
-        'User.find_or_create_by(login: "adam", is_admin: true)' \
-        '.update_attributes!(password: "password")'
+        'User.find_or_create_by(login: "admin", is_admin: true)' \
+        '.update_attributes!(password: "secret")'
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "normin")' \
-        '.update_attributes!(password: "password")'
+        '.update_attributes!(password: "secret")'
     end
 
-    def sign_in_as(login, password = 'password')
+    def sign_in_as(login, password = 'secret')
       visit '/'
       sign_out if find('body')['data-user'].present?
       find("input[type='text']").set login

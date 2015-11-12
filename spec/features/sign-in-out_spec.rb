@@ -17,8 +17,8 @@ feature 'The public page, sign in and sign out', type: :feature do
 
   scenario 'Try to sign in with wrong login' do
     visit '/'
-    find("input[type='text']").set 'adamfaux'
-    find("input[type='password']").set 'password'
+    find("input[type='text']").set 'adminfaux'
+    find("input[type='password']").set 'secret'
     find("button[type='submit']").click
     expect(page).to have_content 'Neither login nor email address found'
   end
@@ -41,7 +41,7 @@ feature 'The public page, sign in and sign out', type: :feature do
     sign_out
     expect(page).to have_content '401 Unauthorized'
     find("input[type='text']").set 'normin@example.com'
-    find("input[type='password']").set 'password'
+    find("input[type='password']").set 'secret'
     find("button[type='submit']").click
     expect(page).to have_content 'been signed in'
   end

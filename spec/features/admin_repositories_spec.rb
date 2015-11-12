@@ -7,7 +7,7 @@ feature 'Admin manages Repositories', type: :feature do
   end
 
   scenario 'Create a repository, editing and deleting it' do
-    sign_in_as 'adam'
+    sign_in_as 'admin'
     visit '/'
     click_on 'Administration'
     click_on 'Repositories'

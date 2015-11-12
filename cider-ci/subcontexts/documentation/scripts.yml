@@ -1,0 +1,7 @@
+scripts:
+  _cider-ci_include:
+    - cider-ci/defaults/scripts/manage-xvnc.yml
+    - cider-ci/defaults/scripts/reverse-proxy.yml
+
+
+

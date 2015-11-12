@@ -5,7 +5,7 @@ describe 'the job "Templates Demo"', type: :feature do
     setup_signin_waitforcommits
   end
   it 'fails the "Test Missing Template" but passes all others' do
-    sign_in_as 'adam'
+    sign_in_as 'admin'
     run_job_on_last_commit 'Templates'
     wait_for_job_state 'Templates', 'failed'
 

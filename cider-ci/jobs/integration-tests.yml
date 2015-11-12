@@ -9,25 +9,10 @@ jobs:
 
     context:
 
-      script-defaults:
-        template-environment-variables: true
-        environment-variables:
-          DISPLAY: ":{{XVNC_PORT}}"
-        timeout: 300
-
-      task-defaults:
-
+      subcontexts:
         _cider-ci_include:
-          - cider-ci/defaults/misc.yml
-          - cider-ci/defaults/attachments.yml
-          - cider-ci/defaults/traits.yml
-          - cider-ci/defaults/ports.yml
-          - cider-ci/defaults/scripts.yml
+          - cider-ci/subcontexts/service-tests.yml
+          - cider-ci/subcontexts/documentation.yml
 
-      _cider-ci_generate-tasks:
-        include-match: spec/.*_spec.rb
 
-#      tasks:
-#        spec/features/admin/repositories_spec.rb:
-#          environment-variables:
-#            CIDER_CI_TASK_FILE: spec/features/builder/contexts_spec.rb
+

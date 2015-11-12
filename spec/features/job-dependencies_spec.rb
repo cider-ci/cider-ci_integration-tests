@@ -20,7 +20,7 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
   before :each do
     `#{Helpers::DemoRepo.delete_branch_cmd('trigger-prerequisite')}`
     Helpers::ConfigurationManagement.invoke_sql 'DELETE FROM jobs'
-    sign_in_as 'adam'
+    sign_in_as 'admin'
     # set_aggressive_reloading
     click_on_first 'Workspace'
   end
