@@ -5,9 +5,6 @@ create-rabbitmq-vhost:
     curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
       -H "content-type:application/json" \
       -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/cider-ci_test_${CIDER_CI_TRIAL_ID}"
-    curl --fail --silent --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
-      -H "content-type:application/json" \
-      "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/vhosts/" | python -m json.tool
     curl --fail --silent --include --user "$RABBITMQ_USER:$RABBITMQ_PASSWORD" \
       -H "content-type:application/json" \
       -XPUT "http://localhost:${RABBITMQ_MANAGEMENT_PORT}/api/permissions/cider-ci_test_${CIDER_CI_TRIAL_ID}/${RABBITMQ_USER}" \

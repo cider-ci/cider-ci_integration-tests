@@ -33,3 +33,15 @@ shared_context :run_in_push_and_pull_mode do |example|
     include_examples example
   end
 end
+
+shared_context :run_in_push_mode do |example|
+  before :each do
+    setup_signin_waitforcommits
+  end
+
+  describe 'push mode' do
+    include_context :executor_push_mode
+    include_examples example
+  end
+
+end
