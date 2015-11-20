@@ -3,10 +3,12 @@ module Helpers
     def self.create_users
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "admin", is_admin: true)' \
-        '.update_attributes!(password: "secret")'
+        '.update_attributes!(password: "secret", '\
+        ' first_name: "Adam", last_name: "Ambassador")'
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "normin")' \
-        '.update_attributes!(password: "secret")'
+        '.update_attributes!(password: "secret", ' \
+        ' first_name: "Normin", last_name: "Normalo")'
     end
 
     def sign_in_as(login, password = 'secret')
