@@ -4,7 +4,7 @@ shared_context :executor_push_mode do
     fail 'Executor is not in push mode!' unless \
       JSON.parse(Helpers::ConfigurationManagement \
         .invoke_ruby('Executor.first.base_url')) \
-        .with_indifferent_access[:result].present?
+      .with_indifferent_access[:result].present?
   end
 end
 
@@ -16,7 +16,7 @@ shared_context :executor_pull_mode do
     fail 'Executor is not in pull mode!' unless \
       JSON.parse(Helpers::ConfigurationManagement \
         .invoke_ruby('Executor.first.base_url')) \
-        .with_indifferent_access[:result].blank?
+      .with_indifferent_access[:result].blank?
   end
 end
 
@@ -45,5 +45,4 @@ shared_context :run_in_push_mode do |example|
     include_context :executor_push_mode
     include_examples example
   end
-
 end
