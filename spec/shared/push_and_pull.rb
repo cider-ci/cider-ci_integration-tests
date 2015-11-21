@@ -2,8 +2,9 @@ shared_context :executor_push_mode do
   before :each do
     Helpers::DemoExecutor.configure_demo_executor
     fail 'Executor is not in push mode!' unless \
-      Helpers::ConfigurationManagement.invoke_ruby(
-        'Executor.first.base_url').present?
+      JSON.parse(Helpers::ConfigurationManagement \
+        .invoke_ruby('Executor.first.base_url')) \
+        .with_indifferent_access[:result].present?
   end
 end
 
@@ -13,8 +14,9 @@ shared_context :executor_pull_mode do
     Helpers::ConfigurationManagement.invoke_ruby(
       'Executor.first.update_attributes! base_url: nil')
     fail 'Executor is not in pull mode!' unless \
-      Helpers::ConfigurationManagement.invoke_ruby(
-        'Executor.first.base_url').blank?
+      JSON.parse(Helpers::ConfigurationManagement \
+        .invoke_ruby('Executor.first.base_url')) \
+        .with_indifferent_access[:result].blank?
   end
 end
 

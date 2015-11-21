@@ -22,7 +22,7 @@ module Helpers
     end
 
     def setup_signin_waitforcommits
-      Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables()'
+      Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
       Helpers::Users.create_users
       Helpers::DemoRepo.setup_demo_repo
       Helpers::DemoExecutor.configure_demo_executor

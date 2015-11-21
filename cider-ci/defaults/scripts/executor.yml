@@ -48,8 +48,11 @@ executor-is-running:
     - script: run-executor
       states: [executing]
   terminate-when:
-    - script: shutdown
-      states: [aborted, passed, failed, skipped]
+    - script: run-executor
+      states: [aborted, failed, skipped]
+    - script: compile-executor
+      states: [aborted, failed, skipped]
+
 
 shutdown-executor:
   body: |
