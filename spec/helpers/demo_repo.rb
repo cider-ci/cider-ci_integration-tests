@@ -2,7 +2,9 @@ module Helpers
   module DemoRepo
     class << self
       def git_url
-        "#{Dir.pwd}/../demo-project-bash/"
+        Pathname(
+          "#{Dir.pwd}/../demo-project-bash/"
+        ).cleanpath.to_s
       end
 
       def setup_demo_repo

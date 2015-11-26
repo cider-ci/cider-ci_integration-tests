@@ -3,11 +3,15 @@ require 'json_roa/client'
 
 module Helpers
   module Misc
+    extend self
+
     def wait_until(wait_time = 60)
       Timeout.timeout(wait_time) do
         until value = yield
           sleep(1)
-          visit current_url if current_url
+          if (defined? current_url) && current_url
+            visit current_url
+          end
         end
         value
       end
@@ -21,12 +25,15 @@ module Helpers
       "/cider-ci/ui/workspace/jobs/#{id}"
     end
 
-    def setup_signin_waitforcommits
+    def reset_and_configure
       Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
       Helpers::Users.create_users
       Helpers::DemoRepo.setup_demo_repo
       Helpers::DemoExecutor.configure_demo_executor
+    end
 
+    def setup_signin_waitforcommits
+      reset_and_configure
       sign_in_as 'admin'
       wait_until { all('#commits-table tbody tr').count > 0 }
     end
