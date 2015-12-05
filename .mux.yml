@@ -1,17 +1,9 @@
-
 windows:
-  - name: "Apache2"
-    id: 2
+  2:
+    name: apache2
     command: |
       while true; do
         LD_LIBRARY_PATH=/opt/local/apache2/modules/ /opt/local/apache2/bin/apachectl -d reverse-proxy -e info -DFOREGROUND;
       done
-  - id: 4
-    name: vim
-    command: |
-      vim
-    post_command_send_keys:
-      \\n
-  - id: 7
+  7:
     name: test
-    command: bundle exec rspec spec
