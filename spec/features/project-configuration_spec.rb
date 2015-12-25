@@ -8,10 +8,22 @@ describe 'Project-Configuration', type: :feature do
     setup_signin_waitforcommits
   end
 
+  let :demo_repo_index_file do
+    if File.exists? '../.git/modules/demo-project-bash/index'
+      '../.git/modules/demo-project-bash/index'
+    end
+  end
+
+  let :demo_repo_repository do
+    if Dir.exists? '../.git/modules/demo-project-bash'
+      '../.git/modules/demo-project-bash'
+    end
+  end
+
   let :demo_repo do
     Git.open('../demo-project-bash',
-             repository: '../.git/modules/demo-project-bash',
-             index: '../.git/modules/demo-project-bash/index')
+             repository: demo_repo_repository,
+             index: demo_repo_index_file)
   end
 
   let :config_files do
