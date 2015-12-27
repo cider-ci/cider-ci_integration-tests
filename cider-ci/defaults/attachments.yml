@@ -1,34 +1,13 @@
 trial-attachments:
   screenshots:
-    glob: 'integration-tests/tmp/*.png'
+    include-match: 'integration-tests\/tmp\/.+\.png$'
     content-type: image/png
-  builder-logs:
-    glob: 'builder/log/*.log'
-    content-type: text/plain
-  executor-logs:
-    glob: 'executor/log/*.log'
-    content-type: text/plain
-  dispatcher-logs:
-    glob: 'dispatcher/log/*.log'
-    content-type: text/plain
-  repository-logs:
-    glob: 'repository/log/*.log'
-    content-type: text/plain
-  storage-logs:
-    glob: 'storage/log/*.log'
-    content-type: text/plain
-  ui-logs:
-    glob: 'user-interface/log/*.log'
+  logs:
+    include-match: '\/logs?\/.+\.log$'
     content-type: text/plain
   config:
-    glob: 'config/*.yml'
-    content-type: text/yaml
-  executor-config:
-    glob: 'executor/config/*.yml'
+    include-match: 'config\/.+\.ya?ml$'
     content-type: text/yaml
   reverse-proxy-config:
-    glob: 'integration-tests/reverse-proxy/conf/*conf'
-    content-type: text/plain
-  reverse-proxy-logs:
-    glob: 'integration-tests/reverse-proxy/logs/*log'
+    include-match: 'integration-tests\/reverse-proxy\/conf/.+\.conf$'
     content-type: text/plain

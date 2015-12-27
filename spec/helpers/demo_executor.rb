@@ -8,7 +8,8 @@ module Helpers
         Helpers::ConfigurationManagement.invoke_ruby \
           'Executor.find_or_initialize_by(name: "DemoExecutor", ' \
               'id: "35cff40c-b4f8-4ca3-9217-d49c9c35f375")' \
-          ".update_attributes!(base_url: 'http://localhost:#{port}') "
+          ".update_attributes!(base_url: 'http://localhost:#{port}'" \
+          ", upload_tree_attachments: true)"
       end
 
       def set_accepted_repositories(repos)
