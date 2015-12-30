@@ -9,9 +9,9 @@ module Helpers
       Timeout.timeout(wait_time) do
         until value = yield
           sleep(1)
-          if (defined? current_url) && current_url
-            visit current_url
-          end
+          # if (defined? current_url) && current_url
+          #   visit current_url
+          # end
         end
         value
       end
