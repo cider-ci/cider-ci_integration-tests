@@ -9,4 +9,4 @@ else
   lein compile
   mv target "${LEIN_CACHE_DIR}"
 fi
-cp -r "${LEIN_CACHE_DIR}" target
+cp -a "${LEIN_CACHE_DIR}" target
