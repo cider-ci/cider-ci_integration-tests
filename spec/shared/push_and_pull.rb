@@ -1,4 +1,4 @@
-shared_context :executor_push_mode do
+shared_context :dispatcher_push_mode do
   before :each do
     Helpers::DemoExecutor.configure_demo_executor
     fail 'Executor is not in push mode!' unless \
@@ -25,13 +25,13 @@ shared_context :run_in_push_and_pull_mode do |example|
     setup_signin_waitforcommits
   end
 
-  describe 'pull mode' do
+  describe 'executor pull mode' do
     include_context :executor_pull_mode
     include_examples example
   end
 
-  describe 'push mode' do
-    include_context :executor_push_mode
+  describe 'dispatcher push mode' do
+    include_context :dispatcher_push_mode
     include_examples example
   end
 end
@@ -42,7 +42,21 @@ shared_context :run_in_push_mode do |example|
   end
 
   describe 'push mode' do
-    include_context :executor_push_mode
+    include_context :dispatcher_push_mode
     include_examples example
   end
 end
+
+
+
+shared_context :run_in_executor_pull_mode do |example|
+  before :each do
+    setup_signin_waitforcommits
+  end
+
+  describe 'executor pull mode' do
+    include_context :executor_pull_mode
+    include_examples example
+  end
+end
+
