@@ -46,7 +46,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
     ).to be == 'failed'
   end
 
-  it 'the scripts for the task "Comprehensive" are in proper order and state' do
+  it 'the scripts for the task "Comprehensive" are in proper order and state', driver: :selenium do
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
@@ -59,7 +59,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
       %w(passed failed passed skipped)
   end
 
-  it 'the scripts for the task "Termination" are in proper order and state' do
+  it 'the scripts for the task "Termination" are in proper order and state', driver: :selenium  do
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
