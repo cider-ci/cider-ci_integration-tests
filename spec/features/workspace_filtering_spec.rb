@@ -79,11 +79,11 @@ describe 'The workspace page', type: :feature do
 
       find('input#branch_name').set 'master'
       find('select#depth').select('Any depth')
-      find('select#per_page').select('5 Per page')
+      find('select#per_page').select('3 Per page')
       click_on 'Filter'
       expect(page).to have_content '0 master'
-      expect(page).to have_content '4 master'
-      expect(page).not_to have_content '5 master'
+      expect(page).to have_content '2 master'
+      expect(page).not_to have_content '3 master'
 
       find('input#branch_name').set 'master'
       find('select#depth').select('Any depth')
