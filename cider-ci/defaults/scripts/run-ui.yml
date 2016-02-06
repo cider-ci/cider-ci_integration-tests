@@ -5,22 +5,12 @@ bundle-ui:
     cd user-interface
     bundle
 
-precompile-assets:
-  exclusive-executor-resource: precompile-assets
-  body: |
-    set -eux
-    cd user-interface
-    ${CIDER_CI_WORKING_DIR}/integration-tests/cider-ci/bin/precompile-assets-with-caching.sh
-  start-when:
-    - script: bundle-ui
-
 run-ui:
   body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
   start-when:
     - script: bundle-ui
     - script: create-database
     - script: create-rabbitmq-vhost
-    - script: precompile-assets
   terminate-when:
     - script: shutdown-ui
       states: [aborted, passed, failed, skipped]
