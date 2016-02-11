@@ -69,9 +69,8 @@ RSpec.configure do |config|
   end
 
   def set_browser example
-    #Capybara.current_driver = :selenium
-    Capybara.current_driver = \
-      example.metadata[:driver] || :poltergeist rescue :poltergeist
+    # Capybara.current_driver = :selenium
+    Capybara.current_driver = example.metadata[:driver] || :poltergeist rescue :poltergeist
   end
 
   # rspec-expectations config goes here. You can use an alternate

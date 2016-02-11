@@ -17,17 +17,19 @@ feature 'The public page, sign in and sign out', type: :feature do
 
   scenario 'Try to sign in with wrong login' do
     visit '/'
-    find("input[type='text']").set 'adminfaux'
-    find("input[type='password']").set 'secret'
-    find("button[type='submit']").click
+    click_on 'Sign in with password'
+    find("form#password-sign-in  input[type='text']").set 'adminfaux'
+    find("form#password-sign-in  input[type='password']").set 'secret'
+    find("form#password-sign-in  button[type='submit']").click
     expect(page).to have_content 'Neither login nor email address found'
   end
 
   scenario 'Sign-in with wrong password' do
     visit '/' unless current_path
-    find("input[type='text']").set 'normin'
-    find("input[type='password']").set 'bogus password'
-    find("button[type='submit']").click
+    click_on 'Sign in with password'
+    find("form#password-sign-in input[type='text']").set 'normin'
+    find("form#password-sign-in input[type='password']").set 'bogus password'
+    find("form#password-sign-in button[type='submit']").click
     expect(page).to have_content 'authentication failed'
   end
 
@@ -40,9 +42,10 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).to have_content 'address has been added'
     sign_out
     expect(page).to have_content '401 Unauthorized'
-    find("input[type='text']").set 'normin@example.com'
-    find("input[type='password']").set 'secret'
-    find("button[type='submit']").click
+    click_on 'Sign in with password'
+    find("form#password-sign-in input[type='text']").set 'normin@example.com'
+    find("form#password-sign-in input[type='password']").set 'secret'
+    find("form#password-sign-in button[type='submit']").click
     expect(page).to have_content 'been signed in'
   end
 end

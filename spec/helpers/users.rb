@@ -4,21 +4,22 @@ module Helpers
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "admin", is_admin: true)' \
         '.update_attributes!(password: "secret",' \
-        ' first_name: "Adam", last_name: "Ambassador",' \
+        ' name: "Adam Ambassador",' \
         ' reload_frequency: "aggressive")'
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "normin")' \
         '.update_attributes!(password: "secret",' \
-        ' first_name: "Normin", last_name: "Normalo",'\
+        ' name: "Normin Normalo",'\
         ' reload_frequency: "aggressive")'
     end
 
     def sign_in_as(login, password = 'secret')
       visit '/'
       sign_out if find('body')['data-user'].present?
-      find("input[type='text']").set login
-      find("input[type='password']").set password
-      find("button[type='submit']").click
+      click_on 'Sign in with password'
+      find("form#password-sign-in input[type='text']").set login
+      find("form#password-sign-in input[type='password']").set password
+      find("form#password-sign-in button[type='submit']").click
     end
 
     def set_aggressive_reloading
