@@ -51,6 +51,9 @@ CALLBACK_URL = "http://localhost:" \
    << (ENV['REVERSE_PROXY_HTTP_PORT'].presence || '8888') \
    << '/cider-ci/ui/public/auth_provider/github/sign_in'
 
+get '/status' do
+  "OK"
+end
 
 get '/login/oauth/authorize' do
   halt(422, "No such client") unless params[:client_id] == CLIENT_ID

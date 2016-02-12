@@ -11,6 +11,19 @@ run_github-api-mock:
     - script: shutdown_github-api-mock
       states: [aborted, passed, failed, skipped]
 
+github-api-mock_is-serving:
+  timeout: 30 seconds
+  start-when:
+    - script: run_github-api-mock
+      states: [executing]
+  body: |
+    #!/usr/bin/env bash
+    set -ux
+    until curl --silent --fail -I "http://localhost:${GITHUB_API_MOCK_PORT}/status" ; do
+      sleep 1;
+    done
+
+
 shutdown_github-api-mock:
   timeout: 5
   body: |

@@ -17,15 +17,17 @@ test:
     cd integration-tests
     bundle exec rspec $CIDER_CI_TASK_FILE
   start-when:
-  - script: repack-demo-repo
-  - script: start-xvnc
-  - script: bundle
-  - script: executor-is-running
   - script: api-is-running
   - script: builder-is-running
+  - script: bundle
   - script: dispatcher-is-running
+  - script: executor-is-running
+  - script: github-api-mock_is-serving
+  - script: repack-demo-repo
   - script: repository-is-running
-  - script: storage-is-running
-  - script: ui-is-running
   - script: run-reverse-proxy
     states: ['executing']
+  - script: start-xvnc
+  - script: storage-is-running
+  - script: ui-is-running
+
