@@ -15,6 +15,7 @@ USERS = {
     id: 1,
     email: 'adam.admin@bogus.com',
     access_token: 'the-access-token-for-adam',
+    name: "Adam Admin",
     emails: [
       {email: 'adam.admin@example.com',
        verified: true}
@@ -22,13 +23,26 @@ USERS = {
   },
   normin: {
     login: 'normin',
-    id: 1,
+    id: 2,
     email: 'normin.normalo@bogus.com',
+    name: "Normin Normalo",
     access_token: 'the-access-token-for-normin',
+    emails: [
+    ]
+  },
+  silvan: {
+    login: 'silvan',
+    id: 3,
+    email: 'silvan.stranger@bogus.com',
+    name: "Silvan Strange",
+    access_token: 'the-access-token-for-silvan',
     emails: [
     ]
   }}.with_indifferent_access
 
+ORGS = {
+  "TestOrg": [:normin]
+}
 
 USER = USERS[(ENV['GITHUB_MOCK_USER'].presence || 'adam')]
 
@@ -100,6 +114,10 @@ get '/users/:user' do
       user.slice(:login,:id,:email).to_json
     end
   end
+end
+
+get '/orgs/TestOrg/members/normin' do
+  halt(204,"")
 end
 
 
