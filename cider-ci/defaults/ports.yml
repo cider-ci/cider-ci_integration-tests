@@ -3,6 +3,10 @@ ports:
     inet_address: "localhost"
     min: 5900
     max: 5999
+  GITHUB_API_MOCK_PORT:
+    inet_address: "localhost"
+    min: 8000
+    max: 8999
   EXECUTOR_HTTP_PORT:
     inet_address: "localhost"
     min: 4100

@@ -1,7 +1,7 @@
 require "addressable/uri"
 require 'sinatra'
 require 'pry'
-require 'JSON'
+require 'json'
 require 'active_support/all'
 require 'haml'
 
