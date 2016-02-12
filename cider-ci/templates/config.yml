@@ -1,0 +1,15 @@
+github_authtoken: the-global-github-auth-token
+
+authentication_providers:
+- name: GitHubMock
+  id: github
+  key: the-client-id
+  secret: the-client-secret
+  oauth_base_url: http://localhost:{{GITHUB_API_MOCK_PORT}}/login/oauth
+  api_endpoint: http://localhost:{{GITHUB_API_MOCK_PORT}}
+  accepted_email_addresses:
+  - email_address: adam.admin@example.com
+    admin: true
+  accepted_organization_memberships:
+  - login: TestOrg
+    access_token: the-test-org-access-token

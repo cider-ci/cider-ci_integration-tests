@@ -12,3 +12,6 @@ environment-variables:
 templates:
   - src: [integration-tests, cider-ci, templates, httpd.conf]
     dest: [integration-tests, reverse-proxy, conf, httpd.conf]
+
+  - src: [integration-tests, cider-ci, templates, config.yml]
+    dest: [config, config.yml]
