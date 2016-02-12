@@ -3,10 +3,10 @@ require 'sinatra'
 require 'pry'
 require 'JSON'
 require 'active_support/all'
+require 'haml'
 
 CLIENT_ID = 'the-client-id'
 CLIENT_SECRET = 'the-client-secret'
-CODE = 'the-code'
 
 
 USERS = {
@@ -21,9 +21,9 @@ USERS = {
     ]
   },
   normin: {
-    login: 'adam',
+    login: 'normin',
     id: 1,
-    email: 'adam.admin@bogus.com',
+    email: 'normin.normalo@bogus.com',
     access_token: 'the-access-token-for-normin',
     emails: [
     ]
@@ -40,17 +40,36 @@ CALLBACK_URL = "http://localhost:" \
 
 get '/login/oauth/authorize' do
   halt(422, "No such client") unless params[:client_id] == CLIENT_ID
+
+
+  html= USERS.map do |k,v|
+    Haml::Engine.new(
+      <<-HAML.strip_heredoc
+      %form{method: 'POST'}
+        %input{type: 'hidden', name: 'login', value: '#{v[:login]}'}
+        %button{type: 'submit'}
+          Sign in as #{v[:login]}
+      %hr
+      HAML
+      ).render
+  end.join("\n")
+
+  html
+end
+
+post '/login/oauth/authorize' do
   uri = Addressable::URI.parse(CALLBACK_URL)
-  uri.query_values = {state: params[:state], code: CODE}
+  uri.query_values = {state: params[:state], code: params[:login]}
   redirect(uri.to_s , 303)
 end
 
+
 post '/login/oauth/access_token' do
-  halt(403, "CODE missmatch") unless params[:code] == CODE
+  halt(403, "CODE missmatch") unless USERS[params[:code]]
   halt(403, "CLIENT_ID missmatch") unless params[:client_id] == CLIENT_ID
   halt(403, "CLIENT_SECRET missmatch") unless params[:client_secret] == CLIENT_SECRET
   content_type 'application/json'
-  {access_token: USER['access_token']}.to_json
+  {access_token: USERS[params[:code]]['access_token']}.to_json
 end
 
 get '/user' do
