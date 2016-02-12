@@ -35,5 +35,5 @@ configure:
     # ui
     config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
     #
-    File.open('config/config.yml','w') { |file| file.write config.to_yaml }
+    File.open('config/config_default.yml','w') { |file| file.write config.to_yaml }
 
