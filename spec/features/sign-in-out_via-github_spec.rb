@@ -16,7 +16,7 @@ feature 'The public page, sign in and sign out', type: :feature do
      .invoke_ruby('User.all')).with_indifferent_access[:result]
 
     expect(users.count).to be==1
-    expect(users.first[:login]).to be== 'adam'
+    expect(users.first[:login]).to be== 'adam@GitHubMock'
     expect(users.first[:is_admin]).to be==  true
   end
 
@@ -31,7 +31,7 @@ feature 'The public page, sign in and sign out', type: :feature do
      .invoke_ruby('User.all')).with_indifferent_access[:result]
 
     expect(users.count).to be==1
-    expect(users.first[:login]).to be== 'normin'
+    expect(users.first[:login]).to be== 'normin@GitHubMock'
     expect(users.first[:is_admin]).to be==  false
   end
 

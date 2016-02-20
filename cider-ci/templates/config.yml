@@ -1,18 +1,18 @@
 github_authtoken: the-global-github-auth-token
 
 authentication_providers:
+
   github:
     name: GitHubMock
     client_id: the-client-id
     client_secret: the-client-secret
-    api_endpoint: http://localhost:8891
-    oauth_base_url: http://localhost:8891/login/oauth
+    api_endpoint: http://localhost:{{GITHUB_API_MOCK_PORT}}
+    oauth_base_url: http://localhost:{{GITHUB_API_MOCK_PORT}}/login/oauth
 
 
     ### sign-in_strategies ######################################################
-    # first match will be used:
-    #   * order with most permissive restrictions first.
-    # `overrides` update user properties on every sign-in
+    # First match will be used => order strategies with most permissive
+    # properties first.
     #############################################################################
 
     sign-in_strategies:
@@ -57,16 +57,3 @@ authentication_providers:
         update-attributes:
           is_enabled: true
 
-#authentication_providers:
-#- name: GitHubMock
-#  id: github
-#  key: the-client-id
-#  secret: the-client-secret
-#  oauth_base_url: http://localhost:{{GITHUB_API_MOCK_PORT}}/login/oauth
-#  api_endpoint: http://localhost:{{GITHUB_API_MOCK_PORT}}
-#  accepted_email_addresses:
-#  - email_address: adam.admin@example.com
-#    admin: true
-#  accepted_organization_memberships:
-#  - login: TestOrg
-#    access_token: the-test-org-access-token
