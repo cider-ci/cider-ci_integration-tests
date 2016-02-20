@@ -1,15 +1,72 @@
 github_authtoken: the-global-github-auth-token
 
 authentication_providers:
-- name: GitHubMock
-  id: github
-  key: the-client-id
-  secret: the-client-secret
-  oauth_base_url: http://localhost:{{GITHUB_API_MOCK_PORT}}/login/oauth
-  api_endpoint: http://localhost:{{GITHUB_API_MOCK_PORT}}
-  accepted_email_addresses:
-  - email_address: adam.admin@example.com
-    admin: true
-  accepted_organization_memberships:
-  - login: TestOrg
-    access_token: the-test-org-access-token
+  github:
+    name: GitHubMock
+    client_id: the-client-id
+    client_secret: the-client-secret
+    api_endpoint: http://localhost:8891
+    oauth_base_url: http://localhost:8891/login/oauth
+
+
+    ### sign-in_strategies ######################################################
+    # first match will be used:
+    #   * order with most permissive restrictions first.
+    # `overrides` update user properties on every sign-in
+    #############################################################################
+
+    sign-in_strategies:
+
+      ### email-addresses #######################################################
+      # * honors any verified email addresses associated with the user
+      # * does not require  any team or organization membership
+      # * sign-in is faster compared to organization or team membership
+      - type: email-addresses
+        email-addresses:
+          - adam.admin@example.com
+        create-attributes:
+          is_admin: true
+          is_enabled: true
+          password_sign_in: true
+          max_session_lifetime: 7 days
+
+      ### team-membership #######################################################
+      # Members of the "Admin" group are automatically promoted to to Cider-CI
+      # admins.
+      - type: team-membership
+        organization-login: TestOrg
+        team-name: Admins
+        create-attributes:
+          is_admin: true
+          is_enabled: true
+          password_sign_in: true
+          max_session_lifetime: 3 days
+        update-attributes:
+          is_admin: true
+          is_enabled: true
+
+      ### organization-membership ###############################################
+      # Members of the "TestOrg" organization can sign-in.
+      - type: organization-membership
+        organization-login: TestOrg
+        create-attributes:
+          is_admin: false
+          is_enabled: true
+          password_sign_in: false
+          max_session_lifetime: 1 day
+        update-attributes:
+          is_enabled: true
+
+#authentication_providers:
+#- name: GitHubMock
+#  id: github
+#  key: the-client-id
+#  secret: the-client-secret
+#  oauth_base_url: http://localhost:{{GITHUB_API_MOCK_PORT}}/login/oauth
+#  api_endpoint: http://localhost:{{GITHUB_API_MOCK_PORT}}
+#  accepted_email_addresses:
+#  - email_address: adam.admin@example.com
+#    admin: true
+#  accepted_organization_memberships:
+#  - login: TestOrg
+#    access_token: the-test-org-access-token
