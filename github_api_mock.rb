@@ -1,13 +1,12 @@
-require "addressable/uri"
+require 'addressable/uri'
 require 'sinatra'
 require 'pry'
 require 'json'
 require 'active_support/all'
 require 'haml'
 
-CLIENT_ID = 'the-client-id'
-CLIENT_SECRET = 'the-client-secret'
-
+CLIENT_ID = 'the-client-id'.freeze
+CLIENT_SECRET = 'the-client-secret'.freeze
 
 USERS = {
   adam: {
@@ -15,17 +14,17 @@ USERS = {
     id: 1,
     email: 'adam.admin@bogus.com',
     access_token: 'the-access-token-for-adam',
-    name: "Adam Admin",
+    name: 'Adam Admin',
     emails: [
-      {email: 'adam.admin@example.com',
-       verified: true}
+      { email: 'adam.admin@example.com',
+        verified: true }
     ]
   },
   normin: {
     login: 'normin',
     id: 2,
     email: 'normin.normalo@bogus.com',
-    name: "Normin Normalo",
+    name: 'Normin Normalo',
     access_token: 'the-access-token-for-normin',
     emails: [
     ]
@@ -34,32 +33,40 @@ USERS = {
     login: 'silvan',
     id: 3,
     email: 'silvan.stranger@bogus.com',
-    name: "Silvan Strange",
+    name: 'Silvan Strange',
     access_token: 'the-access-token-for-silvan',
     emails: [
     ]
-  }}.with_indifferent_access
+  },
+  tessa: {
+    login: 'tessa',
+    email: 'tessa.team@bogus.com',
+    name: 'Tessa Team',
+    access_token: 'the-access-token-for-tessa',
+    emails: [
+    ]
+  } }.with_indifferent_access
 
 ORGS = {
   "TestOrg": [:normin]
-}
+}.freeze
 
 USER = USERS[(ENV['GITHUB_MOCK_USER'].presence || 'adam')]
 
-
-CALLBACK_URL = "http://localhost:" \
+CALLBACK_URL = 'http://localhost:' \
    << (ENV['REVERSE_PROXY_HTTP_PORT'].presence || '8888') \
    << '/cider-ci/ui/public/auth_provider/github/sign_in'
 
 get '/status' do
-  "OK"
+  'OK'
 end
 
+### Oauth #####################################################################
+
 get '/login/oauth/authorize' do
-  halt(422, "No such client") unless params[:client_id] == CLIENT_ID
+  halt(422, 'No such client') unless params[:client_id] == CLIENT_ID
 
-
-  html= USERS.map do |k,v|
+  html = USERS.map do |k, v|
     Haml::Engine.new(
       <<-HAML.strip_heredoc
       %form{method: 'POST'}
@@ -68,7 +75,7 @@ get '/login/oauth/authorize' do
           Sign in as #{v[:login]}
       %hr
       HAML
-      ).render
+    ).render
   end.join("\n")
 
   html
@@ -76,31 +83,32 @@ end
 
 post '/login/oauth/authorize' do
   uri = Addressable::URI.parse(CALLBACK_URL)
-  uri.query_values = {state: params[:state], code: params[:login]}
-  redirect(uri.to_s , 303)
+  uri.query_values = { state: params[:state], code: params[:login] }
+  redirect(uri.to_s, 303)
 end
-
 
 post '/login/oauth/access_token' do
-  halt(403, "CODE missmatch") unless USERS[params[:code]]
-  halt(403, "CLIENT_ID missmatch") unless params[:client_id] == CLIENT_ID
-  halt(403, "CLIENT_SECRET missmatch") unless params[:client_secret] == CLIENT_SECRET
+  halt(403, 'CODE missmatch') unless USERS[params[:code]]
+  halt(403, 'CLIENT_ID missmatch') unless params[:client_id] == CLIENT_ID
+  halt(403, 'CLIENT_SECRET missmatch') unless params[:client_secret] == CLIENT_SECRET
   content_type 'application/json'
-  {access_token: USERS[params[:code]]['access_token']}.to_json
+  { access_token: USERS[params[:code]]['access_token'] }.to_json
 end
+
+### User ######################################################################
 
 get '/user' do
   unless user = find_user_by_access_token(params[:access_token])
-    halt(404,"")
+    halt(404, '')
   else
     content_type 'application/json'
-    user.slice(:login,:id,:email).to_json
+    user.slice(:login, :id, :email).to_json
   end
 end
 
 get '/user/emails' do
   unless user = find_user_by_access_token(params[:access_token])
-    halt(404,"")
+    halt(404, '')
   else
     content_type 'application/json'
     user[:emails].to_json
@@ -109,21 +117,51 @@ end
 
 get '/users/:user' do
   unless user = USERS[params[:user]]
-    halt(404,"User not found")
+    halt(404, 'User not found')
     unless user['access_token'] == params[:access_token]
-      halt(403, "Wrong Access Token")
+      halt(403, 'Wrong Access Token')
     else
       content_type 'application/json'
-      user.slice(:login,:id,:email).to_json
+      user.slice(:login, :id, :email).to_json
     end
   end
 end
 
+### Org  ######################################################################
+
 get '/orgs/TestOrg/members/normin' do
-  halt(204,"")
+  halt(204, '')
 end
 
+### Team ######################################################################
 
-def find_user_by_access_token access_token
-  USERS.find{|k,v| v['access_token'] == access_token }.try(:second)
+get '/orgs/:org/teams' do
+  content_type 'application/json'
+  if params[:org] == 'TestOrg'
+    [{ id: 'admin_team_id',
+       name: 'Admins' }].to_json
+  else
+    [].to_json
+  end
+end
+
+get '/teams/:id/memberships/:username' do
+  content_type 'application/json'
+  if params[:id] == 'admin_team_id'
+    if params[:username] == 'tessa'
+      { role: 'member',
+        state: 'active'
+      }.to_json
+    else
+      halt(404, '{}')
+    end
+  else
+    halt(404, '{}')
+  end
+end
+
+### ORG  ######################################################################
+
+def find_user_by_access_token(access_token)
+  USERS.find { |k, v| v['access_token'] == access_token }.try(:second)
 end
