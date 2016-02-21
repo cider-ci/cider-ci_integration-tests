@@ -26,8 +26,8 @@ authentication_providers:
           - adam.admin@example.com
         create-attributes:
           is_admin: true
-          is_enabled: true
-          password_sign_in: true
+          account_enabled: true
+          password_sign_in_allowed: true
           max_session_lifetime: 7 days
 
       ### team-membership #######################################################
@@ -38,12 +38,12 @@ authentication_providers:
         team-name: Admins
         create-attributes:
           is_admin: true
-          is_enabled: true
-          password_sign_in: true
+          account_enabled: true
+          password_sign_in_allowed: true
           max_session_lifetime: 3 days
         update-attributes:
           is_admin: true
-          is_enabled: true
+          account_enabled: true
 
       ### organization-membership ###############################################
       # Members of the "TestOrg" organization can sign-in.
@@ -51,9 +51,9 @@ authentication_providers:
         organization-login: TestOrg
         create-attributes:
           is_admin: false
-          is_enabled: true
-          password_sign_in: false
+          account_enabled: true
+          password_sign_in_allowed: false
           max_session_lifetime: 1 day
         update-attributes:
-          is_enabled: true
+          account_enabled: true
 
