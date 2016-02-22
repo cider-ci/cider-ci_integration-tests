@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'The public page, sign in and sign out', type: :feature do
-  before :all do
+  before :each do
     Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
     Helpers::Users.create_users
   end
@@ -12,6 +12,29 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).to have_content 'normin'
     sign_out
     expect(page).to have_content 'been signed out'
+    expect(page).not_to have_content 'normin'
+  end
+
+  scenario 'Trying to sign-in by password when password '\
+    'sign-in is not allowed fails.' do
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(
+      password_sign_in_allowed: false)
+    EOS
+    sign_in_as 'normin'
+    expect(page).to have_content \
+      'Password authentication is not allowed for this account!'
+    expect(page).not_to have_content 'normin'
+  end
+
+  scenario 'Trying to sign-in when account is not enabled.' do
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(
+      account_enabled: false)
+    EOS
+    sign_in_as 'normin'
+    expect(page).to have_content \
+      'This account is disabled! '
     expect(page).not_to have_content 'normin'
   end
 
