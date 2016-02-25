@@ -76,7 +76,7 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).to have_content 'Unauthorized'
   end
 
-  scenario 'Disabling an account invalidates the session in the API', driver: :selenium do
+  scenario 'Disabling an account invalidates the session in the API' do
     sign_in_as 'normin'
     expect(page).to have_content 'been signed in'
     visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
@@ -89,6 +89,25 @@ feature 'The public page, sign in and sign out', type: :feature do
     visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
     expect(page).not_to have_content '200 OK'
   end
+
+  scenario 'A disabled account can not sign-in via HTTP-BASIC to the API' do
+
+    faraday = Faraday.new(Capybara.app_host) do |conn|
+      conn.basic_auth('normin', 'secret')
+      conn.adapter Faraday.default_adapter
+    end
+
+    expect(faraday.get("/cider-ci/api/jobs/").status).to  be== 200
+
+
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(
+      account_enabled: false)
+    EOS
+
+    expect(faraday.get("/cider-ci/api/jobs/").status).to  be== 401
+  end
+
 
   scenario 'Trying to sign-in when account is not enabled.' do
     Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
