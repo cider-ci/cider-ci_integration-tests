@@ -5,8 +5,8 @@ require 'json'
 require 'active_support/all'
 require 'haml'
 
-CLIENT_ID = 'the-client-id'.freeze
-CLIENT_SECRET = 'the-client-secret'.freeze
+CLIENT_ID = 'the GitHub OAuth client_id'.freeze
+CLIENT_SECRET = 'the GitHub OAuth client_secrete'.freeze
 
 USERS = {
   adam: {
