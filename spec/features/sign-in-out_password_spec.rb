@@ -60,6 +60,36 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).not_to have_content 'normin'
   end
 
+  scenario 'Disabling an account invalidates the session in the UI' do
+    sign_in_as 'normin'
+    expect(page).to have_content 'been signed in'
+    within '.navbar' do
+      click_on 'Workspace'
+    end
+    expect(page).to have_content 'normin'
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(
+      account_enabled: false)
+    EOS
+    visit current_path
+    expect(page).not_to have_content 'normin'
+    expect(page).to have_content 'Unauthorized'
+  end
+
+  scenario 'Disabling an account invalidates the session in the API', driver: :selenium do
+    sign_in_as 'normin'
+    expect(page).to have_content 'been signed in'
+    visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
+    expect(page).to have_content '200 OK'
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(
+      account_enabled: false)
+    EOS
+    visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/'
+    visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
+    expect(page).not_to have_content '200 OK'
+  end
+
   scenario 'Trying to sign-in when account is not enabled.' do
     Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
       User.find_by(login: 'normin').update_attributes!(
