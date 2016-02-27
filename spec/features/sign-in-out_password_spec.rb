@@ -21,19 +21,6 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).not_to have_content 'normin'
   end
 
-  # TODO: extend to user expiration, see API below
-  scenario 'The user will be logged out when the session expires' do
-    sign_in_as 'normin'
-    expect(page).to have_content 'been signed in'
-    visit '/'
-    expect(page).to have_content 'normin'
-    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
-      Timecop.travel(Time.zone.now +  7.days)
-    EOS
-    visit '/'
-    expect(page).not_to have_content 'normin'
-  end
-
   scenario 'The user will be logged out when the account is disabled' do
     sign_in_as 'normin'
     expect(page).to have_content 'been signed in'
@@ -46,8 +33,6 @@ feature 'The public page, sign in and sign out', type: :feature do
     visit '/'
     expect(page).not_to have_content 'normin'
   end
-
-
 
   scenario 'Trying to sign-in by password when password '\
     'sign-in is not allowed fails.' do
@@ -111,7 +96,8 @@ feature 'The public page, sign in and sign out', type: :feature do
   end
 
 
-  scenario 'An user expired session can not be used to access the API' do
+  scenario 'An user expired session can not be used to access the API ' \
+    'and invalidates the session from the UI' do
     Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
       Timecop.travel(Time.zone.now - 4.days)
     EOS
