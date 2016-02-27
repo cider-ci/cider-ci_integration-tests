@@ -9,7 +9,7 @@ configure:
     # secrets
 
     config['basic_auth']['password'] = ENV['SERVICES_SECRET']
-    config['secret']['password'] = ENV['MASTER_SECRET']
+    config['secret'] = ENV['MASTER_SECRET']
 
 
 
