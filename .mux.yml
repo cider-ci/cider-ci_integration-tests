@@ -7,3 +7,7 @@ windows:
       done
   7:
     name: test
+    command: |
+      export RAILS_SECRET_KEY_BASE=rails-secret-key-base-secret
+      export EXECUTOR_ID=35cff40c-b4f8-4ca3-9217-d49c9c35f375
+
