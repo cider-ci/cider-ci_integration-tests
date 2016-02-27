@@ -9,7 +9,7 @@ module Helpers
           url: Capybara.app_host +
             '/cider-ci/ui/configuration_management_backdoor/invoke',
           user: 'management',
-          password: 'secret',
+          password: ENV['RAILS_SECRET_KEY_BASE'].presence,
           verify_ssl: false,
           payload: ruby_string,
           headers: { content_type:  'application/ruby' })
@@ -22,7 +22,7 @@ module Helpers
           url: Capybara.app_host +
             '/cider-ci/ui/configuration_management_backdoor/invoke',
           user: 'management',
-          password: 'secret',
+          password: ENV['RAILS_SECRET_KEY_BASE'].presence,
           verify_ssl: false,
           payload: sql_string,
           headers: { content_type:  'application/sql' })

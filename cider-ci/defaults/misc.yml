@@ -10,6 +10,9 @@ environment-variables:
   RAILS_ENV: test
   SERVICES_SECRET: services-secret
   MASTER_SECRET: master-secret
+  DATABASE_SECRET: database-secret
+  MESSAGING_SECRET: messaging-secret
+  RAILS_SECRET_KEY_BASE: rails-secret-key-base-secret
 
 templates:
   - src: [integration-tests, cider-ci, templates, httpd.conf]
@@ -17,3 +20,7 @@ templates:
 
   - src: [integration-tests, cider-ci, templates, config.yml]
     dest: [config, config.yml]
+
+  - src: [integration-tests, cider-ci, templates, rails_secrets.yml]
+    dest: [user-inteface, config, secrets.yml]
+
