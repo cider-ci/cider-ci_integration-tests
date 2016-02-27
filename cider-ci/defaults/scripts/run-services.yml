@@ -53,7 +53,7 @@ api-is-running: &is-running-default
   body: |
     #!/usr/bin/env bash
     set -eux
-    until curl --silent --fail --user x:secret -I  "${STATUS_URL}";  do
+    until curl --silent --fail --user test-check-is-running:service-secret -I  "${STATUS_URL}";  do
       sleep 1;
     done
   start-when:
