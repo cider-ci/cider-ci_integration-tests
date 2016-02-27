@@ -22,5 +22,5 @@ templates:
     dest: [config, config.yml]
 
   - src: [integration-tests, cider-ci, templates, rails_secrets.yml]
-    dest: [user-inteface, config, secrets.yml]
+    dest: [user-interface, config, secrets.yml]
 
