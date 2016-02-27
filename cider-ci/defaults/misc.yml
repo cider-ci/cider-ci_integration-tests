@@ -13,6 +13,10 @@ environment-variables:
   DATABASE_SECRET: database-secret
   MESSAGING_SECRET: messaging-secret
   RAILS_SECRET_KEY_BASE: rails-secret-key-base-secret
+  EXECUTOR_ID: 35cff40c-b4f8-4ca3-9217-d49c9c35f375
+  # the executor password depends on the master_secret:
+  # OpenSSL::HMAC.hexdigest( OpenSSL::Digest.new('sha1'), 'master-secret', '35cff40c-b4f8-4ca3-9217-d49c9c35f375')
+  EXECUTOR_PASSWORD: 03b774c9d260ad7329ad3c6dcbc6ea9bec943486
 
 templates:
   - src: [integration-tests, cider-ci, templates, httpd.conf]
