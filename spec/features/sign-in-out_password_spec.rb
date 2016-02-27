@@ -90,8 +90,7 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).not_to have_content '200 OK'
   end
 
-
-  scenario 'An expired session can not be used to access the API' do
+  scenario 'An globally expired session can not be used to access the API' do
     Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
       Timecop.travel(Time.zone.now - 8.days)
     EOS
@@ -109,6 +108,37 @@ feature 'The public page, sign in and sign out', type: :feature do
     visit '/'
     expect(page).not_to have_content 'normin'
   end
+
+
+  scenario 'An user expired session can not be used to access the API' do
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      Timecop.travel(Time.zone.now - 4.days)
+    EOS
+    sign_in_as 'normin'
+    expect(page).to have_content 'been signed in'
+    visit '/'
+    expect(page).to have_content 'normin'
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      Timecop.return
+    EOS
+
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(max_session_lifetime: '7 days')
+    EOS
+    visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
+    expect(page).to have_content '200 OK'
+    visit '/'
+    expect(page).to have_content 'normin'
+
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      User.find_by(login: 'normin').update_attributes!(max_session_lifetime: '3 days')
+    EOS
+    visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
+    expect(page).not_to have_content '200 OK'
+    visit '/'
+    expect(page).not_to have_content 'normin'
+  end
+
 
 
   scenario 'A disabled account can not sign-in via HTTP-BASIC to the API' do
