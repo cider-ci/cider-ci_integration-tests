@@ -3,8 +3,11 @@ require 'set'
 
 describe 'commits' do
   before :all do
-    Helpers::DemoRepo.setup_demo_repo
-    sleep 10
+    Helpers::Misc.reset_and_configure
+    wait_until do
+      authenticated_json_roa_client.get \
+        .relation(:commits).get.collection.first
+    end
   end
 
   it '' do
