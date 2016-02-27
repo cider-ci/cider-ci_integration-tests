@@ -90,6 +90,27 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).not_to have_content '200 OK'
   end
 
+
+  scenario 'An expired session can not be used to access the API' do
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      Timecop.travel(Time.zone.now - 8.days)
+    EOS
+    sign_in_as 'normin'
+    expect(page).to have_content 'been signed in'
+    visit '/'
+    expect(page).to have_content 'normin'
+
+    Helpers::ConfigurationManagement.invoke_ruby <<-EOS.strip_heredoc
+      Timecop.return
+    EOS
+
+    visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
+    expect(page).not_to have_content '200 OK'
+    visit '/'
+    expect(page).not_to have_content 'normin'
+  end
+
+
   scenario 'A disabled account can not sign-in via HTTP-BASIC to the API' do
 
     faraday = Faraday.new(Capybara.app_host) do |conn|
