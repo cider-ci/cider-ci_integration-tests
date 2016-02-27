@@ -21,6 +21,7 @@ feature 'The public page, sign in and sign out', type: :feature do
     expect(page).not_to have_content 'normin'
   end
 
+  # TODO: extend to user expiration, see API below
   scenario 'The user will be logged out when the session expires' do
     sign_in_as 'normin'
     expect(page).to have_content 'been signed in'
