@@ -22,7 +22,7 @@ ui-is-running:
   body: |
     #!/usr/bin/env bash
     set -eux
-    until curl --silent --fail --user x:secret -I  "${STATUS_URL}";  do
+    until curl --silent --fail --user x:${SERVICES_SECRET} -I  "${STATUS_URL}";  do
       sleep 1;
     done
   start-when:

@@ -39,7 +39,7 @@ describe 'Project-Configuration', type: :feature do
   let :conn do
     base_url = "#{Capybara.app_host}/cider-ci/"
     Faraday.new(base_url) do |conn|
-      conn.basic_auth('x', 'secret')
+      conn.basic_auth('test-service', ENV['SERVICES_SECRET'])
       conn.adapter Faraday.default_adapter
     end
   end
