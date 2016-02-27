@@ -53,7 +53,7 @@ api-is-running: &is-running-default
   body: |
     #!/usr/bin/env bash
     set -eux
-    until curl --silent --fail --user test-check-is-running:service-secret -I  "${STATUS_URL}";  do
+    until curl --silent --fail --user test-check-is-running:${SERVICES_SECRET} -I  "${STATUS_URL}";  do
       sleep 1;
     done
   start-when:
@@ -69,7 +69,7 @@ api-shutdown: &shutdown-default
     SHUTDOWN_URL: http://localhost:{{API_HTTP_PORT}}/cider-ci/api/shutdown
   body: |
     set -eux
-    curl -X POST --silent --user shutdown:service-secret -I "${SHUTDOWN_URL}"
+    curl -X POST --silent --user shutdown:${SERVICES_SECRET} -I "${SHUTDOWN_URL}"
   start-when:
     - script: test
       states: [aborted, passed, failed, skipped]
