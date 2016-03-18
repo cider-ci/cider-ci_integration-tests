@@ -4,7 +4,7 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
   before :all do
     setup_signin_waitforcommits
     run_job_on_last_commit 'Script Dependencies'
-    wait_for_job_state 'Script Dependencies', 'failed'
+    wait_for_job_state 'Script Dependencies', 'defective'
     @job_id = find('#job')['data-id']
 
     find('select#tasks_select_condition').select('All')

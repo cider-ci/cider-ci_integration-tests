@@ -2,8 +2,10 @@ require 'addressable/uri'
 require 'sinatra'
 require 'pry'
 require 'json'
+require 'yaml'
 require 'active_support/all'
 require 'haml'
+require 'fileutils'
 
 CLIENT_ID = 'the GitHub OAuth client_id'.freeze
 CLIENT_SECRET = 'the GitHub OAuth client_secrete'.freeze
@@ -57,11 +59,43 @@ CALLBACK_URL = 'http://localhost:' \
    << (ENV['REVERSE_PROXY_HTTP_PORT'].presence || '8888') \
    << '/cider-ci/ui/public/auth_provider/github/sign_in'
 
+def find_user_by_access_token(access_token)
+  USERS.find { |k, v| v['access_token'] == access_token }.try(:second)
+end
+
+###############################################################################
+### Meta ######################################################################
+###############################################################################
+
 get '/status' do
   'OK'
 end
 
+###############################################################################
+### Repositories ##############################################################
+###############################################################################
+
+post '/repos/:owner/:repo/statuses/:sha' do
+
+  auth_token = env['HTTP_AUTHORIZATION'].match(/Bearer\s+(.*)/)[1]
+
+  FileUtils.mkdir_p 'tmp'
+
+  File.write 'tmp/last-status-post.yml',
+    params.merge('auth_token' => auth_token,
+                 'body' => JSON.parse(request.body.read)
+                ).to_yaml
+
+  content_type 'application/json'
+  status 201
+  '{}'
+
+end
+
+
+###############################################################################
 ### Oauth #####################################################################
+###############################################################################
 
 get '/login/oauth/authorize' do
   halt(422, 'No such client') unless params[:client_id] == CLIENT_ID
@@ -95,7 +129,9 @@ post '/login/oauth/access_token' do
   { access_token: USERS[params[:code]]['access_token'] }.to_json
 end
 
-### User ######################################################################
+#################################################################################
+# User ######################################################################
+###############################################################################
 
 get '/user' do
   unless user = find_user_by_access_token(params[:access_token])
@@ -127,13 +163,17 @@ get '/users/:user' do
   end
 end
 
+###############################################################################
 ### Org  ######################################################################
+###############################################################################
 
 get '/orgs/TestOrg/members/normin' do
   halt(204, '')
 end
 
+###############################################################################
 ### Team ######################################################################
+###############################################################################
 
 get '/orgs/:org/teams' do
   content_type 'application/json'
@@ -160,8 +200,4 @@ get '/teams/:id/memberships/:username' do
   end
 end
 
-### ORG  ######################################################################
 
-def find_user_by_access_token(access_token)
-  USERS.find { |k, v| v['access_token'] == access_token }.try(:second)
-end

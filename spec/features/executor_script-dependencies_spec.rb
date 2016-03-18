@@ -1,14 +1,11 @@
 require 'spec_helper'
 
 describe 'the job "Script Dependencies" Demo ', type: :feature do
-  before :all do
-    setup_signin_waitforcommits
-  end
 
   before :all do
     setup_signin_waitforcommits
     run_job_on_last_commit 'Script Dependencies'
-    wait_for_job_state 'Script Dependencies', 'failed'
+    wait_for_job_state 'Script Dependencies', 'defective'
     @job_id = find('#job')['data-id']
   end
 
@@ -31,11 +28,11 @@ describe 'the job "Script Dependencies" Demo ', type: :feature do
 
     expect(
       first('td', text: 'Skip').find(:xpath, '..')['data-state']
-    ).to be == 'failed'
+    ).to be == 'defective'
 
     expect(
       first('td', text: 'Skip but ignore').find(:xpath, '..')['data-state']
-    ).to be == 'passed'
+    ).to be == 'defective'
 
     expect(
       first('td', text: 'Start on Skipped').find(:xpath, '..')['data-state']

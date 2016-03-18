@@ -2,7 +2,7 @@
 
 configure:
   body: |
-    #!/usr/bin/env ruby
+    #!/usr/bin/ruby
     require 'yaml'
     config = YAML.load_file 'config/config_default.yml'
 
@@ -10,8 +10,6 @@ configure:
 
     config['basic_auth']['password'] = ENV['SERVICES_SECRET']
     config['secret'] = ENV['MASTER_SECRET']
-
-
 
     # database
     config['database']['user']= ENV['PGUSER']
@@ -39,6 +37,10 @@ configure:
     # dispatcher
     config['services']['dispatcher']['http']['port']= Integer(ENV['DISPATCHER_HTTP_PORT'])
     config['services']['dispatcher']['nrepl']['enabled']= false
+
+    # notifier
+    config['services']['notifier']['http']['port']= Integer(ENV['NOTIFIER_HTTP_PORT'])
+    config['services']['notifier']['nrepl']['enabled']= false
 
     # repository
     config['services']['repository']['http']['port']= Integer(ENV['REPOSITORY_HTTP_PORT'])

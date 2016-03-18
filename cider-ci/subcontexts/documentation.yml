@@ -7,7 +7,8 @@ documentation:
     timeout: 300
 
   task-defaults:
-
+    environment-variables:
+        RBENV_VERSION: 2.2.4
     _cider-ci_include:
       - cider-ci/defaults/attachments.yml
       - cider-ci/defaults/misc.yml
@@ -18,13 +19,21 @@ documentation:
   tasks:
     check_compiled_documentation:
       scripts:
+        bundle:
+          exclusive-executor-resource: rbenv
+          timeout: 20 Minutes
+          body: |
+            set -eux
+            cd documentation-source
+            ${CIDER_CI_WORKING_DIR}/integration-tests/cider-ci/bin/bundle
         test:
           body: |
             set -eux
             cd documentation-source
-            bundle
             bundle exec rspec spec/test_spec.rb
           start-when:
+            - script: bundle
+              states: [passed]
             - script: start-xvnc
               states: [passed]
             - script: run-reverse-proxy

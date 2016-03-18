@@ -15,6 +15,10 @@ ports:
     inet_address: "localhost"
     min: 4100
     max: 8799
+  EXECUTOR_NREPL_PORT:
+    inet_address: "localhost"
+    min: 7000
+    max: 7999
   REVERSE_PROXY_HTTP_PORT:
     inet_address: "localhost"
     min: 4100
@@ -28,6 +32,10 @@ ports:
     min: 4100
     max: 8799
   DISPATCHER_HTTP_PORT:
+    inet_address: "localhost"
+    min: 4100
+    max: 8799
+  NOTIFIER_HTTP_PORT:
     inet_address: "localhost"
     min: 4100
     max: 8799

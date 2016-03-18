@@ -1,5 +1,6 @@
 ### run services ##############################################################
 
+
 ### common ####################################################################
 
 services-down:
@@ -11,31 +12,42 @@ services-down:
       states: [aborted, passed, failed, skipped]
     - script: run-dispatcher
       states: [aborted, passed, failed, skipped]
+    - script: run-notifier
+      states: [aborted, passed, failed, skipped]
     - script: run-repository
       states: [aborted, passed, failed, skipped]
     - script: run-storage
       states: [aborted, passed, failed, skipped]
 
 
-### the api also servers as a template ########################################
+### install required clojure libraries ########################################
+
+install_lein-dev-plugin:
+  exclusive-executor-resource: install_lein-dev-plugin
+  body: integration-tests/cider-ci/bin/install_lein-dev-plugin.sh
+
+
+### the api also serves as a template #########################################
 
 compile-api: &compile-service
   exclusive-executor-resource: compile-api
   environment-variables:
-    SERVICE_DIRECTORY: api
+    SERVICE_NAME: api
   body: integration-tests/cider-ci/bin/compile-service.sh
+  start-when:
+    - script: install_lein-dev-plugin
   terminate-when:
     - script: test
       states: [aborted, passed, failed, skipped]
 
 run-api: &run-service-default
   environment-variables:
-    SERVICE_DIRECTORY: api
+    SERVICE_NAME: api
   body: |
     set -eux
-    cd ${SERVICE_DIRECTORY}
-    export LEIN_FAST_TRAMPOLINE=yes
-    lein with-profile production trampoline run
+    cd ${SERVICE_NAME}
+    export CLASSPATH="../config:target/${SERVICE_NAME}.jar"
+    java "cider_ci.${SERVICE_NAME}.main"
 
   start-when:
     - script: create-database
@@ -81,13 +93,13 @@ compile-builder:
   <<: *compile-service
   exclusive-executor-resource: compile-builder
   environment-variables:
-    SERVICE_DIRECTORY: builder
+    SERVICE_NAME: builder
   body: integration-tests/cider-ci/bin/compile-service.sh
 
 run-builder:
   <<: *run-service-default
   environment-variables:
-    SERVICE_DIRECTORY: builder
+    SERVICE_NAME: builder
   start-when:
     - script: create-database
     - script: create-rabbitmq-vhost
@@ -116,13 +128,13 @@ compile-dispatcher:
   <<: *compile-service
   exclusive-executor-resource: compile-dispatcher
   environment-variables:
-    SERVICE_DIRECTORY: dispatcher
+    SERVICE_NAME: dispatcher
   body: integration-tests/cider-ci/bin/compile-service.sh
 
 run-dispatcher:
   <<: *run-service-default
   environment-variables:
-    SERVICE_DIRECTORY: dispatcher
+    SERVICE_NAME: dispatcher
   start-when:
     - script: create-database
     - script: create-rabbitmq-vhost
@@ -145,6 +157,41 @@ dispatcher-shutdown:
   environment-variables:
     SHUTDOWN_URL: http://localhost:{{DISPATCHER_HTTP_PORT}}/cider-ci/dispatcher/shutdown
 
+### notifier ################################################################
+
+compile-notifier:
+  <<: *compile-service
+  exclusive-executor-resource: compile-notifier
+  environment-variables:
+    SERVICE_NAME: notifier
+  body: integration-tests/cider-ci/bin/compile-service.sh
+
+run-notifier:
+  <<: *run-service-default
+  environment-variables:
+    SERVICE_NAME: notifier
+  start-when:
+    - script: create-database
+    - script: create-rabbitmq-vhost
+    - script: compile-notifier
+  terminate-when:
+    - script: notifier-shutdown
+      states: [aborted, passed, failed, skipped]
+
+
+notifier-is-running:
+  environment-variables:
+    STATUS_URL: http://localhost:{{NOTIFIER_HTTP_PORT}}/cider-ci/notifier/status
+  start-when:
+  - script: run-notifier
+    states: [executing]
+  <<: *is-running-default
+
+notifier-shutdown:
+  <<: *shutdown-default
+  environment-variables:
+    SHUTDOWN_URL: http://localhost:{{NOTIFIER_HTTP_PORT}}/cider-ci/notifier/shutdown
+
 
 ### repository ################################################################
 
@@ -152,13 +199,13 @@ compile-repository:
   <<: *compile-service
   exclusive-executor-resource: compile-repository
   environment-variables:
-    SERVICE_DIRECTORY: repository
+    SERVICE_NAME: repository
   body: integration-tests/cider-ci/bin/compile-service.sh
 
 run-repository:
   <<: *run-service-default
   environment-variables:
-    SERVICE_DIRECTORY: repository
+    SERVICE_NAME: repository
   start-when:
     - script: create-database
     - script: create-rabbitmq-vhost
@@ -187,13 +234,13 @@ compile-storage:
   <<: *compile-service
   exclusive-executor-resource: compile-storage
   environment-variables:
-    SERVICE_DIRECTORY: storage
+    SERVICE_NAME: storage
   body: integration-tests/cider-ci/bin/compile-service.sh
 
 run-storage:
   <<: *run-service-default
   environment-variables:
-    SERVICE_DIRECTORY: storage
+    SERVICE_NAME: storage
   start-when:
     - script: create-database
     - script: create-rabbitmq-vhost

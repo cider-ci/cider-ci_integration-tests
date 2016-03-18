@@ -1,12 +1,18 @@
 bundle-ui:
-  exclusive-executor-resource: bundler
-  body:
+  exclusive-executor-resource: rbenv
+  timeout: 20 Minutes
+  body: |
+    #!/bin/bash
     set -eux
     cd user-interface
-    bundle
+    ${CIDER_CI_WORKING_DIR}/integration-tests/cider-ci/bin/bundle
 
 run-ui:
-  body: cd user-interface && bundle exec rails s -p  ${UI_HTTP_PORT}
+  body: |
+    set -eux
+    export PATH=$(pwd)/user-interface/vendor/jruby/bin/:$PATH
+    cd user-interface
+    bundle exec rails s -p  ${UI_HTTP_PORT}
   start-when:
     - script: bundle-ui
     - script: create-database

@@ -7,7 +7,7 @@ describe 'the job "Templates Demo"', type: :feature do
   it 'fails the "Test Missing Template" but passes all others' do
     sign_in_as 'admin'
     run_job_on_last_commit 'Templates'
-    wait_for_job_state 'Templates', 'failed'
+    wait_for_job_state 'Templates', 'defective'
 
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
@@ -22,7 +22,7 @@ describe 'the job "Templates Demo"', type: :feature do
 
     expect(
       find('td', text: 'Test Missing Template').find(:xpath, '..')['data-state']
-    ).to be == 'failed'
+    ).to be == 'defective'
 
     expect(
       find('td', text: 'Test Recursive Templating').find(:xpath, '..')['data-state']

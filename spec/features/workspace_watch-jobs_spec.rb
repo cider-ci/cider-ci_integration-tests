@@ -8,8 +8,8 @@ describe 'Watching jobs in the workspace', type: :feature do
     find(".runnable-job[data-name='Script Dependencies']")
       .find('a,button', text: 'Run').click
     click_on_first 'Workspace'
-    wait_until { all('table#jobs-table tr.job.failed').count > 0 }
-    expect(find("tr.commit li.job[data-state='failed']")).to be
+    wait_until { all('table#jobs-table tr.job.defective').count > 0 }
+    expect(find("tr.commit li.job[data-state='defective']")).to be
   end
 
 end

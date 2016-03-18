@@ -6,7 +6,7 @@ traits:
   linux: true
   maven: true
   maven3: true
-  openjdk: true
+  jdk-8: true
   postgresql: true
   rbenv: true
   ruby: true

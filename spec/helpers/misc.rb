@@ -1,19 +1,21 @@
-require 'timeout'
 require 'json_roa/client'
+require 'nrepl'
+require 'timeout'
 
 module Helpers
   module Misc
     extend self
 
-    def wait_until(wait_time = 60)
-      Timeout.timeout(wait_time) do
-        until value = yield
-          sleep(1)
-          # if (defined? current_url) && current_url
-          #   visit current_url
-          # end
+    def wait_until(wait_time = 60, &block)
+      begin
+        Timeout.timeout(wait_time) do
+          until value = block.call
+            sleep(1)
+          end
+          value
         end
-        value
+      rescue Timeout::Error => e
+        fail Timeout::Error.new(block.source)
       end
     end
 
@@ -29,7 +31,6 @@ module Helpers
       Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
       Helpers::Users.create_users
       Helpers::DemoRepo.setup_demo_repo
-      Helpers::DemoExecutor.configure_demo_executor
     end
 
     def setup_signin_waitforcommits
@@ -77,5 +78,12 @@ module Helpers
         conn.ssl.verify = false
       end
     end
+
+    def eval_clj_via_nrepl(port, code)
+      repl = Nrepl::Repl.connect(Integer(port))
+      res = repl.eval code
+      res.select{|r| r["ex"].present?}.map{|err| raise err["ex"]}
+    end
+
   end
 end

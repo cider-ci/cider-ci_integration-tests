@@ -1,8 +1,14 @@
 require 'spec_helper'
 
 describe 'The workspace page', type: :feature do
-  before :each do
+  before :all do
     setup_signin_waitforcommits
+  end
+
+  before :each do
+    sign_in_as 'admin'
+    click_on_first 'Workspace'
+    click_on 'Reset'
   end
 
   describe 'can be filtered' do
@@ -23,7 +29,7 @@ describe 'The workspace page', type: :feature do
       end
 
       it 'by comma separated strings' do
-        find('input#branch_name').set 'gabeldigoo, master'
+        find('input#branch_name').set "gabeldigoo, #{TEST_BRANCH}"
         click_on 'Filter'
         expect(all('tr.commit').size).to be >= 0
       end
@@ -57,42 +63,42 @@ describe 'The workspace page', type: :feature do
     end
 
     it 'by depth and pagination' do
-      find('input#branch_name').set 'master'
+      find('input#branch_name').set TEST_BRANCH
       find('select#depth').select('Heads only')
       click_on 'Filter'
-      expect(page).to have_content '0 master'
-      expect(page).not_to have_content '1 master'
+      expect(page).to have_content "0 #{TEST_BRANCH}"
+      expect(page).not_to have_content "1 #{TEST_BRANCH}"
 
-      find('input#branch_name').set 'master'
+      find('input#branch_name').set TEST_BRANCH
       find('select#depth').select('Max 1 down')
       click_on 'Filter'
-      expect(page).to have_content '0 master'
-      expect(page).to have_content '1 master'
-      expect(page).not_to have_content '2 master'
+      expect(page).to have_content "0 #{TEST_BRANCH}"
+      expect(page).to have_content "1 #{TEST_BRANCH}"
+      expect(page).not_to have_content "2 #{TEST_BRANCH}"
 
-      find('input#branch_name').set 'master'
+      find('input#branch_name').set TEST_BRANCH
       find('select#depth').select('Max 3 down')
       click_on 'Filter'
-      expect(page).to have_content '0 master'
-      expect(page).to have_content '3 master'
-      expect(page).not_to have_content '4 master'
+      expect(page).to have_content "0 #{TEST_BRANCH}"
+      expect(page).to have_content "3 #{TEST_BRANCH}"
+      expect(page).not_to have_content "4 #{TEST_BRANCH}"
 
-      find('input#branch_name').set 'master'
+      find('input#branch_name').set TEST_BRANCH
       find('select#depth').select('Any depth')
       find('select#per_page').select('3 Per page')
       click_on 'Filter'
-      expect(page).to have_content '0 master'
-      expect(page).to have_content '2 master'
-      expect(page).not_to have_content '3 master'
+      expect(page).to have_content "0 #{TEST_BRANCH}"
+      expect(page).to have_content "2 #{TEST_BRANCH}"
+      expect(page).not_to have_content "3 #{TEST_BRANCH}"
 
-      find('input#branch_name').set 'master'
+      find('input#branch_name').set TEST_BRANCH
       find('select#depth').select('Any depth')
       find('select#per_page').select('12 Per page')
       click_on 'Filter'
-      expect(page).to have_content '0 master'
-      expect(page).to have_content '4 master'
-      expect(page).to have_content '5 master'
-      expect(page).to have_content '11 master'
+      expect(page).to have_content "0 #{TEST_BRANCH}"
+      expect(page).to have_content "4 #{TEST_BRANCH}"
+      expect(page).to have_content "5 #{TEST_BRANCH}"
+      expect(page).to have_content "11 #{TEST_BRANCH}"
     end
   end
 end

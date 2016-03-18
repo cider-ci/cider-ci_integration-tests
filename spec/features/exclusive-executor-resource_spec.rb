@@ -1,7 +1,6 @@
 require 'spec_helper'
-require 'shared/push_and_pull'
 
-describe 'The Exclusive Executor Resource in normal mode', type: :feature do
+describe 'The Exclusive Executor Resource', type: :feature do
   before :all do
     setup_signin_waitforcommits
   end

@@ -2,27 +2,29 @@
 
 configure-executor:
   body: |
-    #!/usr/bin/env ruby
+    #!/usr/bin/ruby
     require 'yaml'
     require 'openssl'
 
-    config = YAML.load_file 'executor/config/config_default.yml'
+    config = YAML.load_file 'executor/resources/config_default.yml'
     config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
     config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
-    config['nrepl']['enabled']=false
+    config['server_base_url']= ("http://localhost:" + ENV['REVERSE_PROXY_HTTP_PORT'])
+    config['nrepl']['enabled']=true
+    config['nrepl']['port']= Integer(ENV['EXECUTOR_NREPL_PORT'])
     config['max_load']= 2
-    config['basic_auth']['username']= ENV['EXECUTOR_ID']
-    config['basic_auth']['password']= ENV['EXECUTOR_PASSWORD']
 
     File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
-    File.open('executor/config/traits.yml','w') { |file| file.write ["bash", "linux"].to_yaml }
+    File.open('executor/config/traits.yml','w') { |file| file.write ["Bash", "Git"].to_yaml }
 
 
 compile-executor:
   exclusive-executor-resource: compile-executor
   environment-variables:
-    SERVICE_DIRECTORY: executor
+    SERVICE_NAME: executor
   body: integration-tests/cider-ci/bin/compile-service.sh
+  start-when:
+    - script: install_lein-dev-plugin
   terminate-when:
     - script: shutdown-executor
       states: [aborted, passed, failed, skipped]
@@ -32,8 +34,7 @@ run-executor:
     #!/usr/bin/env bash
     set -eux
     cd executor
-    export LEIN_FAST_TRAMPOLINE=yes
-    lein with-profile production trampoline run
+    java -jar "target/executor.jar"
   start-when:
     - script: configure-executor
     - script: compile-executor
@@ -46,7 +47,7 @@ executor-is-running:
   body: |
     #!/usr/bin/env bash
     set -ux
-    until curl --silent --fail --user ${EXECUTOR_ID}:${EXECUTOR_PASSWORD} -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do
+    until curl --silent --fail --user check:fb305779d33334f6d68650c3024626e12d3872a6  -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do
       sleep 1;
     done
   start-when:

@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'shared/push_and_pull'
 
 describe 'Abort and retry a job', type: :feature do
   let :abort_and_retry_job do

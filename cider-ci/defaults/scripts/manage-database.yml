@@ -1,4 +1,6 @@
 configure-database:
+  start-when:
+    - script: bundle-ui
   body: |
     #!/usr/bin/env ruby
     require 'yaml'
@@ -17,8 +19,8 @@ create-database:
   body: |
     #!/usr/bin/env bash
     set -eux
-    cd user-interface
-    bundle exec rake db:reset db:pg:truncate_tables
+    createdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
+    psql -d "cider-ci_test_${CIDER_CI_TRIAL_ID}" -f user-interface/db/structure.sql
   start-when:
     - script: bundle-ui
     - script: configure-database
@@ -31,8 +33,7 @@ delete-database:
   body: |
     #!/usr/bin/env bash
     set -eux
-    cd user-interface
-    bundle exec rake db:pg:terminate_connections db:drop
+    dropdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
   ignore-state: true
   ignore-abort: true
   start-when:

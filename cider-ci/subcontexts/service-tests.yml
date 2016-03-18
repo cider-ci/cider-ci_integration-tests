@@ -4,10 +4,10 @@ service-tests:
     template-environment-variables: true
     environment-variables:
       DISPLAY: ":{{XVNC_PORT}}"
+      RBENV_VERSION:  2.2.4
     timeout: 300
 
   task-defaults:
-
     _cider-ci_include:
       - cider-ci/defaults/attachments.yml
       - cider-ci/defaults/misc.yml
@@ -19,6 +19,7 @@ service-tests:
     include-match: spec/.*_spec.rb
 
 # tasks:
-#   spec/features/admin/repositories_spec.rb:
+#   features/push-mode_and_pull-mode_spec.rb:
 #     environment-variables:
-#       CIDER_CI_TASK_FILE: spec/features/builder/contexts_spec.rb
+#       CIDER_CI_TASK_FILE: features/push-mode_and_pull-mode_spec.rb
+

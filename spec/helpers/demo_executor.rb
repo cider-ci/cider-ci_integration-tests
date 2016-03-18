@@ -1,18 +1,8 @@
 module Helpers
   module DemoExecutor
     class << self
+
       ACCEPTED_REPOSITORIES_FILE = '../executor/config/accepted-repositories.yml'
-      def configure_demo_executor
-        port = Integer(ENV['EXECUTOR_HTTP_PORT'].present? &&
-                       ENV['EXECUTOR_HTTP_PORT'] || '8883')
-        config_executor_rb = %Q<
-          Executor.find_or_initialize_by(name: "DemoExecutor",
-              id: "#{ENV['EXECUTOR_ID']}")
-            .update_attributes!(base_url: 'http://localhost:#{port}' ,
-              upload_tree_attachments: true)
-            >.squish
-        Helpers::ConfigurationManagement.invoke_ruby  config_executor_rb
-      end
 
       def set_accepted_repositories(repos)
         File.open(ACCEPTED_REPOSITORIES_FILE, 'w') do |file|
@@ -24,6 +14,12 @@ module Helpers
         require 'fileutils'
         FileUtils.rm(ACCEPTED_REPOSITORIES_FILE) rescue nil
       end
+
+      def eval_clj code
+        port = Integer( ENV['EXECUTOR_NREPL_PORT'].presence || 7883)
+        Helpers::Misc.eval_clj_via_nrepl port, code
+      end
+
     end
   end
 end

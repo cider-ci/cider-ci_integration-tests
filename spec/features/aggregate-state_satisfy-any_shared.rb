@@ -31,11 +31,3 @@ shared_examples :job_stayes_passed_when_last_trial_failed do |job_name|
     expect(find('#job-info .state')).to have_content 'passed'
   end
 end
-
-feature 'Aggregate State Feature', type: :feature do
-  include_examples :job_stayes_passed_when_last_trial_failed,
-                   'Aggregate State with Explicit `satisfy-any`'
-
-  include_examples :job_stayes_passed_when_last_trial_failed,
-                   'Aggregate State with Implicit `satisfy-any`'
-end

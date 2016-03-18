@@ -6,9 +6,11 @@ git-options:
 
 max-auto-trials: 3
 
+dispatch-storm-delay-duration: 20 Seconds
+
 environment-variables:
   RAILS_ENV: test
-  SERVICES_SECRET: services-secret
+  SERVICES_SECRET: service-secret
   MASTER_SECRET: master-secret
   DATABASE_SECRET: database-secret
   MESSAGING_SECRET: messaging-secret

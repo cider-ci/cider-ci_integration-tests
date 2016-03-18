@@ -5,9 +5,18 @@ windows:
       while true; do
         LD_LIBRARY_PATH=/opt/local/apache2/modules/ /opt/local/apache2/bin/apachectl -d reverse-proxy -e info -DFOREGROUND;
       done
+  3:
+    name: github api mock
+    command: |
+      export GITHUB_API_MOCK_PORT=8999
+      bundle exec ruby github_api_mock.rb -p ${GITHUB_API_MOCK_PORT}
+
   7:
     name: test
     command: |
+      export GITHUB_API_MOCK_PORT=8999
       export RAILS_SECRET_KEY_BASE=rails-secret-key-base-secret
+      export SERVICES_SECRET=service-secret
       export EXECUTOR_ID=35cff40c-b4f8-4ca3-9217-d49c9c35f375
+      export CAPYBARA_DRIVER=selenium
 

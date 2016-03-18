@@ -18,11 +18,19 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
     sign_in_as 'admin'
   end
 
+  let :submodule_ref do
+    TEST_COMMIT_ID = Helpers::System.exec!("
+      #!/usr/bin/env bash
+      cd ../demo-project-bash/
+      git submodule status submodule") \
+        .strip.split(/\s+/).first.gsub(/^-|\+|U/,"")
+  end
+
   describe 'the dependent job' do
     it 'is created once the prerequisite in the submodule has passed' do
       click_on_first 'Workspace'
       find('select#depth').select('Any depth')
-      find('input#git_ref').set('b0c4d7')
+      find('input#git_ref').set(submodule_ref)
       click_on('Filter')
       first('a.run-a-job').click
       find(".runnable-job[data-name='#{prerequisite_name}']")

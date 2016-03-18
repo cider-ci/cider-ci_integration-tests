@@ -7,6 +7,7 @@ trial-attachments:
     content-type: text/plain
   config:
     include-match: 'config\/.+\.ya?ml$'
+    exclude-match: '\/vendor\/'
     content-type: text/yaml
   reverse-proxy-config:
     include-match: 'integration-tests\/reverse-proxy\/conf/.+\.conf$'
