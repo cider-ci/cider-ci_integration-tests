@@ -8,7 +8,7 @@ describe 'The workspace page', type: :feature do
 
   it 'shows expected things' do
     expect(page).to have_content 'My Workspace'
-    expect(find('li.branch', text: '0 master')).to be
+    expect(find('li.branch', text: "0 #{TEST_BRANCH}")).to be
   end
 
   it "the 'Workspace' link leads to 'My Workspace' " do

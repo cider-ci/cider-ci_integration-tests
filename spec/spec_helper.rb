@@ -6,6 +6,15 @@ require 'pry'
 require 'logger'
 require 'faker'
 
+require 'helpers/system'
+
+TEST_BRANCH = 'v3'
+TEST_COMMIT_ID = Helpers::System.exec!("
+  #!/usr/bin/env bash
+  cd ..
+  git ls-tree HEAD demo-project-bash ").strip.split(/\s+/).map(&:strip)[2]
+
+
 require 'matchers'
 
 require 'helpers/configuration_management'
@@ -70,7 +79,10 @@ RSpec.configure do |config|
 
   def set_browser example
     # Capybara.current_driver = :selenium
-    Capybara.current_driver = example.metadata[:driver] || :poltergeist rescue :poltergeist
+    Capybara.current_driver = \
+      ENV['CAPYBARA_DRIVER'].presence.try(:to_sym) \
+      || example.metadata[:driver] \
+      || :poltergeist rescue :poltergeist
   end
 
   # rspec-expectations config goes here. You can use an alternate
@@ -145,8 +157,12 @@ RSpec.configure do |config|
     Kernel.srand config.seed
 
     config.after(:each) do |example|
-      cleanup
+      # cleanup
       take_screenshot unless example.exception.nil?
+    end
+
+    config.after(:all) do |example|
+      cleanup
     end
 
     def cleanup

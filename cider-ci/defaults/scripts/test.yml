@@ -10,7 +10,7 @@ bundle:
   body: cd integration-tests && bundle
 
 test:
-  timeout: 120
+  timeout: 180
   body: |
     #!/usr/bin/env bash
     set -eux
