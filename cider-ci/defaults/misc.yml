@@ -6,6 +6,8 @@ git-options:
 
 max-auto-trials: 3
 
+dispatch-storm-delay-duration: 25 Seconds
+
 environment-variables:
   RAILS_ENV: test
   SERVICES_SECRET: services-secret
