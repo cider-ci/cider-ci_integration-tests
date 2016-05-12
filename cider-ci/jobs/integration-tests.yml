@@ -12,7 +12,3 @@ jobs:
       subcontexts:
         _cider-ci_include:
           - cider-ci/subcontexts/service-tests.yml
-          - cider-ci/subcontexts/documentation.yml
-
-
-

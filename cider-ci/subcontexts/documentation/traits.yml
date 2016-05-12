@@ -1,8 +1,0 @@
-traits:
-  bash: true
-  curl: true
-  git: true
-  linux: true
-  rbenv: true
-  ruby: true
-  hunspell: true
