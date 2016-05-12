@@ -1,6 +1,10 @@
 require 'spec_helper'
 
-describe '' , type: :feature do
+describe(" Given: job1 with run_when directive on brach matching ^test_.+$.
+           Facts: job1 will not be run as long there is a project configuration
+            preventing it. job1 will be run otherwise if a matching branch is
+            created.
+           ".strip_heredoc, type: :feature) do
 
   before :each do
     setup_signin_waitforcommits
@@ -13,12 +17,9 @@ describe '' , type: :feature do
           'branch with prefix test_ has been updated':
             type: branch
             include_match: ^test_.+$
-        context:
-          tasks:
-            task1:
-              scripts:
-                script1:
-                  body: test a = a
+        task: |
+          :; exit 0
+          exit /b 0
     YAML
   end
 
