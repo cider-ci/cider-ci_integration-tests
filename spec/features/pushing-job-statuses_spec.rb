@@ -26,8 +26,8 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       find('input#repository_foreign_api_repo').set "test-repo"
       find("form *[type='submit']").click
 
-      run_job_on_last_commit 'Introduction Demo and Example'
-      wait_for_job_state 'Introduction Demo and Example', 'passed'
+      run_job_on_last_commit 'Introduction Demo and Example Job'
+      wait_for_job_state 'Introduction Demo and Example Job', 'passed'
 
       written_data = YAML.load_file('tmp/last-status-post.yml').with_indifferent_access
       expect(written_data[:auth_token]).to be== 'test-token'
