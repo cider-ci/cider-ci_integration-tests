@@ -29,7 +29,7 @@ describe 'the job "Timeout Demo"', type: :feature do
     click_on('Filter')
     click_on('Fail Timeout')
     expect(all('li.script').map { |e| e['data-state'] }).to be == \
-      %w(defective skipped)
+      %w(defective skipped defective skipped)
   end
 
   it 'the scripts for the task "Pass Timeout" are in proper order and state', driver: :selenium do
