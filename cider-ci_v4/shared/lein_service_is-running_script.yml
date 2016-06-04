@@ -1,0 +1,11 @@
+timeout: 3 Minutes
+environment_variables:
+  STATUS_URL: http://localhost:{{SERVICE_PORT}}/cider-ci/{{SERVICE_CONTEXT}}/status
+body: |
+  #!/usr/bin/env bash
+  set -eux
+  until curl --silent --fail \
+    --user test-check-is-running:${SERVICES_SECRET} \
+    -I  "${STATUS_URL}";  do
+    sleep 1;
+  done

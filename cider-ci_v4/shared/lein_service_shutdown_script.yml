@@ -1,0 +1,13 @@
+timeout: 3 Seconds
+environment_variables:
+  SHUTDOWN_URL: http://localhost:{{SERVICE_PORT}}/cider-ci/{{SERVICE_CONTEXT}}/shutdown
+
+body: |
+  #!/usr/bin/env bash
+  set -eux
+  curl -I -X POST --silent \
+    --user shutdown:${SERVICES_SECRET} \
+    "${SHUTDOWN_URL}"
+
+start_when:
+  include: cider-ci_v4/shared/test_is_terminal.yml

@@ -1,0 +1,45 @@
+scripts:
+
+  compile-builder:
+    include: cider-ci_v4/shared/lein_service_compile_script.yml
+    exclusive_executor_resource: compile-builder
+    environment_variables: &ENV_VARS
+      SERVICE_PORT: '{{BUILDER_HTTP_PORT}}'
+      SERVICE_NAME: builder
+      SERVICE_CONTEXT: builder
+
+  run-builder:
+    include: cider-ci_v4/shared/lein_service_run_script.yml
+    environment_variables: *ENV_VARS
+    start_when:
+      builder has been compiled:
+        script_key: compile-builder
+
+  builder-is-running:
+    include: cider-ci_v4/shared/lein_service_is-running_script.yml
+    environment_variables: *ENV_VARS
+    start_when:
+      the builder is executing: &EXECUTING {script_key: run-builder, states: [executing]}
+    terminate_when:
+      run-builder is in terminal state: &TERMINAL
+        script_key: run-builder
+        states: [aborted, defective, passed, failed, skipped]
+
+  test:
+    start_when:
+      builder is running: {script_key: builder-is-running}
+
+  shutdown-builder:
+    include: cider-ci_v4/shared/lein_service_shutdown_script.yml
+    environment_variables: *ENV_VARS
+    start_when:
+      the builder service is executing: *EXECUTING
+      the builder is or has been running:
+        script_key: builder-is-running
+
+  delete-database: &START_WHEN_TERMINAL
+    start_when:
+      the run-builder is in terminal state: *TERMINAL
+
+  delete-rabbitmq-vhost:
+    <<: *START_WHEN_TERMINAL

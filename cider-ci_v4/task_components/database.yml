@@ -1,0 +1,21 @@
+traits:
+  PostgreSQL 9.5: true
+scripts:
+  create-database:
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      createdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
+      psql -d "cider-ci_test_${CIDER_CI_TRIAL_ID}" -f user-interface/db/structure.sql
+  delete-database:
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      dropdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
+    ignore_state: true
+    start_when:
+      include: cider-ci_v4/shared/test_is_terminal.yml
+      'the database has been created':
+        script_key: create-database
+        states: [passed]
+

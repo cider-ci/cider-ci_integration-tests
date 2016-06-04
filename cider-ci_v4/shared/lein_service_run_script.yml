@@ -1,0 +1,12 @@
+body: |
+  set -eux
+  cd ${SERVICE_NAME}
+  export CLASSPATH="../config:target/${SERVICE_NAME}.jar"
+  java "cider_ci.${SERVICE_NAME}.main"
+start_when:
+  database has been created:
+    script_key: create-database
+  rabbitmq_vhost_has_been_created:
+    script_key: create-rabbitmq-vhost
+  server_has_been_configured:
+    script_key: configure-server

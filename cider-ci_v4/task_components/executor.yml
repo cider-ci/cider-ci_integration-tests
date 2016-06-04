@@ -1,0 +1,77 @@
+### executor ##############################################
+
+scripts:
+
+  configure-executor:
+    body: |
+      #!/usr/bin/ruby
+      require 'yaml'
+      require 'openssl'
+
+      config = YAML.load_file 'executor/resources/config_default.yml'
+      config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
+      config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
+      config['server_base_url']= ("http://localhost:" + ENV['REVERSE_PROXY_HTTP_PORT'])
+      config['nrepl']['enabled']=true
+      config['nrepl']['port']= Integer(ENV['EXECUTOR_NREPL_PORT'])
+      config['max_load']= 2
+
+      File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
+      File.open('executor/config/traits.yml','w') { |file| file.write ["Bash", "Git"].to_yaml }
+
+
+  compile-executor:
+    exclusive_executor_resource: compile-executor
+    environment_variables:
+      SERVICE_NAME: executor
+    body: integration-tests/cider-ci/bin/compile-service.sh
+    start_when:
+      'lein dev plugin has been installed':
+        script_key: install_lein-dev-plugin
+
+  run-executor:
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      cd executor
+      java -jar "target/executor.jar"
+    start_when:
+      executor is configured:
+        script_key: configure-executor
+      executor is compiled:
+        script_key: compile-executor
+
+  executor-is-running:
+    timeout: 3 Minutes
+    body: |
+      #!/usr/bin/env bash
+      set -ux
+      until curl --silent --fail \
+          --user check:fb305779d33334f6d68650c3024626e12d3872a6  \
+          -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do
+        sleep 1;
+      done
+    start_when:
+      executor is running:
+        script_key: run-executor
+        states: [executing]
+
+  test:
+    start_when:
+      executor is running:
+        script_key: executor-is-running
+
+  shutdown-executor:
+    body: |
+      set -eux
+      curl -X POST --silent --user ${EXECUTOR_ID}:${EXECUTOR_PASSWORD} \
+        -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown
+
+    start_when:
+      include:  cider-ci_v4/shared/test_is_terminal.yml
+      executor is executing:
+        script_key: run-executor
+        states: [executing]
+      executor is or was running:
+        script_key: executor-is-running
+        states: [passed]

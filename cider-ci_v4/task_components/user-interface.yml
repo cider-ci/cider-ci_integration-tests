@@ -1,0 +1,72 @@
+scripts:
+
+  ui-configure-database:
+    body: |
+      #!/usr/bin/env ruby
+      require 'yaml'
+      config = \
+        { 'test' =>
+          { 'adapter' => 'postgresql',
+            'encoding' => 'unicode',
+            'host' => 'localhost',
+            'pool' => 3,
+            'port' => Integer(ENV['PGPORT']),
+            'username' => ENV['PGUSER'],
+            'password' =>  ENV['PGPASSWORD'],
+            'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
+      File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
+
+  ui-run:
+    body: |
+      set -eux
+      export PATH=$(pwd)/user-interface/vendor/jruby/bin/:$PATH
+      cd user-interface
+      bundle exec rails s -p  ${UI_HTTP_PORT}
+    start_when:
+      ui database has been configured:
+        script_key: ui-configure-database
+      database has been created:
+        script_key: create-database
+    terminate_when:
+      shutdown is in terminal state:
+        script_key: ui-shutdown
+        states: [aborted, defective, passed, failed, skipped]
+
+
+  ui-is-running:
+    timeout: 2 Minutes
+    environment_variables:
+      STATUS_URL: http://localhost:{{UI_HTTP_PORT}}/cider-ci/ui/public
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      until curl --silent --fail --user x:${SERVICES_SECRET} -I  "${STATUS_URL}";  do
+        sleep 1;
+      done
+    start_when:
+      the ui is executing:
+        script_key: ui-run
+        states: [executing]
+    terminate_when:
+      api-run is in terminal state:
+        script_key: ui-run
+        states: [aborted, defective, passed, failed, skipped]
+
+  test:
+    start_when:
+      the ui is running:
+        script_key: ui-is-running
+
+  ui-shutdown:
+    body: |
+      kill -INT $(lsof -t -wni tcp:${UI_HTTP_PORT})
+      sleep 1
+    start_when:
+      the ui service is executing:
+        script_key: ui-run
+        states: [executing]
+      the ui service is or was running:
+        script_key: ui-is-running
+      the test is in terminal state:
+        script_key: test
+        states: [aborted, defective, passed, failed, skipped]

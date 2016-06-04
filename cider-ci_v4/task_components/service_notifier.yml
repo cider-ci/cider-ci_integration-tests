@@ -1,0 +1,45 @@
+scripts:
+
+  compile-notifier:
+    include: cider-ci_v4/shared/lein_service_compile_script.yml
+    exclusive_executor_resource: compile-notifier
+    environment_variables: &ENV_VARS
+      SERVICE_PORT: '{{NOTIFIER_HTTP_PORT}}'
+      SERVICE_NAME: notifier
+      SERVICE_CONTEXT: notifier
+
+  run-notifier:
+    include: cider-ci_v4/shared/lein_service_run_script.yml
+    environment_variables: *ENV_VARS
+    start_when:
+      notifier has been compiled:
+        script_key: compile-notifier
+
+  notifier-is-running:
+    include: cider-ci_v4/shared/lein_service_is-running_script.yml
+    environment_variables: *ENV_VARS
+    start_when:
+      the notifier is executing: &EXECUTING {script_key: run-notifier, states: [executing]}
+    terminate_when:
+      run-notifier is in terminal state: &TERMINAL
+        script_key: run-notifier
+        states: [aborted, defective, passed, failed, skipped]
+
+  test:
+    start_when:
+      notifier is running: {script_key: notifier-is-running}
+
+  shutdown-notifier:
+    include: cider-ci_v4/shared/lein_service_shutdown_script.yml
+    environment_variables: *ENV_VARS
+    start_when:
+      the notifier service is executing: *EXECUTING
+      the notifier is or has been running:
+        script_key: notifier-is-running
+
+  delete-database: &START_WHEN_TERMINAL
+    start_when:
+      the run-notifier is in terminal state: *TERMINAL
+
+  delete-rabbitmq-vhost:
+    <<: *START_WHEN_TERMINAL

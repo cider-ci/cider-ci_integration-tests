@@ -1,0 +1,4 @@
+body: integration-tests/cider-ci/bin/compile-service.sh
+start_when:
+  lein dev-plugin is installed:
+    script_key: install_lein-dev-plugin

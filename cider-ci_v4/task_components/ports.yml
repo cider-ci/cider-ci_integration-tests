@@ -1,0 +1,37 @@
+ports:
+  GITHUB_API_MOCK_PORT:
+    min: 8000
+    max: 8999
+  EXECUTOR_HTTP_PORT:
+    min: 4100
+    max: 8799
+  EXECUTOR_HTTPS_PORT:
+    min: 4100
+    max: 8799
+  EXECUTOR_NREPL_PORT:
+    min: 7000
+    max: 7999
+  REVERSE_PROXY_HTTP_PORT:
+    min: 4100
+    max: 8799
+  API_HTTP_PORT:
+    min: 4100
+    max: 8799
+  BUILDER_HTTP_PORT:
+    min: 4100
+    max: 8799
+  DISPATCHER_HTTP_PORT:
+    min: 4100
+    max: 8799
+  NOTIFIER_HTTP_PORT:
+    min: 4100
+    max: 8799
+  REPOSITORY_HTTP_PORT:
+    min: 4100
+    max: 8799
+  STORAGE_HTTP_PORT:
+    min: 4100
+    max: 8799
+  UI_HTTP_PORT:
+    min: 4100
+    max: 8799
