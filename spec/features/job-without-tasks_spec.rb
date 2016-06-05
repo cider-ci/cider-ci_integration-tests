@@ -28,18 +28,17 @@ describe 'Job without tasks ', type: :feature do
     end
   end
 
-  context 'a job without tasks and no explicit :empty_tasks_warning property' do
+  context 'a job without tasks' do
 
     let :job_name do
       'Job without tasks'
     end
 
     let :message do
-      'Replacy by "Job without tasks"'
+      'Replaced by "Job without tasks"'
     end
 
-    it 'passes but yields an issue of type warning,
-        and a :empty_tasks_warning property with true value has been added' do
+    it 'defects and yields an issue of type warning ' do
       Helpers::DemoRepo.reset!
       Dir.chdir Helpers::DemoRepo.system_path do
         File.open("cider-ci.yml", 'w') do |file|
@@ -59,11 +58,7 @@ describe 'Job without tasks ', type: :feature do
       click_on_first 'Workspace'
       wait_until { page.has_content? message }
       run_job_on_last_commit job_name
-      wait_for_job_state job_name, 'passed'
-
-      # the empty_tasks_warning has been set automatically to true
-      first("a.spec", text: 'Specification').click
-      expect(find('pre')).to have_content 'empty_tasks_warning: true'
+      wait_for_job_state job_name, 'defective'
 
       # there is a job-issue-warning for the job on the workspace
       click_on_first "Workspace"
@@ -80,51 +75,4 @@ describe 'Job without tasks ', type: :feature do
       expect{ wait_until(1){ first(".alert") }}.to raise_error Timeout::Error
     end
   end
-
-
-
-  context 'a job without tasks and explicit :empty_tasks_warning false' do
-
-    let :job_name do
-      'Job without tasks'
-    end
-
-    let :message do
-      'Replacy by "Job without tasks"'
-    end
-
-    it 'passes the job and no alert/warning is given' do
-      Helpers::DemoRepo.reset!
-      Dir.chdir Helpers::DemoRepo.system_path do
-        File.open("cider-ci.yml", 'w') do |file|
-          file.write <<-YAML.strip_heredoc
-            jobs:
-              test:
-                name: Job without tasks
-                empty_tasks_warning: false
-                tasks: {}
-          YAML
-        end
-      end
-      Helpers::DemoRepo.exec! <<-CMD.strip_heredoc
-        git add --all .
-        git commit -m #{Shellwords.escape message}
-      CMD
-      sign_in_as 'admin'
-      click_on_first 'Workspace'
-      wait_until { page.has_content? message }
-      run_job_on_last_commit job_name
-      wait_for_job_state job_name, 'passed'
-
-      # the empty_tasks_warning is set to false
-      first("a.spec", text: 'Specification').click
-      expect(find('pre')).to have_content 'empty_tasks_warning: false'
-
-      # there is no alert
-      click_on_first "Job"
-      expect{ wait_until(1){ first(".alert") }}.to \
-        raise_error Timeout::Error
-    end
-  end
-
 end
