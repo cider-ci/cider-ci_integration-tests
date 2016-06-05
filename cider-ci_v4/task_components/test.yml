@@ -7,4 +7,4 @@ scripts:
       set -eux
       export PATH=~/.rubies/$RUBY/bin:$PATH
       cd integration-tests
-      xvfb-run bundle exec rspec $CIDER_CI_TASK_FILE
+      xvfb-run -a -e /dev/stderr bundle exec rspec $CIDER_CI_TASK_FILE
