@@ -6,7 +6,5 @@ body: |
 start_when:
   database has been created:
     script_key: create-database
-  rabbitmq_vhost_has_been_created:
-    script_key: create-rabbitmq-vhost
   server_has_been_configured:
     script_key: configure-server

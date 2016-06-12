@@ -9,7 +9,6 @@ task_defaults:
     - 'cider-ci_v4/task_components/github_api_mock_service.yml'
     - 'cider-ci_v4/task_components/lein_dev_plugin.yml'
     - 'cider-ci_v4/task_components/ports.yml'
-    - 'cider-ci_v4/task_components/rabbitmq.yml'
     - 'cider-ci_v4/task_components/reverse_proxy.yml'
     - 'cider-ci_v4/task_components/test.yml'
     - 'cider-ci_v4/task_components/server_configuration.yml'

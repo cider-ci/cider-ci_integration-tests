@@ -41,5 +41,3 @@ scripts:
     start_when:
       the run-notifier is in terminal state: *TERMINAL
 
-  delete-rabbitmq-vhost:
-    <<: *START_WHEN_TERMINAL
