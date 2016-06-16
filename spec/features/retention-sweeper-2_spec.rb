@@ -6,9 +6,9 @@ describe 'After setting short retention times ',
 
   before :all do
     IO.write "../config/config.yml", {
-      'job_retention_duration' => '45 Seconds',
-      'task_retention_duration' => '30 Seconds',
-      'trial_retention_duration' => '15 Seconds',
+      'job_retention_duration' => '90 Seconds',
+      'task_retention_duration' => '60 Seconds',
+      'trial_retention_duration' => '30 Seconds',
     }.to_yaml
   end
 
@@ -40,7 +40,7 @@ describe 'After setting short retention times ',
     # there is till one job
     click_on_first "Workspace"
     expect(all("table#jobs-table tr").count).to be== 1
-    sleep 30
+    sleep 45
     expect(all("table#jobs-table tr").count).to be== 1
 
   end
