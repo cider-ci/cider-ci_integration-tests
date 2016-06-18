@@ -34,7 +34,7 @@ scripts:
 
 
   ui-is-running:
-    timeout: 2 Minutes
+    timeout: 3 Minutes
     environment_variables:
       STATUS_URL: http://localhost:{{UI_HTTP_PORT}}/cider-ci/ui/public
     body: |
