@@ -21,6 +21,8 @@ task_defaults:
     - 'cider-ci_v4/task_components/service_storage.yml'
     - 'cider-ci_v4/task_components/user-interface.yml'
 
+  max_trials: 5
+
   dispatch_storm_delay_duration: 20 Seconds
 
   git_options:
