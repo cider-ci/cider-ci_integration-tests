@@ -21,7 +21,7 @@ scripts:
       set -eux
       export PATH=$(pwd)/user-interface/vendor/jruby/bin/:$PATH
       cd user-interface
-      bundle exec rails s -p  ${UI_HTTP_PORT}
+      jruby --dev -S bundle exec rails s -p  ${UI_HTTP_PORT}
     start_when:
       ui database has been configured:
         script_key: ui-configure-database
