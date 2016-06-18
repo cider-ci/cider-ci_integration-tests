@@ -20,7 +20,7 @@ task_defaults:
     - 'cider-ci_v4/task_components/service_storage.yml'
     - 'cider-ci_v4/task_components/user-interface.yml'
 
-  dispatch_storm_delay_duration: 35 Seconds
+  dispatch_storm_delay_duration: 20 Seconds
 
   git_options:
     submodules:
