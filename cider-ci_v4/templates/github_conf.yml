@@ -1,0 +1,65 @@
+github_authtoken: the-global-github-auth-token
+
+authentication_providers:
+
+  #  the GitHub provider MUST use the key `github`
+  #  the "callback URL" of the application MUST read like the following
+  #  http://YOUR-SERVER-NAME/cider-ci/ui/public/auth_provider/github/sign_in
+
+  github:
+
+    name: GitHubMock
+    client_id: the GitHub OAuth client_id
+    client_secret: the GitHub OAuth client_secrete
+    api_endpoint: http://localhost:{{GITHUB_API_MOCK_PORT}}
+    oauth_base_url: http://localhost:{{GITHUB_API_MOCK_PORT}}/login/oauth
+
+
+    ### sign-in_strategies ######################################################
+    # first match will be used => order strategies with most permissive
+    # properties first!
+    #############################################################################
+
+    sign-in_strategies:
+
+      ### email-addresses #######################################################
+      # * honors any verified (!) email addresses associated with the user
+      # * does not require  any team or organization membership
+      # * sign-in is faster compared to organization or team membership
+      - type: email-addresses
+        email-addresses:
+          - adam.admin@example.com
+        create-attributes:
+          is_admin: true
+          account_enabled: true
+          password_sign_in_allowed: true
+          max_session_lifetime: 7 days
+
+      ### team-membership #######################################################
+      # Example: members of the "Admin" group are automatically promoted to
+      # to Cider-CI admins.
+      - type: team-membership
+        access_token: access-token of an owner with org:read scope
+        organization-login: TestOrg
+        team-name: Admins
+        create-attributes:
+          is_admin: true
+          account_enabled: true
+          password_sign_in_allowed: true
+          max_session_lifetime: 3 days
+        update-attributes:
+          is_admin: true
+          account_enabled: true
+
+      ### organization-membership ###############################################
+      # Members of the "TestOrg" organization can sign-in.
+      - type: organization-membership
+        organization-login: TestOrg
+        create-attributes:
+          is_admin: false
+          account_enabled: true
+          password_sign_in_allowed: false
+          max_session_lifetime: 1 day
+        update-attributes:
+          account_enabled: true
+

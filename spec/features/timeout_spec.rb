@@ -10,6 +10,7 @@ describe 'the job "Timeout Demo"', type: :feature do
   end
 
   it 'fails the "Fail Timeout" task but passes the other' do
+
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
@@ -23,7 +24,7 @@ describe 'the job "Timeout Demo"', type: :feature do
     ).to be == 'passed'
   end
 
-  it 'the scripts for the task "Fail Timeout" are in proper order and state', driver: :selenium do
+  it 'the scripts for the task "Fail Timeout" are in proper order and state' do
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
@@ -32,7 +33,7 @@ describe 'the job "Timeout Demo"', type: :feature do
       %w(defective skipped defective skipped)
   end
 
-  it 'the scripts for the task "Pass Timeout" are in proper order and state', driver: :selenium do
+  it 'the scripts for the task "Pass Timeout" are in proper order and state' do
     visit path_to_job(@job_id)
     find('select#tasks_select_condition').select('All')
     click_on('Filter')
