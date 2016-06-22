@@ -14,7 +14,6 @@ describe 'Abort and retry a job', type: :feature do
     end
     click_on 'Abort'
     expect(first("ul.trials li.trial[data-state='aborting']")).to be
-    wait_for_job_state abort_and_retry_job, 'aborting'
     wait_for_job_state abort_and_retry_job, 'aborted'
 
     # check the "aborted by" info is shown for the job
