@@ -44,7 +44,7 @@ describe 'A trial passing the trial_dispatch_timeout will be set to '\
 
     Helpers::DemoRepo.reset!
     Dir.chdir Helpers::DemoRepo.system_path do
-      IO.write "cider-ci_v4.yml", cider_ci_config
+      IO.write "cider-ci.yml", cider_ci_config
     end
 
     Helpers::DemoRepo.exec! <<-CMD.strip_heredoc

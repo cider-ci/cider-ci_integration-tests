@@ -1,7 +1,7 @@
 scripts:
 
   compile-repository:
-    include: cider-ci_v4/shared/lein_service_compile_script.yml
+    include: cider-ci/shared/lein_service_compile_script.yml
     exclusive_executor_resource: compile-repository
     environment_variables: &ENV_VARS
       SERVICE_PORT: '{{REPOSITORY_HTTP_PORT}}'
@@ -9,14 +9,14 @@ scripts:
       SERVICE_CONTEXT: repositories
 
   run-repository:
-    include: cider-ci_v4/shared/lein_service_run_script.yml
+    include: cider-ci/shared/lein_service_run_script.yml
     environment_variables: *ENV_VARS
     start_when:
       repository has been compiled:
         script_key: compile-repository
 
   repository-is-running:
-    include: cider-ci_v4/shared/lein_service_is-running_script.yml
+    include: cider-ci/shared/lein_service_is-running_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the repository is executing: &EXECUTING {script_key: run-repository, states: [executing]}
@@ -30,7 +30,7 @@ scripts:
       repository is running: {script_key: repository-is-running}
 
   shutdown-repository:
-    include: cider-ci_v4/shared/lein_service_shutdown_script.yml
+    include: cider-ci/shared/lein_service_shutdown_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the repository service is executing: *EXECUTING

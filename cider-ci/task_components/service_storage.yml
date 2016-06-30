@@ -1,7 +1,7 @@
 scripts:
 
   compile-storage:
-    include: cider-ci_v4/shared/lein_service_compile_script.yml
+    include: cider-ci/shared/lein_service_compile_script.yml
     exclusive_executor_resource: compile-storage
     environment_variables: &ENV_VARS
       SERVICE_PORT: '{{STORAGE_HTTP_PORT}}'
@@ -9,14 +9,14 @@ scripts:
       SERVICE_CONTEXT: storage
 
   run-storage:
-    include: cider-ci_v4/shared/lein_service_run_script.yml
+    include: cider-ci/shared/lein_service_run_script.yml
     environment_variables: *ENV_VARS
     start_when:
       storage has been compiled:
         script_key: compile-storage
 
   storage-is-running:
-    include: cider-ci_v4/shared/lein_service_is-running_script.yml
+    include: cider-ci/shared/lein_service_is-running_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the storage is executing: &EXECUTING {script_key: run-storage, states: [executing]}
@@ -30,7 +30,7 @@ scripts:
       storage is running: {script_key: storage-is-running}
 
   shutdown-storage:
-    include: cider-ci_v4/shared/lein_service_shutdown_script.yml
+    include: cider-ci/shared/lein_service_shutdown_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the storage service is executing: *EXECUTING

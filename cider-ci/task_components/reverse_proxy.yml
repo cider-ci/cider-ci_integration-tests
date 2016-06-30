@@ -35,7 +35,7 @@ scripts:
       kill -INT $(lsof -t -wni tcp:${REVERSE_PROXY_HTTP_PORT})
       sleep 1
     start_when:
-      include: cider-ci_v4/shared/test_is_terminal.yml
+      include: cider-ci/shared/test_is_terminal.yml
       'reverse proxy is running':
         script_key: run-reverse-proxy
         states: [executing]

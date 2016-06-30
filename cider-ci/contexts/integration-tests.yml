@@ -4,22 +4,22 @@ script_defaults:
 
 task_defaults:
   include:
-    - 'cider-ci_v4/task_components/bundle_rspec_ruby.yml'
-    - 'cider-ci_v4/task_components/database.yml'
-    - 'cider-ci_v4/task_components/executor.yml'
-    - 'cider-ci_v4/task_components/github_api_mock_service.yml'
-    - 'cider-ci_v4/task_components/lein_dev_plugin.yml'
-    - 'cider-ci_v4/task_components/ports.yml'
-    - 'cider-ci_v4/task_components/reverse_proxy.yml'
-    - 'cider-ci_v4/task_components/test.yml'
-    - 'cider-ci_v4/task_components/server_configuration.yml'
-    - 'cider-ci_v4/task_components/service_api.yml'
-    - 'cider-ci_v4/task_components/service_builder.yml'
-    - 'cider-ci_v4/task_components/service_dispatcher.yml'
-    - 'cider-ci_v4/task_components/service_notifier.yml'
-    - 'cider-ci_v4/task_components/service_repository.yml'
-    - 'cider-ci_v4/task_components/service_storage.yml'
-    - 'cider-ci_v4/task_components/user-interface.yml'
+    - 'cider-ci/task_components/bundle_rspec_ruby.yml'
+    - 'cider-ci/task_components/database.yml'
+    - 'cider-ci/task_components/executor.yml'
+    - 'cider-ci/task_components/github_api_mock_service.yml'
+    - 'cider-ci/task_components/lein_dev_plugin.yml'
+    - 'cider-ci/task_components/ports.yml'
+    - 'cider-ci/task_components/reverse_proxy.yml'
+    - 'cider-ci/task_components/test.yml'
+    - 'cider-ci/task_components/server_configuration.yml'
+    - 'cider-ci/task_components/service_api.yml'
+    - 'cider-ci/task_components/service_builder.yml'
+    - 'cider-ci/task_components/service_dispatcher.yml'
+    - 'cider-ci/task_components/service_notifier.yml'
+    - 'cider-ci/task_components/service_repository.yml'
+    - 'cider-ci/task_components/service_storage.yml'
+    - 'cider-ci/task_components/user-interface.yml'
 
   max_trials: 5
 
@@ -66,7 +66,7 @@ tasks:
   spec/features/sign-in-out_via-github_spec.rb:
     templates:
       github_config:
-        src: integration-tests/cider-ci_v4/templates/github_conf.yml
+        src: integration-tests/cider-ci/templates/github_conf.yml
         dest: config/config.yml
 
 generate_tasks:

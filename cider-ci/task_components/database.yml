@@ -14,7 +14,7 @@ scripts:
       dropdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
     ignore_state: true
     start_when:
-      include: cider-ci_v4/shared/test_is_terminal.yml
+      include: cider-ci/shared/test_is_terminal.yml
       'the database has been created':
         script_key: create-database
         states: [passed]

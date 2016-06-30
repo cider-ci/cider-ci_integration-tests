@@ -1,7 +1,7 @@
 scripts:
 
   compile-builder:
-    include: cider-ci_v4/shared/lein_service_compile_script.yml
+    include: cider-ci/shared/lein_service_compile_script.yml
     exclusive_executor_resource: compile-builder
     environment_variables: &ENV_VARS
       SERVICE_PORT: '{{BUILDER_HTTP_PORT}}'
@@ -9,14 +9,14 @@ scripts:
       SERVICE_CONTEXT: builder
 
   run-builder:
-    include: cider-ci_v4/shared/lein_service_run_script.yml
+    include: cider-ci/shared/lein_service_run_script.yml
     environment_variables: *ENV_VARS
     start_when:
       builder has been compiled:
         script_key: compile-builder
 
   builder-is-running:
-    include: cider-ci_v4/shared/lein_service_is-running_script.yml
+    include: cider-ci/shared/lein_service_is-running_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the builder is executing: &EXECUTING {script_key: run-builder, states: [executing]}
@@ -30,7 +30,7 @@ scripts:
       builder is running: {script_key: builder-is-running}
 
   shutdown-builder:
-    include: cider-ci_v4/shared/lein_service_shutdown_script.yml
+    include: cider-ci/shared/lein_service_shutdown_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the builder service is executing: *EXECUTING

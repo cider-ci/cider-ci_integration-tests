@@ -1,7 +1,7 @@
 scripts:
 
   compile-dispatcher:
-    include: cider-ci_v4/shared/lein_service_compile_script.yml
+    include: cider-ci/shared/lein_service_compile_script.yml
     exclusive_executor_resource: compile-dispatcher
     environment_variables: &ENV_VARS
       SERVICE_PORT: '{{DISPATCHER_HTTP_PORT}}'
@@ -9,14 +9,14 @@ scripts:
       SERVICE_CONTEXT: dispatcher
 
   run-dispatcher:
-    include: cider-ci_v4/shared/lein_service_run_script.yml
+    include: cider-ci/shared/lein_service_run_script.yml
     environment_variables: *ENV_VARS
     start_when:
       dispatcher has been compiled:
         script_key: compile-dispatcher
 
   dispatcher-is-running:
-    include: cider-ci_v4/shared/lein_service_is-running_script.yml
+    include: cider-ci/shared/lein_service_is-running_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the dispatcher is executing: &EXECUTING {script_key: run-dispatcher, states: [executing]}
@@ -30,7 +30,7 @@ scripts:
       dispatcher is running: {script_key: dispatcher-is-running}
 
   shutdown-dispatcher:
-    include: cider-ci_v4/shared/lein_service_shutdown_script.yml
+    include: cider-ci/shared/lein_service_shutdown_script.yml
     environment_variables: *ENV_VARS
     start_when:
       the dispatcher service is executing: *EXECUTING
