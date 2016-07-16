@@ -1,6 +1,5 @@
 traits:
   ruby-install: true
-  chruby: true
   Bash: true
 
 scripts:
