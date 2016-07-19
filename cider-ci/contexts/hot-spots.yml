@@ -1,0 +1,8 @@
+include: cider-ci/shared/integration-tests_context.yml
+task_defaults:
+  max_trials: 5
+  eager_trials: 2
+
+generate_tasks:
+  include_match: ^.*pushing-job-statuses_spec.*$
+

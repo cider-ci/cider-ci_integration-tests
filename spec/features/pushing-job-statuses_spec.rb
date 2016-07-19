@@ -32,12 +32,14 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       ### run a job ###########################################################
 
+      FileUtils.rm ['tmp/last-status-post.yml'], force: true
+
       run_job_on_last_commit 'Introduction Demo and Example Job'
       wait_for_job_state 'Introduction Demo and Example Job', 'passed'
 
       ### check for success status push #######################################
 
-      wait_until 10 do
+      wait_until 30 do
         File.exist?('tmp/last-status-post.yml') &&
           (YAML.load_file('tmp/last-status-post.yml')
            .with_indifferent_access[:body][:state] == 'success')
@@ -56,9 +58,14 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       ### check for success status push for new amended commit ################
 
-      FileUtils.rm ['tmp/last-status-post.yml']
+      FileUtils.rm ['tmp/last-status-post.yml'], force: true
 
       Helpers::DemoRepo.exec! 'git commit --allow-empty -m "Some new commit with same tree_id" '
+      Helpers::DemoRepo.git_update_server_info
+
+      wait_until do
+        page.has_content? "Some new commit"
+      end
 
       wait_until 30 do
         File.exist?('tmp/last-status-post.yml') &&

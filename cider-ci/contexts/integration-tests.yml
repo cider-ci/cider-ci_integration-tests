@@ -1,63 +1,4 @@
-script_defaults:
-  template_environment_variables: true
-  timeout: 5 Minutes
-
-task_defaults:
-  include:
-    - 'cider-ci/task_components/bundle_rspec_ruby.yml'
-    - 'cider-ci/task_components/database.yml'
-    - 'cider-ci/task_components/executor.yml'
-    - 'cider-ci/task_components/github_api_mock_service.yml'
-    - 'cider-ci/task_components/lein_dev_plugin.yml'
-    - 'cider-ci/task_components/ports.yml'
-    - 'cider-ci/task_components/reverse_proxy.yml'
-    - 'cider-ci/task_components/test.yml'
-    - 'cider-ci/task_components/server_configuration.yml'
-    - 'cider-ci/task_components/service_api.yml'
-    - 'cider-ci/task_components/service_builder.yml'
-    - 'cider-ci/task_components/service_dispatcher.yml'
-    - 'cider-ci/task_components/service_notifier.yml'
-    - 'cider-ci/task_components/service_repository.yml'
-    - 'cider-ci/task_components/service_storage.yml'
-    - 'cider-ci/task_components/user-interface.yml'
-
-  max_trials: 5
-
-  dispatch_storm_delay_duration: 23 Seconds
-
-  git_options:
-    submodules:
-      include_match: ^.*$
-
-  environment_variables:
-    RUBY_ENGINE: ruby
-    RUBY_VERSION: 2.2.4
-    RUBY: '{{RUBY_ENGINE}}-{{RUBY_VERSION}}'
-    RAILS_ENV: test
-    SERVICES_SECRET: service-secret
-    MASTER_SECRET: master-secret
-    DATABASE_SECRET: database-secret
-    MESSAGING_SECRET: messaging-secret
-    RAILS_SECRET_KEY_BASE: rails-secret-key-base-secret
-    EXECUTOR_ID: 35cff40c-b4f8-4ca3-9217-d49c9c35f375
-    # the executor password depends on the master_secret:
-    # OpenSSL::HMAC.hexdigest( OpenSSL::Digest.new('sha1'), 'master-secret', '35cff40c-b4f8-4ca3-9217-d49c9c35f375')
-    EXECUTOR_PASSWORD: 03b774c9d260ad7329ad3c6dcbc6ea9bec943486
-
-  trial_attachments:
-    screenshots:
-      include_match: 'integration-tests\/tmp\/.+\.png$'
-      content_type: image/png
-    logs:
-      include_match: '\/logs?\/.+\.log$'
-      content_type: text/plain
-    config:
-      include_match: 'config\/.+\.ya?ml$'
-      exclude_match: '\/vendor\/'
-      content_type: text/yaml
-    reverse-proxy-config:
-      include_match: 'integration-tests\/reverse-proxy\/conf/.+\.conf$'
-      content_type: text/plain
+include: cider-ci/shared/integration-tests_context.yml
 
 tasks:
   spec/features/retention-sweeper-2_spec.rb: {priority: 2}
@@ -71,3 +12,4 @@ tasks:
 
 generate_tasks:
   include_match: spec/.*_spec.rb
+

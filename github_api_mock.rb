@@ -77,14 +77,17 @@ end
 
 post '/repos/:owner/:repo/statuses/:sha' do
 
-  auth_token = env['HTTP_AUTHORIZATION'].match(/Bearer\s+(.*)/)[1]
+  auth_token = env['HTTP_AUTHORIZATION'].match(/Bearer\s+(.*)/)[1] rescue nil
 
   FileUtils.mkdir_p 'tmp'
-
-  File.write 'tmp/last-status-post.yml',
-    params.merge('auth_token' => auth_token,
-                 'body' => JSON.parse(request.body.read)
-                ).to_yaml
+  data = params.merge('auth_token' => auth_token,
+                      'body' => JSON.parse(request.body.read))
+  IO.write 'tmp/last-status-post.yml', data.to_yaml
+  if File.exist? 'tmp/last-status-post.yml'
+    logger.info "written tmp/last-status-post.yml with content: #{data.to_json}"
+  else
+    logger.warn "NOT WRITTEN tmp/last-status-post.yml with content: #{data.to_json}"
+  end
 
   content_type 'application/json'
   status 201
