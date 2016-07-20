@@ -4,5 +4,5 @@ task_defaults:
   eager_trials: 2
 
 generate_tasks:
-  include_match: ^.*pushing-job-statuses_spec.*$
+  include_match: ^.*load_spec.*$
 

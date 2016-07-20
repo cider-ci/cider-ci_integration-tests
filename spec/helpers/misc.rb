@@ -66,9 +66,9 @@ module Helpers
     def wait_for_job_state(job_name, state,
       options = { wait_time:  60, forbidden_terminal_states: %w(passed failed aborted) - [state] })
       wait_until options[:wait_time] do
-        expect(options[:forbidden_terminal_states]).not_to include first(".job[data-name='#{job_name}']")['data-state']
         all(".job[data-name='#{job_name}'][data-state='#{state}']").present?
       end
+      expect(options[:forbidden_terminal_states]).not_to include first(".job[data-name='#{job_name}']")['data-state']
     end
 
     def api_connection

@@ -1,3 +1,6 @@
+require 'active_support'
+require 'yaml'
+
 module Helpers
   module DemoExecutor
     class << self
@@ -18,6 +21,13 @@ module Helpers
       def eval_clj code
         port = Integer( ENV['EXECUTOR_NREPL_PORT'].presence || 7883)
         Helpers::Misc.eval_clj_via_nrepl port, code
+      end
+
+
+      CONFIG_FILE = '../executor/config/config.yml'
+      def amend_config cfg
+        existing_config = YAML.load_file(CONFIG_FILE).with_indifferent_access
+        IO.write CONFIG_FILE, existing_config.deep_merge(cfg).as_json.to_yaml
       end
 
     end
