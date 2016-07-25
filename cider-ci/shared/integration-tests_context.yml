@@ -23,7 +23,8 @@ task_defaults:
 
   max_trials: 5
 
-  dispatch_storm_delay_duration: 23 Seconds
+  load: 2.5
+  dispatch_storm_delay_duration: 15 Seconds
 
   git_options:
     submodules:
