@@ -4,7 +4,5 @@ task_defaults:
   eager_trials: 2
 
 generate_tasks:
-  include_match: ^.*NO_MATCH_spec.*$
+  include_match: ^.*load_spec.*$
 
-tasks:
-  dummy: exit 0
