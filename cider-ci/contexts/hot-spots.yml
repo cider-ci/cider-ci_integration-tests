@@ -1,8 +1,4 @@
 include: cider-ci/shared/integration-tests_context.yml
 task_defaults:
-  max_trials: 5
+  max_trials: 2
   eager_trials: 2
-
-generate_tasks:
-  include_match: ^.*load_spec.*$
-
