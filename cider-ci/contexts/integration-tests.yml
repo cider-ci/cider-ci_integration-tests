@@ -12,4 +12,5 @@ tasks:
 
 generate_tasks:
   include_match: spec/.*_spec.rb
+  submodule: [integration-tests]
 
