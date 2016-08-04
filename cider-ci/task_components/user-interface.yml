@@ -1,3 +1,7 @@
+traits:
+  ruby-install: true
+  Bash: true
+
 scripts:
 
   ui-configure-database:
@@ -16,13 +20,39 @@ scripts:
             'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
       File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
 
+  ui-bundle:
+    exclusive_executor_resource: ruby-install_{{$RUBY}}
+    timeout: 20 Minutes
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      export PATH=~/.rubies/$RUBY/bin:$PATH
+
+      if [ ! -d ~/.rubies/$RUBY ]; then
+        ruby-install --no-install-deps $RUBY_ENGINE $RUBY_VERSION
+      fi
+
+      cd user-interface
+      rm -f .bundle/config
+
+      if [ ! -f ~/.rubies/$RUBY/bin/bundle ]; then
+        gem install bundler
+      fi
+
+      bundle install
+
+
   ui-run:
     body: |
       set -eux
-      export PATH=$(pwd)/user-interface/vendor/jruby/bin/:$PATH
+      #export PATH=$(pwd)/user-interface/vendor/jruby/bin/:$PATH
+      export PATH=~/.rubies/$RUBY/bin:$PATH
       cd user-interface
-      jruby --dev -S bundle exec rails s -p  ${UI_HTTP_PORT}
+      #jruby --dev -S bundle exec rails s -p  ${UI_HTTP_PORT}
+      bundle exec rails s -p  ${UI_HTTP_PORT}
     start_when:
+      ui ruby is bundled:
+        script_key: ui-bundle
       ui database has been configured:
         script_key: ui-configure-database
       database has been created:
@@ -48,7 +78,7 @@ scripts:
         script_key: ui-run
         states: [executing]
     terminate_when:
-      api-run is in terminal state:
+      ui-run is in terminal state:
         script_key: ui-run
         states: [aborted, defective, passed, failed, skipped]
 
