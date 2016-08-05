@@ -11,6 +11,7 @@ scripts:
   run-repository:
     include: cider-ci/shared/lein_service_run_script.yml
     environment_variables: *ENV_VARS
+    ignore_state: true
     start_when:
       repository has been compiled:
         script_key: compile-repository
