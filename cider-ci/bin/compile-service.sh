@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -eux
 cd "$SERVICE_NAME"
+export LEIN_SNAPSHOTS_IN_RELEASE=yes
 SELF_DIGEST=$(git log -n 1 HEAD --pretty=%T)
 UTILS_DIGEST=$(cd ../clj-utils &&  git log -n 1 HEAD --pretty=%T)
 LEIN_DEV_PLUGIN_DIGEST=$(cd ../lein-dev-plugin &&  git log -n 1 HEAD --pretty=%T)
