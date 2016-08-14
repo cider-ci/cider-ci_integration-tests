@@ -147,7 +147,7 @@ describe 'Project-Configuration', type: :feature do
         first("a",text: "Workspace").click
         wait_until { first  "a .tree-issue-warning" }.click
         expect(page).to have_content "Project Configuration Error"
-        expect(page).to have_content /The file for the path .* was not found in the project .*/
+        expect(page).to have_content /Path .* does not exist in .*/
       end
 
       it 'is NOT FOUND' do
