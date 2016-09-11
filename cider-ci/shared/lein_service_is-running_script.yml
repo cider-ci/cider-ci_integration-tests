@@ -6,6 +6,7 @@ body: |
   set -eux
   until curl --silent --fail \
     --user test-check-is-running:${SERVICES_SECRET} \
-    -I  "${STATUS_URL}";  do
+    -H 'Accept: application/json' \
+    -I "${STATUS_URL}";  do
     sleep 1;
   done

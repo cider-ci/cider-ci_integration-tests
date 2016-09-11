@@ -31,14 +31,13 @@ describe " Triggering jobs via branch updates with respect of
     it "the job will not be created automatically
     when an appropriate branch update is pushed".strip_heredoc do
 
-      click_on "Administration"
-      click_on "Repositories"
-      first("tr.repository a").click
+      click_on 'Projects'
+      wait_until { page.has_content? 'Demo Project'}
+      click_on "Demo Project"
       click_on "Edit"
-      find('input#repository_branch_trigger_include_match').set 'some non existing branch'
-      find("form *[type='submit']").click
+      find('input#branch_trigger_include_match').set 'some non existing branch'
+      find("[type='submit']").click
       first("a",text: "Workspace").click
-
       expect(Helpers::DemoRepo.create_new_branch('trigger-prerequisite')) \
         .to pass_execution
 

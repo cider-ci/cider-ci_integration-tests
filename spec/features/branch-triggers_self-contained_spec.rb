@@ -33,12 +33,12 @@ describe(" Given: job1 with run_when directive on brach matching ^test_.+$.
 
     # disable branch trigger for repository ##################################################
 
-    click_on "Administration"
-    click_on "Repositories"
-    first("tr.repository a").click
+    click_on 'Projects'
+    wait_until { page.has_content? 'Demo Project'}
+    click_on "Demo Project"
     click_on "Edit"
-    find('input#repository_branch_trigger_include_match').set '$.+^'
-    find("form *[type='submit']").click
+    find('input#branch_trigger_include_match').set '$.+^'
+    find("[type='submit']").click
     click_on_first 'Workspace'
 
 
@@ -72,13 +72,13 @@ describe(" Given: job1 with run_when directive on brach matching ^test_.+$.
 
     # (re­enable branch trigger for repository #################################
 
-    click_on "Administration"
-    click_on "Repositories"
-    first("tr.repository a").click
+    click_on 'Projects'
+    wait_until { page.has_content? 'Demo Project'}
+    click_on "Demo Project"
     click_on "Edit"
-    find('input#repository_branch_trigger_include_match').set '^.+$'
-    find('input#repository_branch_trigger_exclude_match').set '$.+^'
-    find("form *[type='submit']").click
+    find('input#branch_trigger_include_match').set '^.+$'
+    find('input#branch_trigger_exclude_match').set '$.+^'
+    find("[type='submit']").click
     click_on_first 'Workspace'
 
 

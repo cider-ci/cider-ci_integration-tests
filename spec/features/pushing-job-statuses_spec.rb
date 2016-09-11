@@ -18,16 +18,23 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       ### prepare #############################################################
 
-      click_on "Administration"
-      click_on "Repositories"
-      first("tr.repository a").click
+      click_on 'Projects'
+      wait_until { page.has_content? 'Demo Project'}
+      click_on "Demo Project"
       click_on "Edit"
 
-      find('input#repository_foreign_api_endpoint').set "http://localhost:#{github_api_mock_port}"
-      find('input#repository_foreign_api_authtoken').set "test-token"
-      find('input#repository_foreign_api_owner').set "test-org"
-      find('input#repository_foreign_api_repo').set "test-repo"
-      find("form *[type='submit']").click
+      find('input#api_token').set "test-token"
+
+      find('input#remote_api_endpoint').set "http://localhost:#{github_api_mock_port}"
+      find('input#remote_api_endpoint').set "http://localhost:#{github_api_mock_port}"
+
+      find('input#remote_api_namespace').set "test-org"
+      find('input#remote_api_namespace').set "test-org"
+
+      find('input#remote_api_name').set "test-repo"
+      find('input#remote_api_name').set "test-repo"
+
+      find("[type='submit']").click
 
 
       ### run a job ###########################################################

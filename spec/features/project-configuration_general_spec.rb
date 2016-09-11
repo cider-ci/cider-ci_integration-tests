@@ -18,6 +18,7 @@ describe 'Project-Configuration', type: :feature do
     Faraday.new(base_url) do |conn|
       conn.basic_auth('test-service', ENV['SERVICES_SECRET'])
       conn.adapter Faraday.default_adapter
+      conn.headers['Accept'] = 'application/json'
     end
   end
 

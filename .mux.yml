@@ -3,7 +3,9 @@ windows:
     name: apache2
     command: |
       while true; do
-        LD_LIBRARY_PATH=/opt/local/apache2/modules/ /opt/local/apache2/bin/apachectl -d reverse-proxy -e info -DFOREGROUND;
+        LD_LIBRARY_PATH=/opt/local/lib/apache2/modules/ \
+          /opt/local/sbin/apachectl -d reverse-proxy -e info -DFOREGROUND
+        sleep 1;
       done
   3:
     name: github api mock
