@@ -6,7 +6,9 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
   type: :feature do
 
   before :each do
-    setup_signin_waitforcommits
+    Helpers::DemoRepo.reset!
+    Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
+    Helpers::Users.create_users
   end
 
   let :github_api_mock_port do
@@ -18,23 +20,24 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       ### prepare #############################################################
 
+      sign_in_as 'admin'
+      visit '/'
       click_on 'Projects'
-      wait_until { page.has_content? 'Demo Project'}
-      click_on "Demo Project"
-      click_on "Edit"
+      click_on 'Add a new project'
+
+      find('input#git_url').set Helpers::DemoRepo.system_path
+      find('input#name').set 'Test Project'
 
       find('input#api_token').set "test-token"
-
       find('input#remote_api_endpoint').set "http://localhost:#{github_api_mock_port}"
-      find('input#remote_api_endpoint').set "http://localhost:#{github_api_mock_port}"
-
       find('input#remote_api_namespace').set "test-org"
-      find('input#remote_api_namespace').set "test-org"
-
       find('input#remote_api_name').set "test-repo"
-      find('input#remote_api_name').set "test-repo"
+      find('select#remote_api_type').select('github')
+      find('input#remote_fetch_interval').set "3 Seconds"
 
       find("[type='submit']").click
+
+      wait_until{ first("table.table-project td.text-center.branches.success") }
 
 
       ### run a job ###########################################################
@@ -70,6 +73,10 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       Helpers::DemoRepo.exec! 'git commit --allow-empty -m "Some new commit with same tree_id" '
       Helpers::DemoRepo.git_update_server_info
 
+      first("a",text: "Projects").click
+      wait_until{ first("td.branches.success", text: "a few seconds ago")}
+
+      first("a",text: "Workspace").click
       wait_until do
         page.has_content? "Some new commit"
       end

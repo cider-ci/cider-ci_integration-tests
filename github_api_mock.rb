@@ -1,11 +1,12 @@
-require 'addressable/uri'
-require 'sinatra'
-require 'pry'
-require 'json'
-require 'yaml'
 require 'active_support/all'
-require 'haml'
+require 'addressable/uri'
 require 'fileutils'
+require 'haml'
+require 'json'
+require 'pry'
+require 'rest-client'
+require 'sinatra'
+require 'yaml'
 
 CLIENT_ID = 'the GitHub OAuth client_id'.freeze
 CLIENT_SECRET = 'the GitHub OAuth client_secrete'.freeze
@@ -64,6 +65,17 @@ def find_user_by_access_token(access_token)
 end
 
 ###############################################################################
+### intialize #################################################################
+###############################################################################
+
+
+
+def initialize
+  super()
+  @hooks = []
+end
+
+###############################################################################
 ### Meta ######################################################################
 ###############################################################################
 
@@ -77,21 +89,27 @@ end
 
 post '/repos/:owner/:repo/statuses/:sha' do
 
+  sleep 1
+
   auth_token = env['HTTP_AUTHORIZATION'].match(/Bearer\s+(.*)/)[1] rescue nil
 
-  FileUtils.mkdir_p 'tmp'
-  data = params.merge('auth_token' => auth_token,
-                      'body' => JSON.parse(request.body.read))
-  IO.write 'tmp/last-status-post.yml', data.to_yaml
-  if File.exist? 'tmp/last-status-post.yml'
-    logger.info "written tmp/last-status-post.yml with content: #{data.to_json}"
+  if auth_token != 'test-token'
+    status 403
   else
-    logger.warn "NOT WRITTEN tmp/last-status-post.yml with content: #{data.to_json}"
-  end
+    FileUtils.mkdir_p 'tmp'
+    data = params.merge('auth_token' => auth_token,
+                        'body' => JSON.parse(request.body.read))
+    IO.write 'tmp/last-status-post.yml', data.to_yaml
+    if File.exist? 'tmp/last-status-post.yml'
+      logger.info "written tmp/last-status-post.yml with content: #{data.to_json}"
+    else
+      logger.warn "NOT WRITTEN tmp/last-status-post.yml with content: #{data.to_json}"
+    end
 
-  content_type 'application/json'
-  status 201
-  '{}'
+    content_type 'application/json'
+    status 201
+    '{}'
+  end
 
 end
 
@@ -173,6 +191,55 @@ end
 get '/orgs/TestOrg/members/normin' do
   halt(204, '')
 end
+
+###############################################################################
+### push notifications / aka webhooks #########################################
+###############################################################################
+
+get '/repos/:owner/:repo/hooks' do
+  content_type 'application/json'
+  @hooks.to_json
+end
+
+
+post '/repos/:owner/:repo/hooks' do
+
+  ;params.with_indifferent_access.slice(:owner,:repo,:config)
+
+  id = rand(10000)
+  hooks_url = "http://localhost:#{ENV['GITHUB_API_MOCK_PORT']}/repos/#{params[:owner]}/#{params[:repo]}/hooks/#{id}"
+
+  defaults = {
+    id: id,
+    url: hooks_url,
+    test_url: "#{hooks_url}/test",
+    ping_url: "#{hooks_url}/pings",
+    events: ["push"],
+    created_at: Time.now,
+    updated_at: Time.now,
+  }.with_indifferent_access
+
+  body = JSON.parse(request.body.read).with_indifferent_access
+
+  hook = defaults.deep_merge(body)
+
+  @hooks << hook
+
+  content_type 'application/json'
+  status 201
+  hook.to_json
+end
+
+post '/repos/:owner/:repo/hooks/:id/test' do
+  if repo = @hooks.select{|r| r[:id].to_s == params[:id]}.first
+    url = repo[:config][:url]
+    RestClient.post url, {}.to_json, {content_type: :json, accept: :json}
+    status 204
+  else
+    status 404
+  end
+end
+
 
 ###############################################################################
 ### Team ######################################################################

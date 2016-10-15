@@ -48,6 +48,9 @@ scripts:
       # ui
       config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
 
+      # extended repository UI for tests
+      config['repository_service_advanced_api_edit_fields'] = true
+
       # WRITE Config ############################################################
       File.open('config/config_default.yml','w') { |file| file.write config.to_yaml }
 
