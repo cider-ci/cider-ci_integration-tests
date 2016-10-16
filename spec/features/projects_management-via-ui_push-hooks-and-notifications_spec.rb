@@ -39,7 +39,7 @@ feature 'Admin manages Repositories', type: :feature do
 
     click_on 'Edit'
 
-    find('input#api_token').set 'test-token'
+    find('input#remote_api_token').set 'test-token'
     find('input#remote_api_endpoint').set "http://localhost:#{ENV['GITHUB_API_MOCK_PORT']}"
     find('input#remote_api_namespace').set 'project-namespace'
     find('input#remote_api_name').set 'project-name'

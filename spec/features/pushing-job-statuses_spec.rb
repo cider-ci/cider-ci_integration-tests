@@ -16,7 +16,8 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       || fail("GITHUB_API_MOCK_PORT is not set")
   end
 
-  it "The API mock writes the status and appropriate data into a file" do
+  it "The project UI shows the proper information and " \
+    "the API mock writes the status and appropriate data into a file" do
 
       ### prepare #############################################################
 
@@ -28,7 +29,7 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       find('input#git_url').set Helpers::DemoRepo.system_path
       find('input#name').set 'Test Project'
 
-      find('input#api_token').set "test-token"
+      find('input#remote_api_token').set "test-token"
       find('input#remote_api_endpoint').set "http://localhost:#{github_api_mock_port}"
       find('input#remote_api_namespace').set "test-org"
       find('input#remote_api_name').set "test-repo"
@@ -37,10 +38,14 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       find("[type='submit']").click
 
-      wait_until{ first("table.table-project td.text-center.branches.success") }
+
+      wait_until{ first("table.table-project td.status-pushes", text: 'unused') }
+      expect( first("table.table-project td.status-pushes.success") ).to be
 
 
       ### run a job ###########################################################
+
+      wait_until{ first("table.table-project td.text-center.branches.success") }
 
       FileUtils.rm ['tmp/last-status-post.yml'], force: true
 
@@ -96,6 +101,28 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       expect(written_data[:body][:target_url]).to be_present
       expect(written_data[:body][:description]).to be_present
       expect(written_data[:body][:context]).to be_present
+
+
+
+      ### with invalid token the state becomes 'error' ########################
+
+      click_on_first 'Projects'
+      click_on 'Test Project'
+      click_on 'Edit'
+      find('input#remote_api_token').set 'invalid-token'
+      find("[type='submit']").click
+      wait_until(10){first("table.table-project td.status-pushes.danger[data-state='error']")}
+
+
+      ### with empty token the state becomes 'unaccessible' ###################
+
+      click_on_first 'Projects'
+      click_on 'Test Project'
+      click_on 'Edit'
+      find('input#remote_api_token').set ' '
+      find("[type='submit']").click
+      wait_until(10){first("table.table-project td.status-pushes.warning[data-state='unaccessible']")}
+
 
   end
 
