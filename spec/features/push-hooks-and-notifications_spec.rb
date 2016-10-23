@@ -12,7 +12,7 @@ feature 'Admin manages Repositories', type: :feature do
     click_on 'Projects'
 
 
-    # set up project without push hook
+    # set up the project with disabled push hook management ###################
 
     wait_until { page.has_content? 'Add a new project'}
     click_on 'Add a new project'
@@ -21,81 +21,93 @@ feature 'Admin manages Repositories', type: :feature do
     find('input#name').set 'TestRepo'
     click_on 'Submit'
 
-    wait_until do
-      first("table.table-project td.push-hook.warning")
+    wait_until 5 do
+      first("table.table-project td.push-hook[data-state='unmanaged']")
     end
 
-    wait_until do
-      first("table.table-project td.push-hook") \
-        .text.match /setup is not possible/
-    end
-
-    wait_until do
+    wait_until 5 do
       first("table.table-project td.push-notification.warning")
     end
 
 
-    # modify project to enable push hook
+    # enable hook management and check that it is now "unavailable" ###########
 
     click_on 'Edit'
+    find("input.manage_remote_push_hooks").set(true)
+    click_on 'Submit'
+    wait_until do
+      first("table.table-project td.push-hook.danger[data-state='unavailable']")
+    end
 
-    find('input#remote_api_token').set 'test-token'
+
+    # modify the project to enable the push-hook but with an illegal token ####
+    click_on 'Edit'
+    find('input#remote_api_token').set 'faux-token'
     find('input#remote_api_endpoint').set "http://localhost:#{ENV['GITHUB_API_MOCK_PORT']}"
     find('input#remote_api_namespace').set 'project-namespace'
     find('input#remote_api_name').set 'project-name'
     find('select#remote_api_type').select('github')
     click_on 'Submit'
 
-    # check that push hook has been set up automatically
+    # check that push hook has been tried to set up automatically and failed
 
-    wait_until do
-      first("table.table-project td.push-hook.success")
+    wait_until 5 do
+      first("table.table-project td.push-hook.danger[data-state='error']")
     end
 
-    wait_until do
+    # fix the token ###########################################################
+    click_on 'Edit'
+    find('input#remote_api_token').set 'test-token'
+    click_on 'Submit'
+
+    wait_until 5 do
+      first("table.table-project td.push-hook.success[data-state='ok']")
+    end
+
+    wait_until 5 do
       first("table.table-project td.push-hook") \
         .text.match /a few seconds ago/
     end
 
-    # check that the hook did sent a notification
 
-    wait_until do
+    # check that the hook did sent a notification #############################
+
+    wait_until 5 do
       first("table.table-project td.push-notification.success")
     end
 
-    wait_until do
+    wait_until 5 do
       first("table.table-project td.push-notification") \
         .text.match /a few seconds ago/
     end
 
 
-    # re trigger hook check manually
+    # re trigger hook check manually ##########################################
 
-    wait_until do
+    wait_until 70 do
       first("table.table-project td.push-hook") \
         .text.match /a minute ago/
     end
 
-    wait_until do
+    wait_until 5 do
       first("table.table-project td.push-notification") \
         .text.match /a minute ago/
     end
 
     find("table.table-project td.push-hook button.check-push-hook").click
 
-    # now check if the hook has been checked and triggered again
 
-    wait_until do
+    # now check if the hook has been checked and triggered again ##############
+
+    wait_until 5 do
       first("table.table-project td.push-hook") \
         .text.match /a few seconds ago/
     end
 
-    wait_until do
+    wait_until 5 do
       first("table.table-project td.push-notification") \
         .text.match /a few seconds ago/
     end
-
-
 
 
   end

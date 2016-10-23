@@ -203,31 +203,28 @@ end
 
 
 post '/repos/:owner/:repo/hooks' do
-
-  ;params.with_indifferent_access.slice(:owner,:repo,:config)
-
-  id = rand(10000)
-  hooks_url = "http://localhost:#{ENV['GITHUB_API_MOCK_PORT']}/repos/#{params[:owner]}/#{params[:repo]}/hooks/#{id}"
-
-  defaults = {
-    id: id,
-    url: hooks_url,
-    test_url: "#{hooks_url}/test",
-    ping_url: "#{hooks_url}/pings",
-    events: ["push"],
-    created_at: Time.now,
-    updated_at: Time.now,
-  }.with_indifferent_access
-
-  body = JSON.parse(request.body.read).with_indifferent_access
-
-  hook = defaults.deep_merge(body)
-
-  @hooks << hook
-
-  content_type 'application/json'
-  status 201
-  hook.to_json
+  auth_token = env['HTTP_AUTHORIZATION'].match(/Bearer\s+(.*)/)[1] rescue nil
+  if auth_token != 'test-token'
+    status 403
+  else
+    id = rand(10000)
+    hooks_url = "http://localhost:#{ENV['GITHUB_API_MOCK_PORT']}/repos/#{params[:owner]}/#{params[:repo]}/hooks/#{id}"
+    defaults = {
+      id: id,
+      url: hooks_url,
+      test_url: "#{hooks_url}/test",
+      ping_url: "#{hooks_url}/pings",
+      events: ["push"],
+      created_at: Time.now,
+      updated_at: Time.now,
+    }.with_indifferent_access
+    body = JSON.parse(request.body.read).with_indifferent_access
+    hook = defaults.deep_merge(body)
+    @hooks << hook
+    content_type 'application/json'
+    status 201
+    hook.to_json
+  end
 end
 
 post '/repos/:owner/:repo/hooks/:id/test' do

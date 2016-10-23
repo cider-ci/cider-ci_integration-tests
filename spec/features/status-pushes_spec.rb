@@ -19,7 +19,7 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
   it "The project UI shows the proper information and " \
     "the API mock writes the status and appropriate data into a file" do
 
-      ### prepare #############################################################
+      ### prepare with disabled status-pushes #################################
 
       sign_in_as 'admin'
       visit '/'
@@ -28,20 +28,40 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       find('input#git_url').set Helpers::DemoRepo.system_path
       find('input#name').set 'Test Project'
-
+      find("input.send_status_notifications").set(false)
       find('input#remote_api_token').set "test-token"
       find('input#remote_api_endpoint').set "http://localhost:#{github_api_mock_port}"
       find('input#remote_api_namespace').set "test-org"
       find('input#remote_api_name').set "test-repo"
       find('select#remote_api_type').select('github')
       find('input#remote_fetch_interval').set "3 Seconds"
-
       find("[type='submit']").click
 
+      wait_until 5 do
+        first("table.table-project td.status-pushes", text: 'disabled')
+      end
 
-      wait_until{ first("table.table-project td.status-pushes", text: 'unused') }
-      expect( first("table.table-project td.status-pushes.success") ).to be
 
+      ### enabled but with out token ##########################################
+
+      click_on 'Edit'
+      find("input.send_status_notifications").set(true)
+      find('input#remote_api_token').set " "
+      find("[type='submit']").click
+      wait_until 5 do
+        first("table.table-project td.status-pushes.danger", text: 'unaccessible')
+      end
+
+
+      ### now enalbe it but set a illegal token ###############################
+      click_on 'Edit'
+      find("input.send_status_notifications").set(true)
+      find('input#remote_api_token').set "faux-token"
+      find("[type='submit']").click
+
+      wait_until 5 do
+        first("table.table-project td.status-pushes", text: 'unused')
+      end
 
       ### run a job ###########################################################
 
@@ -52,13 +72,37 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       run_job_on_last_commit 'Introduction Demo and Example Job'
       wait_for_job_state 'Introduction Demo and Example Job', 'passed'
 
-      ### check for success status push #######################################
+
+      ### now, since the token is wrong we should see an error ################
+
+      click_on_first "Projects"
+      click_on_first "Test Project"
+      wait_until 5 do
+        first("table.table-project td.status-pushes.danger", text: 'error')
+      end
+
+
+      ### fix the token ########################################################
+
+      click_on 'Edit'
+      find('input#remote_api_token').set "test-token"
+      find("[type='submit']").click
+
+      ### this should change the status to success ############################
+
+      wait_until 5 do
+        first("table.table-project td.status-pushes.success",
+              text: 'a few seconds ago')
+      end
+
+      ### check the proper data has been sent ##################################
 
       wait_until 30 do
         File.exist?('tmp/last-status-post.yml') &&
           (YAML.load_file('tmp/last-status-post.yml')
            .with_indifferent_access[:body][:state] == 'success')
       end
+
 
       commit_sha = Helpers::DemoRepo.exec! 'git log -n 1 --format=%H'
 
@@ -71,7 +115,28 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       expect(written_data[:body][:context]).to be_present
 
 
+      ### push statuses manually ##############################################
+
+      # first wait until the pushed status happen some while ago
+       wait_until 70 do
+        first("table.table-project td.status-pushes.success",
+              text: 'minute ago')
+      end
+      first("button.push-statuses").click
+
+      wait_until 5 do
+        first("table.table-project td.status-pushes.success",
+              text: 'a few seconds ago')
+      end
+
+
       ### check for success status push for new amended commit ################
+
+      # first wait until the pushed status happen some while ago
+       wait_until 70 do
+        first("table.table-project td.status-pushes.success",
+              text: 'minute ago')
+      end
 
       FileUtils.rm ['tmp/last-status-post.yml'], force: true
 
@@ -79,7 +144,16 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       Helpers::DemoRepo.git_update_server_info
 
       first("a",text: "Projects").click
-      wait_until{ first("td.branches.success", text: "a few seconds ago")}
+      wait_until(5){ first("td.branches.success", text: "a few seconds ago")}
+
+
+      # check that the status has been recently pushed
+      click_on_first "Projects"
+      click_on_first "Test Project"
+      wait_until 30 do
+        first("table.table-project td.status-pushes.success",
+              text: 'a few seconds ago')
+      end
 
       first("a",text: "Workspace").click
       wait_until do
@@ -103,7 +177,6 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       expect(written_data[:body][:context]).to be_present
 
 
-
       ### with invalid token the state becomes 'error' ########################
 
       click_on_first 'Projects'
@@ -114,15 +187,26 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       wait_until(10){first("table.table-project td.status-pushes.danger[data-state='error']")}
 
 
-      ### with empty token the state becomes 'unaccessible' ###################
+      ### with empty token the state becomes 'unaccessible' again #############
 
       click_on_first 'Projects'
       click_on 'Test Project'
       click_on 'Edit'
       find('input#remote_api_token').set ' '
       find("[type='submit']").click
-      wait_until(10){first("table.table-project td.status-pushes.warning[data-state='unaccessible']")}
+      wait_until(10){first("table.table-project td.status-pushes.danger[data-state='unaccessible']")}
 
+
+      ### if we disable it it becomes disabled again ##########################
+
+      click_on_first 'Projects'
+      click_on 'Test Project'
+      click_on 'Edit'
+      find("input.send_status_notifications").set(false)
+      find("[type='submit']").click
+      wait_until 5 do
+        first("table.table-project td.status-pushes", text: 'disabled')
+      end
 
   end
 
