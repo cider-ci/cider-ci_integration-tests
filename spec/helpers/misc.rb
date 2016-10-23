@@ -20,6 +20,7 @@ module Helpers
     end
 
     def click_on_first(locator, options = {})
+      wait_until(3){first(:link_or_button, locator, options)}
       first(:link_or_button, locator, options).click
     end
 
