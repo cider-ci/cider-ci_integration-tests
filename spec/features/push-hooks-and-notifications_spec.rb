@@ -49,7 +49,6 @@ feature 'Admin manages Repositories', type: :feature do
     find('select#remote_api_type').select('github')
     click_on 'Submit'
 
-    # check that push hook has been tried to set up automatically and failed
 
     wait_until 5 do
       first("table.table-project td.push-hook.danger[data-state='error']")
@@ -60,7 +59,7 @@ feature 'Admin manages Repositories', type: :feature do
     find('input#remote_api_token').set 'test-token'
     click_on 'Submit'
 
-    wait_until 5 do
+    wait_until 10 do
       first("table.table-project td.push-hook.success[data-state='ok']")
     end
 
@@ -82,32 +81,22 @@ feature 'Admin manages Repositories', type: :feature do
     end
 
 
-    # re trigger hook check manually ##########################################
+    # re trigger hook check manually and check that we received a new push notification
 
-    wait_until 70 do
-      first("table.table-project td.push-hook") \
-        .text.match /a minute ago/
-    end
-
-    wait_until 5 do
-      first("table.table-project td.push-notification") \
-        .text.match /a minute ago/
-    end
-
+    push_hook_updated_at_before = Time.parse first("table.table-project td.push-hook")['data-updated-at']
+    push_notification_received_at_before = Time.parse first("table.table-project td.push-notification")['data-received-at']
     find("table.table-project td.push-hook button.check-push-hook").click
-
-
-    # now check if the hook has been checked and triggered again ##############
-
     wait_until 5 do
-      first("table.table-project td.push-hook") \
-        .text.match /a few seconds ago/
+      Time.parse(first("table.table-project td.push-hook")['data-updated-at']) > push_hook_updated_at_before
     end
-
     wait_until 5 do
-      first("table.table-project td.push-notification") \
-        .text.match /a few seconds ago/
+      first("table.table-project td.push-hook.success[data-state='ok']")
     end
+    push_hook_updated_at_after = Time.parse first("table.table-project td.push-hook")['data-updated-at']
+    push_notification_received_at_after = Time.parse first("table.table-project td.push-notification")['data-received-at']
+
+    expect(push_hook_updated_at_after).to be> push_hook_updated_at_before
+    expect(push_notification_received_at_after).to be> push_notification_received_at_before
 
 
   end

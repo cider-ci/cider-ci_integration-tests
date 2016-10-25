@@ -118,49 +118,44 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
       ### push statuses manually ##############################################
 
       # first wait until the pushed status happen some while ago
-       wait_until 70 do
-        first("table.table-project td.status-pushes.success",
-              text: 'minute ago')
-      end
+      last_posted_at_before = Time.parse(first("table td.status-pushes")['data-last-posted-at'])
       first("button.push-statuses").click
-
       wait_until 5 do
-        first("table.table-project td.status-pushes.success",
-              text: 'a few seconds ago')
+        last_posted_at_before \
+          <  Time.parse(first("table td.status-pushes")['data-last-posted-at'])
       end
 
 
       ### check for success status push for new amended commit ################
 
-      # first wait until the pushed status happen some while ago
-       wait_until 70 do
-        first("table.table-project td.status-pushes.success",
-              text: 'minute ago')
-      end
+      last_posted_at_before = Time.parse(first("table td.status-pushes")['data-last-posted-at'])
 
       FileUtils.rm ['tmp/last-status-post.yml'], force: true
 
       Helpers::DemoRepo.exec! 'git commit --allow-empty -m "Some new commit with same tree_id" '
       Helpers::DemoRepo.git_update_server_info
 
-      first("a",text: "Projects").click
-      wait_until(5){ first("td.branches.success", text: "a few seconds ago")}
-
-
-      # check that the status has been recently pushed
       click_on_first "Projects"
       click_on_first "Test Project"
-      wait_until 30 do
-        first("table.table-project td.status-pushes.success",
-              text: 'a few seconds ago')
+      first("table td.fetch-and-update").first("a.fetch-now, button.fetch-now").click
+      sleep 1
+      wait_until do
+        first("table td.fetch-and-update[data-state='ok']")
       end
-
-      first("a",text: "Workspace").click
+      click_on_first("Workspace")
       wait_until do
         page.has_content? "Some new commit"
       end
 
-      wait_until 30 do
+      # check that the status has been recently pushed
+      click_on_first "Projects"
+      click_on_first "Test Project"
+      wait_until 5 do
+        last_posted_at_before \
+          < Time.parse(first("table td.status-pushes")['data-last-posted-at'])
+      end
+
+      wait_until 5 do
         File.exist?('tmp/last-status-post.yml') &&
           (YAML.load_file('tmp/last-status-post.yml')
            .with_indifferent_access[:body][:state] == 'success')

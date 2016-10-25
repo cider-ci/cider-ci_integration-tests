@@ -19,15 +19,18 @@ feature 'Repository / Project update notifications.', type: :feature do
       click_on 'Edit'
       find('input#remote_fetch_interval').set '1 Hour'
       click_on 'Submit'
-      wait_until(90){ page.has_content? 'fetched a minute ago' }
     end
     scenario"
     When posting a request to the specified URL we will observe
-    that the project will have been updated a few seconds ago.
+    that the project will be fetched.
     ".strip_heredoc do
-      url = find('#update_notification_url').text
-      expect(Faraday.post(url).status).to be== 202
       wait_until { page.has_content? 'fetched a few seconds ago' }
+      last_fetched_at_before = Time.parse(first("td.fetch-and-update")['data-last-fetched-at'])
+      url = find('section.push-notifications #update_notification_url').text
+      expect(Faraday.post(url).status).to be== 202
+      wait_until do
+        last_fetched_at_before < Time.parse(first("td.fetch-and-update")['data-last-fetched-at'])
+      end
     end
   end
 end
