@@ -26,7 +26,7 @@ feature 'Admin manages Repositories', type: :feature do
     end
 
     wait_until 5 do
-      first("table.table-project td.push-notification.warning")
+      first("table.table-project td.push-notification.default")
     end
 
 
@@ -38,7 +38,6 @@ feature 'Admin manages Repositories', type: :feature do
     wait_until do
       first("table.table-project td.push-hook.danger[data-state='unavailable']")
     end
-
 
     # modify the project to enable the push-hook but with an illegal token ####
     click_on 'Edit'
@@ -53,6 +52,7 @@ feature 'Admin manages Repositories', type: :feature do
     wait_until 5 do
       first("table.table-project td.push-hook.danger[data-state='error']")
     end
+
 
     # fix the token ###########################################################
     click_on 'Edit'
