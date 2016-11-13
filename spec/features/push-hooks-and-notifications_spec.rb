@@ -49,7 +49,7 @@ feature 'Admin manages Repositories', type: :feature do
     click_on 'Submit'
 
 
-    wait_until 5 do
+    wait_until 10 do
       first("table.table-project td.push-hook.danger[data-state='error']")
     end
 

@@ -64,28 +64,22 @@ def find_user_by_access_token(access_token)
   USERS.find { |k, v| v['access_token'] == access_token }.try(:second)
 end
 
-###############################################################################
 ### intialize #################################################################
-###############################################################################
-
-
 
 def initialize
   super()
   @hooks = []
 end
 
-###############################################################################
+
 ### Meta ######################################################################
-###############################################################################
 
 get '/status' do
   'OK'
 end
 
-###############################################################################
+
 ### Repositories ##############################################################
-###############################################################################
 
 post '/repos/:owner/:repo/statuses/:sha' do
 
@@ -114,9 +108,7 @@ post '/repos/:owner/:repo/statuses/:sha' do
 end
 
 
-###############################################################################
 ### Oauth #####################################################################
-###############################################################################
 
 get '/login/oauth/authorize' do
   halt(422, 'No such client') unless params[:client_id] == CLIENT_ID
@@ -150,9 +142,8 @@ post '/login/oauth/access_token' do
   { access_token: USERS[params[:code]]['access_token'] }.to_json
 end
 
-#################################################################################
+
 # User ######################################################################
-###############################################################################
 
 get '/user' do
   unless user = find_user_by_access_token(params[:access_token])
@@ -192,15 +183,13 @@ get '/orgs/TestOrg/members/normin' do
   halt(204, '')
 end
 
-###############################################################################
+
 ### push notifications / aka webhooks #########################################
-###############################################################################
 
 get '/repos/:owner/:repo/hooks' do
   content_type 'application/json'
   @hooks.to_json
 end
-
 
 post '/repos/:owner/:repo/hooks' do
   auth_token = env['HTTP_AUTHORIZATION'].match(/Bearer\s+(.*)/)[1] rescue nil
@@ -238,9 +227,7 @@ post '/repos/:owner/:repo/hooks/:id/test' do
 end
 
 
-###############################################################################
 ### Team ######################################################################
-###############################################################################
 
 get '/orgs/:org/teams' do
   content_type 'application/json'
@@ -268,3 +255,31 @@ get '/teams/:id/memberships/:username' do
 end
 
 
+### demo project git ##########################################################
+
+Dir.chdir("../demo-project-bash") do
+  system("git repack -a") || raise("`git repack -a ` failed")
+  system("git update-server-info") || raise("`git update-server-info` failed")
+  puts "GIT-SERVER: repacked and server-info updated"
+end
+
+get '/git/demo-project-bash/*' do
+  auth = Rack::Auth::Basic::Request.new(request.env)
+  path = "../demo-project-bash/.git/#{params[:splat].join("/")}"
+  unless auth.provided?
+    headers['WWW-Authenticate'] = 'Basic realm="Restricted Area"'
+    halt 401, "Not authorized\n"
+  else
+    unless auth.credentials.first == "the-github-token"
+      logger.warn "GIT-SERVER: auth token is missing or wrong #{auth.credentials}"
+      halt 404, "Not found\n"
+    else
+      if File.exists? path
+        send_file path
+      else
+      logger.info "GIT-SERVER: file really not found"
+        halt 404, "Not found\n"
+      end
+    end
+  end
+end
