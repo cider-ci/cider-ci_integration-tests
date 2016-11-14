@@ -9,6 +9,7 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
     Helpers::DemoRepo.reset!
     Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
     Helpers::Users.create_users
+
   end
 
   let :github_api_mock_port do
@@ -18,6 +19,10 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
   it "The project UI shows the proper information and " \
     "the API mock writes the status and appropriate data into a file" do
+
+      config = (YAML.load_file('../config/config.yml') rescue {}).with_indifferent_access
+      config[:status_pushes_name_prefix] = nil
+      IO.write('../config/config.yml', config.to_h.to_yaml)
 
       ### prepare with disabled status-pushes #################################
 
@@ -125,6 +130,28 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
           <  Time.parse(first("table td.status-pushes")['data-last-posted-at'])
       end
 
+
+      ### configurable status name prefix ######################################
+
+      written_data = YAML.load_file('tmp/last-status-post.yml').with_indifferent_access
+      # check the various config files if this fails unexpected
+
+      expect(written_data[:body][:context]).to match 'Cider-CI@localhost'
+
+      config = (YAML.load_file('../config/config.yml') rescue {}).with_indifferent_access
+      config[:status_pushes_name_prefix] = "TestPrefix"
+      IO.write('../config/config.yml', config.to_h.to_yaml)
+      sleep 5 # load config
+      last_posted_at_before = Time.parse(first("table td.status-pushes")['data-last-posted-at'])
+      first("button.push-statuses").click
+      wait_until 5 do
+        last_posted_at_before \
+          <  Time.parse(first("table td.status-pushes")['data-last-posted-at'])
+      end
+      written_data = YAML.load_file('tmp/last-status-post.yml').with_indifferent_access
+      expect(written_data[:body][:context]).to match 'TestPrefix'
+      config[:status_pushes_name_prefix] = nil
+      IO.write('../config/config.yml', config.to_h.to_yaml)
 
       ### check for success status push for new amended commit ################
 
