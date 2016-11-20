@@ -86,10 +86,9 @@ describe(" Given: job1 with run_when directive on brach matching ^test_.+$.
 
     Helpers::DemoRepo.exec! <<-CMD.strip_heredoc
       git checkout -b 'test_2'
-      CMD
-    wait_until { page.has_content?("test_2") }
-    sleep 10
-    wait_until { page.has_selector?(".job[data-name='job1']") }
+    CMD
+    wait_until(15){ page.has_content?("test_2") }
+    wait_until(15){ page.has_selector?(".job[data-name='job1']") }
 
   end
 

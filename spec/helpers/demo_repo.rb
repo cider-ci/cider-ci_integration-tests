@@ -58,6 +58,7 @@ module Helpers
           '.update_attributes! ' \
           "git_url: '#{git_url}', "\
           'remote_fetch_interval: "1 Second", ' \
+          'branch_trigger_max_commit_age: "100 years", '\
           'public_view_permission: true'
         git_update_server_info
       end
