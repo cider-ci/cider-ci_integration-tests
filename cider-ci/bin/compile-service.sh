@@ -2,11 +2,12 @@
 set -eux
 cd "$SERVICE_NAME"
 export LEIN_SNAPSHOTS_IN_RELEASE=yes
-SELF_DIGEST=$(git log -n 1 HEAD --pretty=%T)
-UTILS_DIGEST=$(cd ../clj-utils &&  git log -n 1 HEAD --pretty=%T)
-LEIN_DEV_PLUGIN_DIGEST=$(cd ../lein-dev-plugin &&  git log -n 1 HEAD --pretty=%T)
-CONFIG_DIGEST=$(cd .. && git ls-tree HEAD -- config | openssl dgst -sha1 | cut -d ' ' -f 2)
-DIGEST="${SELF_DIGEST}_${UTILS_DIGEST}_${LEIN_DEV_PLUGIN_DIGEST}_${CONFIG_DIGEST}"
+# SELF_DIGEST=$(git log -n 1 HEAD --pretty=%T)
+# UTILS_DIGEST=$(cd ../clj-utils &&  git log -n 1 HEAD --pretty=%T)
+# LEIN_DEV_PLUGIN_DIGEST=$(cd ../lein-dev-plugin &&  git log -n 1 HEAD --pretty=%T)
+# CONFIG_DIGEST=$(cd .. && git ls-tree HEAD -- config | openssl dgst -sha1 | cut -d ' ' -f 2)
+# DIGEST="${SELF_DIGEST}_${UTILS_DIGEST}_${LEIN_DEV_PLUGIN_DIGEST}_${CONFIG_DIGEST}"
+DIGEST=$(cd .. &&  git log -n 1 HEAD --pretty=%T)
 LEIN_UBERJAR_FILE="/tmp/${SERVICE_NAME}_${DIGEST}.jar"
 if [ -f "${LEIN_UBERJAR_FILE}" ];then
   echo " ${LEIN_UBERJAR_FILE} exists"
