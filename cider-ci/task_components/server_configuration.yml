@@ -15,6 +15,7 @@ scripts:
       config['basic_auth']['password'] = ENV['SERVICES_SECRET']
       config['secret'] = ENV['MASTER_SECRET']
 
+
       # database
       config['database']['user']= ENV['PGUSER']
       config['database']['password']= ENV['PGPASSWORD']
@@ -37,9 +38,9 @@ scripts:
       config['services']['dispatcher']['http']['port']= Integer(ENV['DISPATCHER_HTTP_PORT'])
       config['services']['dispatcher']['nrepl']['enabled']= false
 
-      # repository
-      config['services']['repository']['http']['port']= Integer(ENV['REPOSITORY_HTTP_PORT'])
-      config['services']['repository']['nrepl']['enabled']= false
+      # server
+      config['services']['server']['http']['port']= Integer(ENV['SERVER_HTTP_PORT'])
+      config['services']['server']['nrepl']['enabled']= false
 
       # storage
       config['services']['storage']['http']['port']= Integer(ENV['STORAGE_HTTP_PORT'])
@@ -48,7 +49,7 @@ scripts:
       # ui
       config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
 
-      # extended repository UI for tests
+      # extended server UI for tests
       config['repository_service_advanced_api_edit_fields'] = true
 
       # WRITE Config ############################################################

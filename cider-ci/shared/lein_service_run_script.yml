@@ -2,7 +2,11 @@ body: |
   set -eux
   cd ${SERVICE_NAME}
   export CLASSPATH="../config:target/${SERVICE_NAME}.jar"
-  java "cider_ci.${SERVICE_NAME}.main"
+  if [ $SERVICE_NAME = "server" ]; then
+    java "cider_ci.main"
+  else
+    java "cider_ci.${SERVICE_NAME}.main"
+  fi
 start_when:
   database has been created:
     script_key: create-database

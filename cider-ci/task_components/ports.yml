@@ -26,7 +26,7 @@ ports:
   NOTIFIER_HTTP_PORT:
     min: 4100
     max: 8799
-  REPOSITORY_HTTP_PORT:
+  SERVER_HTTP_PORT:
     min: 4100
     max: 8799
   STORAGE_HTTP_PORT:

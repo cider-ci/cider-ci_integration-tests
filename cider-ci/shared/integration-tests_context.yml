@@ -16,7 +16,7 @@ task_defaults:
     - 'cider-ci/task_components/service_api.yml'
     - 'cider-ci/task_components/service_builder.yml'
     - 'cider-ci/task_components/service_dispatcher.yml'
-    - 'cider-ci/task_components/service_repository.yml'
+    - 'cider-ci/task_components/service_server.yml'
     - 'cider-ci/task_components/service_storage.yml'
     - 'cider-ci/task_components/user-interface.yml'
 

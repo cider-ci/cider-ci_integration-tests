@@ -2,10 +2,8 @@ windows:
   2:
     name: apache2
     command: |
-      while true; do
-        DYLD_LIBRARY_PATH=/opt/local/lib/apache2/modules/  \
-          /opt/local/sbin/httpd -d reverse-proxy -f conf/httpd.conf -e info -DFOREGROUND
-      done
+      DYLD_LIBRARY_PATH=/opt/local/lib/apache2/modules/  \
+        /opt/local/sbin/httpd -d reverse-proxy -f conf/httpd.conf -e info -DFOREGROUND
   3:
     name: github api mock
     command: |
