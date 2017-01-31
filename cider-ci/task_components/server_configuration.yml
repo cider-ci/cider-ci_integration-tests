@@ -34,10 +34,6 @@ scripts:
       config['services']['builder']['http']['port']= Integer(ENV['BUILDER_HTTP_PORT'])
       config['services']['builder']['nrepl']['enabled']= false
 
-      # dispatcher
-      config['services']['dispatcher']['http']['port']= Integer(ENV['DISPATCHER_HTTP_PORT'])
-      config['services']['dispatcher']['nrepl']['enabled']= false
-
       # server
       config['services']['server']['http']['port']= Integer(ENV['SERVER_HTTP_PORT'])
       config['services']['server']['nrepl']['enabled']= false
