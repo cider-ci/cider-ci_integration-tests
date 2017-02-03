@@ -14,9 +14,6 @@ ports:
   REVERSE_PROXY_HTTP_PORT:
     min: 4100
     max: 8799
-  API_HTTP_PORT:
-    min: 4100
-    max: 8799
   DISPATCHER_HTTP_PORT:
     min: 4100
     max: 8799

@@ -73,7 +73,7 @@ module Helpers
     end
 
     def api_connection
-      base_url = "#{Capybara.app_host}/cider-ci/api"
+      base_url = "#{Capybara.app_host}/cider-ci/api/"
       ::JSON_ROA::Client.connect base_url do |conn|
         conn.basic_auth('admin', 'secret')
         conn.ssl.verify = false

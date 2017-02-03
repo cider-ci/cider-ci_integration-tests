@@ -26,10 +26,6 @@ scripts:
       config['reverse_proxy']['http']['port']= Integer(ENV['REVERSE_PROXY_HTTP_PORT'])
       config['reverse_proxy']['nrepl']['enabled']=false
 
-      # api
-      config['services']['api']['http']['port']= Integer(ENV['API_HTTP_PORT'])
-      config['services']['api']['nrepl']['enabled']= false
-
       # server
       config['services']['server']['http']['port']= Integer(ENV['SERVER_HTTP_PORT'])
       config['services']['server']['nrepl']['enabled']= false

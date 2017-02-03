@@ -9,7 +9,7 @@ describe 'The executor version diverges from the server version', type: :feature
   def set_mismatch_version
     Helpers::DemoExecutor.eval_clj <<-CLJ.strip_heredoc
       (ns cider-ci.self)
-      (def VERSION "0.0.0-MISMATCH")
+      (def VERSION "Cider-CI 0.0.0-P+T")
     CLJ
   end
 

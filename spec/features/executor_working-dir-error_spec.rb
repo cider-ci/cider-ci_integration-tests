@@ -8,7 +8,7 @@ describe 'prepare-and-create-working-dir with throwing exception', type: :featur
 
   def executor_throws_when_creating_the_working_dir
     Helpers::DemoExecutor.eval_clj <<-CLJ.strip_heredoc
-      (ns cider-ci.ex.git)
+      (ns cider-ci.executor.git)
       (defn prepare-and-create-working-dir [params]
         (throw (ex-info "Simulating exception during prepare-and-create-working-dir." {})))
     CLJ

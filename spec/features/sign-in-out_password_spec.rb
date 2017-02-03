@@ -143,7 +143,7 @@ feature 'The public page, sign in and sign out', type: :feature do
       account_enabled: false)
     EOS
 
-    expect(faraday.get("/cider-ci/api/jobs/").status).to  be== 401
+    expect(faraday.get("/cider-ci/api/jobs/").status).to  be== 403
   end
 
 

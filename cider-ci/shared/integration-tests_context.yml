@@ -13,7 +13,6 @@ task_defaults:
     - 'cider-ci/task_components/reverse_proxy.yml'
     - 'cider-ci/task_components/test.yml'
     - 'cider-ci/task_components/server_configuration.yml'
-    - 'cider-ci/task_components/service_api.yml'
     - 'cider-ci/task_components/service_server.yml'
     - 'cider-ci/task_components/service_storage.yml'
     - 'cider-ci/task_components/user-interface.yml'
