@@ -15,24 +15,16 @@ scripts:
       config['basic_auth']['password'] = ENV['SERVICES_SECRET']
       config['secret'] = ENV['MASTER_SECRET']
 
-
       # database
       config['database']['user']= ENV['PGUSER']
       config['database']['password']= ENV['PGPASSWORD']
       config['database']['subname']= "//localhost:#{ENV['PGPORT']}/cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"
 
-      # reverse-proxy
       config['server_base_url']= "http://localhost:#{ENV['REVERSE_PROXY_HTTP_PORT']}"
-      config['reverse_proxy']['http']['port']= Integer(ENV['REVERSE_PROXY_HTTP_PORT'])
-      config['reverse_proxy']['nrepl']['enabled']=false
 
       # server
       config['services']['server']['http']['port']= Integer(ENV['SERVER_HTTP_PORT'])
       config['services']['server']['nrepl']['enabled']= false
-
-      # storage
-      config['services']['storage']['http']['port']= Integer(ENV['STORAGE_HTTP_PORT'])
-      config['services']['storage']['nrepl']['enabled']= false
 
       # ui
       config['services']['ui']['http']['port']= Integer(ENV['UI_HTTP_PORT'])
