@@ -22,6 +22,8 @@ describe " Triggering jobs via branch updates with respect of
       click_on "Edit"
       find('input#branch_trigger_max_commit_age').set '0 Seconds'
       find("[type='submit']").click
+      wait_until(10) { first(".modal") }
+      wait_until(10) { ! first(".modal") }
     end
 
     it "the job will not be created automatically
@@ -45,6 +47,8 @@ describe " Triggering jobs via branch updates with respect of
       click_on "Edit"
       find('input#branch_trigger_max_commit_age').set '100 Years'
       find("[type='submit']").click
+      wait_until(10) { first(".modal") }
+      wait_until(10) { ! first(".modal") }
     end
 
     it "the job gets automatically created
@@ -68,6 +72,8 @@ describe " Triggering jobs via branch updates with respect of
       find('input#branch_trigger_include_match').set 'some non existing branch'
       find('input#branch_trigger_max_commit_age').set '100 Years'
       find("[type='submit']").click
+      wait_until(10) { first(".modal") }
+      wait_until(10) { ! first(".modal") }
     end
 
     it "the job will not be created automatically

@@ -15,11 +15,15 @@ feature 'Admin manages Repositories', type: :feature do
     find('input#name').set 'TestRepo'
     find('input#name').set 'TestRepo'
     click_on 'Submit'
+    wait_until(10) { first(".modal") }
+    wait_until(10) { ! first(".modal") }
     wait_until(5) { page.has_content?  /Project\s+"TestRepo"/ }
-    wait_until { page.has_content?  /Edit/ }
+    wait_until(5) { page.has_content?  /Edit/ }
     click_on 'Edit'
     find('input#name').set 'UpdatedName'
     click_on 'Submit'
+    wait_until(10) { first(".modal") }
+    wait_until(10) { ! first(".modal") }
     wait_until(5) { page.has_content?  /Project\s+"UpdatedName"/ }
     click_on 'Delete'
     wait_until(5) { page.has_content?  /Add a new project/ }

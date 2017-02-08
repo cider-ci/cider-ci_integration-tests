@@ -39,8 +39,9 @@ describe(" Given: job1 with run_when directive on brach matching ^test_.+$.
     click_on "Edit"
     find('input#branch_trigger_include_match').set '$.+^'
     find("[type='submit']").click
+    wait_until(10) { first(".modal") }
+    wait_until(10) { ! first(".modal") }
     click_on_first 'Workspace'
-
 
     # setup project ###########################################################
 
@@ -79,6 +80,8 @@ describe(" Given: job1 with run_when directive on brach matching ^test_.+$.
     find('input#branch_trigger_include_match').set '^.+$'
     find('input#branch_trigger_exclude_match').set '$.+^'
     find("[type='submit']").click
+    wait_until(10) { first(".modal") }
+    wait_until(10) { ! first(".modal") }
     click_on_first 'Workspace'
 
 
