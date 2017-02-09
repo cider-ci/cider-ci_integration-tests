@@ -52,8 +52,9 @@ describe 'the job "Attachments Demo" creates ', type: :feature do
       first('tr.task a').click
       first('tr.trial a').click
       click_on 'Attachment'
-      click_on 'trial-attachment'
+      expect(page).to have_content '/tmp/null-trial-attachment.txt'
       expect(page).to have_content '/tmp/a-trial-attachment.txt'
+      find('a', text: '/tmp/a-trial-attachment.txt').click
       find('#open-content').click
       expect(page).to have_content 'I am a trial attachment!'
     end
