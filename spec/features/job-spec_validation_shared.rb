@@ -56,7 +56,7 @@ shared_examples :generic_job_spec_validation_fail do |custom_expectations|
         first("tr.job a").click
         job_path = current_path
 
-        expect(find(".alert")).to have_content /Error: Validation Error/
+        expect(find(".alert-danger")).to have_content /Error: Validation Error/
 
         #expect(find(".alert")).to have_content
         #/The following key\(s\) are not allowed.*bogus.*/

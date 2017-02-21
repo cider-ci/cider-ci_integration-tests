@@ -58,7 +58,7 @@ describe 'Job without tasks ', type: :feature do
       click_on_first 'Workspace'
       wait_until { page.has_content? message }
       run_job_on_last_commit job_name
-      wait_for_job_state job_name, 'defective'
+      wait_for_job_state job_name, 'passed'
 
       # there is a job-issue-warning for the job on the workspace
       click_on_first "Workspace"

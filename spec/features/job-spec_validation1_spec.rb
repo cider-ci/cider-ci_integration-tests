@@ -16,7 +16,7 @@ describe 'Validating contexts and contexts', type: :feature do
           YAML
     end
     custom_expectations = <<-RB.strip_heredoc
-      expect(find(".alert")).to \
+      expect(find(".alert-danger")).to \
         have_content /test.*context.*bogus/
     RB
     include_examples :generic_job_spec_validation_fail, custom_expectations
@@ -37,7 +37,7 @@ describe 'Validating contexts and contexts', type: :feature do
           YAML
     end
     custom_expectations = <<-RB.strip_heredoc
-      expect(find(".alert")).to \
+      expect(find(".alert-danger")).to \
         have_content /test.*context.*contexts.*some-subcontext.*bogus/
     RB
     include_examples :generic_job_spec_validation_fail, custom_expectations

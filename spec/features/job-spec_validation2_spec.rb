@@ -17,7 +17,7 @@ describe "Validating task and task_defaults" do
       YAML
     end
     custom_expectations = <<-RB.strip_heredoc
-      expect(find(".alert")).to have_content(/task_with_a_bogus_key/)
+      expect(find(".alert-danger")).to have_content(/task_with_a_bogus_key/)
     RB
     include_examples :generic_job_spec_validation_fail, custom_expectations
   end
