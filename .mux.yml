@@ -5,6 +5,7 @@ windows:
       while true; do
         DYLD_LIBRARY_PATH=/opt/local/lib/apache2/modules/  \
           /opt/local/sbin/httpd -d reverse-proxy -f conf/httpd.conf -e info -DFOREGROUND
+        sleep 1
       done
   3:
     name: github api mock
