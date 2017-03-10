@@ -27,7 +27,9 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
   end
 
   describe 'the dependent job' do
-    it 'is created once the prerequisite in the submodule has passed' do
+    it 'is created once the prerequisite in the submodule has passed and
+    a branch has been updated, after' do
+
       click_on_first 'Workspace'
       find('select#depth').select('Any depth')
       find('input#git_ref').set(submodule_ref)
@@ -35,11 +37,15 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
       first('a.run-a-job').click
       find(".runnable-job[data-name='#{prerequisite_name}']")
         .find('a,button', text: 'Run').click
+      wait_for_job_state prerequisite_name, 'passed'
 
-      # the dependent will run automatically on the current branch
       click_on_first 'Workspace'
       find('input#git_ref').set('')
       click_on('Filter')
+
+      expect(Helpers::DemoRepo.create_new_branch('test')) \
+        .to pass_execution
+
       wait_until do
         all(".job[data-name='#{dependent_name}'][data-state='passed']") \
           .present?
