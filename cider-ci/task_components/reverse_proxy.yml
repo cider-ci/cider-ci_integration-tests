@@ -14,7 +14,6 @@ templates:
 scripts:
 
   run-reverse-proxy:
-    timeout: 5 Minutes
     body: |
       #!/usr/bin/env bash
       set -eux

@@ -1,7 +1,6 @@
 scripts:
 
   run_github-api-mock:
-    timeout: 5 Minutes
     body: |
       #!/usr/bin/env bash
       set -eux

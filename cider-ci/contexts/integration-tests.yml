@@ -4,6 +4,10 @@ tasks:
   spec/features/retention-sweeper-2_spec.rb: {priority: 2}
   spec/features/retention-sweeper-1_spec.rb: {priority: 2}
   spec/features/attachments_spec.rb: {priority: 1}
+  spec/features/cron-trigger-rerun-demo_spec.rb:
+    priority: 1
+    script_defaults:
+      timeout: 8 Minutes
   spec/features/sign-in-out_via-github_spec.rb:
     templates:
       github_config:
