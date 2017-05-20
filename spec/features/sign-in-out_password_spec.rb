@@ -71,6 +71,7 @@ feature 'The public page, sign in and sign out', type: :feature do
       User.find_by(login: 'normin').update_attributes!(
       account_enabled: false)
     EOS
+    sleep 3
     visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/'
     visit '/cider-ci/api/api-browser/index.html#/cider-ci/api/jobs/'
     expect(page).not_to have_content '200 OK'

@@ -18,7 +18,7 @@ describe 'the job "Environment Variables Demo" ', type: :feature do
     click_on 'Trial'
     expect(Helpers::DemoRepo.create_new_branch('expose_branch_heads_test')).to \
       pass_execution
-    sleep 3
+    sleep 10
     click_on 'Retry'
     wait_until{ first('li.state[data-state="passed"]') }
     click_on 'show'
