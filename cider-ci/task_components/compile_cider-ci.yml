@@ -1,0 +1,4 @@
+scripts:
+  compile_cider-ci:
+    body: integration-tests/cider-ci/bin/compile_cider-ci.sh
+    exclusive_executor_resource: compile_cider-ci

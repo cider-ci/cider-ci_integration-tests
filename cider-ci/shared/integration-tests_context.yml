@@ -4,11 +4,11 @@ script_defaults:
 
 task_defaults:
   include:
+    - 'cider-ci/task_components/compile_cider-ci.yml'
     - 'cider-ci/task_components/bundle_rspec_ruby.yml'
     - 'cider-ci/task_components/database.yml'
     - 'cider-ci/task_components/executor.yml'
     - 'cider-ci/task_components/github_api_mock_service.yml'
-    - 'cider-ci/task_components/lein_dev_plugin.yml'
     - 'cider-ci/task_components/ports.yml'
     - 'cider-ci/task_components/reverse_proxy.yml'
     - 'cider-ci/task_components/test.yml'
@@ -16,7 +16,7 @@ task_defaults:
     - 'cider-ci/task_components/service_server.yml'
     - 'cider-ci/task_components/user-interface.yml'
 
-  max_trials: 5
+  max_trials: 2
 
   load: 2.5
   dispatch_storm_delay_duration: 15 Seconds
@@ -48,7 +48,7 @@ task_defaults:
       include_match: '\/logs?\/.+\.log$'
       content_type: text/plain
     config:
-      include_match: 'config\/.+\.ya?ml$'
+      include_match: 'config\/.*\.ya?ml$'
       exclude_match: '\/vendor\/'
       content_type: text/yaml
     mock:

@@ -6,10 +6,17 @@ describe 'Testing the load', type: :feature do
 
   def set_executor_load ex_load
     Helpers::DemoExecutor.amend_config max_load: ex_load
-    click_on_first 'Administration'
-    click_on_first 'Executors'
-    wait_until do
-      page.has_content? "0.0 / #{ex_load.to_f}"
+    visit '/cider-ci/executors/'
+    wait_until 10 do
+      first("a", text: 'Test-Executor')
+    end
+    first("a", text: 'Test-Executor').click
+    wait_until 10 do
+      visit current_path
+      wait_until 10 do
+        first("#max_load .value")
+      end
+      Float(first("#max_load .value").text) == Float(ex_load)
     end
   end
 

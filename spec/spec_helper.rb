@@ -20,6 +20,7 @@ require 'helpers/configuration_management'
 require 'helpers/demo_executor'
 require 'helpers/demo_repo'
 require 'helpers/misc'
+require 'helpers/system_admin'
 require 'helpers/users'
 
 
@@ -157,16 +158,15 @@ RSpec.configure do |config|
     Kernel.srand config.seed
 
     config.after(:each) do |example|
-      # cleanup
       take_screenshot unless example.exception.nil?
     end
 
-    config.after(:all) do |example|
-      cleanup
+    config.before(:each) do |example|
+      Helpers::DemoExecutor.reset_config
     end
 
-    def cleanup
-      Helpers::DemoExecutor.cleanup
+    config.after(:all) do |example|
+      Helpers::DemoExecutor.reset_config
     end
 
     def take_screenshot(screenshot_dir = nil, name = nil)

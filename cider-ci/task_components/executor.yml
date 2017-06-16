@@ -8,38 +8,38 @@ scripts:
       require 'yaml'
       require 'openssl'
 
-      config = YAML.load_file 'executor/resources/config_default.yml'
+      File.open('executor-traits.yml','w') { |file| file.write ["Bash", "Git"].to_yaml }
+
+      `java -jar server/target/cider-ci.jar executor -c executor/config.yml write-default-config -f`
+
+      raise 'failed to create initial executor configuraion' \
+        unless $?.exitstatus == 0
+
+      config = YAML.load_file 'executor/config.yml'
+      config['basic_auth']['password']= 'TestExecutor1234'
+      config['http']['enabled']= true
       config['http']['port']= Integer(ENV['EXECUTOR_HTTP_PORT'])
-      config['http']['ssl-port']= Integer(ENV['EXECUTOR_HTTPS_PORT'])
       config['server_base_url']= ("http://localhost:" + ENV['REVERSE_PROXY_HTTP_PORT'])
       config['nrepl']['enabled']=true
       config['nrepl']['port']= Integer(ENV['EXECUTOR_NREPL_PORT'])
       config['max_load']= 2
+      config['traits_files'] << 'executor-traits.yml'
 
-      File.open('executor/config/config.yml','w') { |file| file.write config.to_yaml }
-      File.open('executor/config/traits.yml','w') { |file| file.write ["Bash", "Git"].to_yaml }
+      File.open('executor/config.yml','w') { |file| file.write config.to_yaml }
 
-
-  compile-executor:
-    exclusive_executor_resource: compile-executor
-    environment_variables:
-      SERVICE_NAME: executor
-    body: integration-tests/cider-ci/bin/compile-service.sh
     start_when:
-      'lein dev plugin has been installed':
-        script_key: install_lein-dev-plugin
+      cider-ci has been compiled:
+        script_key: compile_cider-ci
 
   run-executor:
     body: |
       #!/usr/bin/env bash
       set -eux
       cd executor
-      java -jar "target/executor.jar"
+      java -jar ../server/target/cider-ci.jar executor --config-file config.yml run
     start_when:
-      executor is configured:
+      executor has been configured:
         script_key: configure-executor
-      executor is compiled:
-        script_key: compile-executor
 
   executor-is-running:
     timeout: 3 Minutes
@@ -47,8 +47,7 @@ scripts:
       #!/usr/bin/env bash
       set -ux
       until curl --silent --fail \
-          --user check:fb305779d33334f6d68650c3024626e12d3872a6  \
-          -I http://localhost:${EXECUTOR_HTTP_PORT}/hello ; do
+          -I http://localhost:${EXECUTOR_HTTP_PORT}/ping ; do
         sleep 1;
       done
     start_when:

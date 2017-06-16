@@ -6,10 +6,8 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
   type: :feature do
 
   before :each do
-    Helpers::DemoRepo.reset!
-    Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
-    Helpers::Users.create_users
-
+    setup_signin_waitforcommits
+    Helpers::ConfigurationManagement.invoke_sql 'DELETE FROM repositories;'
   end
 
   let :github_api_mock_port do
@@ -22,7 +20,7 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       config = (YAML.load_file('../config/config.yml') rescue {}).with_indifferent_access
       config[:status_pushes_name_prefix] = nil
-      IO.write('../config/config.yml', config.to_h.to_yaml)
+      IO.write('../config/config.yml', config.as_json.to_yaml)
 
       ### prepare with disabled status-pushes #################################
 
@@ -140,18 +138,20 @@ describe "Sending job statuses to a GitHub compatible API endpoint.",
 
       config = (YAML.load_file('../config/config.yml') rescue {}).with_indifferent_access
       config[:status_pushes_name_prefix] = "TestPrefix"
-      IO.write('../config/config.yml', config.to_h.to_yaml)
-      sleep 5 # load config
+      IO.write('../config/config.yml', config.as_json.to_yaml)
+      sleep 10 # load config
       last_posted_at_before = Time.parse(first("table td.status-pushes")['data-last-posted-at'])
       first("button.push-statuses").click
       wait_until 5 do
         last_posted_at_before \
           <  Time.parse(first("table td.status-pushes")['data-last-posted-at'])
       end
-      written_data = YAML.load_file('tmp/last-status-post.yml').with_indifferent_access
-      expect(written_data[:body][:context]).to match 'TestPrefix'
+      wait_until 10 do
+        written_data = YAML.load_file('tmp/last-status-post.yml').with_indifferent_access
+        written_data[:body][:context].match 'TestPrefix'
+      end
       config[:status_pushes_name_prefix] = nil
-      IO.write('../config/config.yml', config.to_h.to_yaml)
+      IO.write('../config/config.yml', config.as_json.to_yaml)
 
       ### check for success status push for new amended commit ################
 

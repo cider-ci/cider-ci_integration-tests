@@ -1,6 +1,6 @@
 timeout: 3 Seconds
 environment_variables:
-  SHUTDOWN_URL: http://localhost:{{SERVICE_PORT}}/cider-ci/{{SERVICE_CONTEXT}}/shutdown
+  SHUTDOWN_URL: http://localhost:{{SERVICE_PORT}}/cider-ci/shutdown
 
 body: |
   #!/usr/bin/env bash

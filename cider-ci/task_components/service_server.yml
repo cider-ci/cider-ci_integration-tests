@@ -1,24 +1,38 @@
 scripts:
 
-  compile-server:
-    include: cider-ci/shared/lein_service_compile_script.yml
-    exclusive_executor_resource: compile-server
-    environment_variables: &ENV_VARS
-      SERVICE_PORT: '{{SERVER_HTTP_PORT}}'
-      SERVICE_NAME: server
-      SERVICE_CONTEXT: repositories
-
   run-server:
-    include: cider-ci/shared/lein_service_run_script.yml
-    environment_variables: *ENV_VARS
+    body: |
+      set -eux
+      cd server
+      export CLASSPATH="../config:target/cider-ci.jar"
+      java -jar target/cider-ci.jar server run
+    start_when:
+      cider-ci has been compiled:
+        script_key: compile_cider-ci
+      database has been created:
+        script_key: create-database
+      server_has_been_configured:
+        script_key: configure-server
     ignore_state: true
     start_when:
-      server has been compiled:
-        script_key: compile-server
+      cider-ci has been compiled:
+        script_key: compile_cider-ci
+      server_has_been_configured:
+        script_key: configure-server
 
   server-is-running:
-    include: cider-ci/shared/lein_service_is-running_script.yml
-    environment_variables: *ENV_VARS
+    timeout: 3 Minutes
+    environment_variables:
+      STATUS_URL: http://localhost:{{SERVER_HTTP_PORT}}/cider-ci/status
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      until curl --silent --fail \
+        --user test-check-is-running:${SERVICES_SECRET} \
+        -H 'Accept: application/json' \
+        -I "${STATUS_URL}";  do
+        sleep 1;
+      done
     start_when:
       the server is executing: &EXECUTING {script_key: run-server, states: [executing]}
     terminate_when:
@@ -32,8 +46,21 @@ scripts:
 
   shutdown-server:
     include: cider-ci/shared/lein_service_shutdown_script.yml
-    environment_variables: *ENV_VARS
+
+    timeout: 3 Seconds
+    environment_variables:
+      SHUTDOWN_URL: http://localhost:{{SERVER_HTTP_PORT}}/cider-ci/shutdown
+
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      curl -I -X POST --silent \
+        --user shutdown:${SERVICES_SECRET} \
+        -H 'Accept: application/json' \
+        "${SHUTDOWN_URL}"
+
     start_when:
+      include: cider-ci/shared/test_is_terminal.yml
       the server service is executing: *EXECUTING
       the server is or has been running:
         script_key: server-is-running

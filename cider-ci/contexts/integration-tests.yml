@@ -8,11 +8,6 @@ tasks:
     priority: 1
     script_defaults:
       timeout: 8 Minutes
-  spec/features/sign-in-out_via-github_spec.rb:
-    templates:
-      github_config:
-        src: integration-tests/cider-ci/templates/github_conf.yml
-        dest: config/config.yml
 
 generate_tasks:
   include_match: spec/.*_spec.rb

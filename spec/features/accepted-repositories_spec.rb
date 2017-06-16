@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe 'Dispatching wrt accepted_repositories ', type: :feature do
+
   it 'The job will not be dispatched unless ' \
     'the git_url is one of the accepted ones' do
     setup_signin_waitforcommits

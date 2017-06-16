@@ -8,28 +8,43 @@ describe 'The executor version diverges from the server version', type: :feature
 
   def set_mismatch_version
     Helpers::DemoExecutor.eval_clj <<-CLJ.strip_heredoc
-      (ns cider-ci.self)
-      (def VERSION "Cider-CI 0.0.0-P+T")
+      (ns cider-ci.utils.self)
+      (defn version [] "0.0.0-P+T")
     CLJ
   end
 
   describe 'when setting a different version ' do
-    it 'a "Version Mismatch" executor_issue shows in several places' \
+    it 'the (differing) version is shown as a property ' \
       'and not trial will be dispatched to the executor' do
       sign_in_as 'admin'
-      click_on 'Administration'
-      click_on 'Executors'
-      wait_until do
-        all("tr.executor").count > 0
-      end
-      expect(page).not_to have_selector(".executor-issue-warning")
-      set_mismatch_version
-      wait_until do
-        all(".executor-issue-warning").count > 0
-      end
-      first('tr.executor a').click
-      expect(page).to have_content ("Version Mismatch")
 
+      visit '/cider-ci/executors/'
+      wait_until(10){ first("a", text: 'Test-Executor')}
+      first("a", text: 'Test-Executor').click
+      wait_until 10 do
+        visit current_path
+        wait_until(10){first("#version")}
+      end
+
+      version = YAML.load(first("#version .value").text.strip)
+
+      set_mismatch_version
+
+      # wait until the version diverges
+
+      wait_until 10 do
+        visit current_path
+        wait_until(10){first("#version")}
+        version != YAML.load(first("#version .value").text.strip)
+      end
+
+#
+#      wait_until do
+#        all(".executor-issue-warning").count > 0
+#      end
+#      first('tr.executor a').click
+#      expect(page).to have_content ("Version Mismatch")
+#
       run_job_on_last_commit 'JSON Demo'
 
       sleep 30
