@@ -1,12 +1,26 @@
 traits:
   PostgreSQL 9.5: true
 scripts:
+
   create-database:
     body: |
       #!/usr/bin/env bash
       set -eux
       createdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
-      psql -d "cider-ci_test_${CIDER_CI_TRIAL_ID}" -f user-interface/db/structure.sql
+
+  migrate-database:
+    start_when:
+      the database has been created:
+        script_key: create-database
+      cider-ci has been compiled:
+        script_key: compile_cider-ci
+    body: |
+      #!/usr/bin/env bash
+      set -eux
+      java -jar server/target/cider-ci.jar \
+        server migrate \
+        -d "jdbc:postgresql://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/cider-ci_test_${CIDER_CI_TRIAL_ID}"
+
   delete-database:
     body: |
       #!/usr/bin/env bash

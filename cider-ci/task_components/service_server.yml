@@ -6,19 +6,15 @@ scripts:
       cd server
       export CLASSPATH="../config:target/cider-ci.jar"
       java -jar target/cider-ci.jar server run
-    start_when:
-      cider-ci has been compiled:
-        script_key: compile_cider-ci
-      database has been created:
-        script_key: create-database
-      server_has_been_configured:
-        script_key: configure-server
     ignore_state: true
     start_when:
       cider-ci has been compiled:
         script_key: compile_cider-ci
       server_has_been_configured:
         script_key: configure-server
+      database has been migrated:
+        script_key: migrate-database
+
 
   server-is-running:
     timeout: 3 Minutes
