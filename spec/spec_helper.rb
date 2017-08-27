@@ -83,7 +83,7 @@ RSpec.configure do |config|
     Capybara.current_driver = \
       ENV['CAPYBARA_DRIVER'].presence.try(:to_sym) \
       || example.metadata[:driver] \
-      || :poltergeist rescue :poltergeist
+      || :selenium rescue :selenium
   end
 
   # rspec-expectations config goes here. You can use an alternate
