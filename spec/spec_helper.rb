@@ -55,8 +55,8 @@ RSpec.configure do |config|
   Capybara.app_host = "http://localhost:#{port}"
   Capybara.server_port = port
 
-  if ENV['FIREFOX_ESR_PATH'].present?
-    Selenium::WebDriver::Firefox.path = ENV['FIREFOX_ESR_PATH']
+  if ENV['FIREFOX_ESR_45_PATH'].present?
+    Selenium::WebDriver::Firefox.path = ENV['FIREFOX_ESR_45_PATH']
   end
 
   Capybara.register_driver :poltergeist do |app|

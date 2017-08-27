@@ -38,7 +38,7 @@ module Helpers
     def setup_signin_waitforcommits
       reset_and_configure
       sign_in_as 'admin'
-      wait_until { all('#commits-table tbody tr').count > 0 }
+      wait_until(10){ all('.tree-commits .tree-commit').count > 0 }
     end
 
     def api_click_on_relation_method(rel_name, method_name)
@@ -58,8 +58,9 @@ module Helpers
     end
 
     def run_job_on_last_commit(job_name)
-      click_on_first 'Workspace'
-      wait_until { all('a.show-commit').count > 0 }
+      click_on_first 'Commits'
+      wait_until(10){ all('.tree-commits .tree-commit').count > 0 }
+      first('.tree-commits .tree-commit a.tree-id').click
       click_on_first 'Run'
       find(".runnable-job[data-name='#{job_name}']")
         .find('a,button', text: 'Run').click
