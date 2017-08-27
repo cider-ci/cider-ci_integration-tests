@@ -59,7 +59,7 @@ module Helpers
 
     def run_job_on_last_commit(job_name)
       click_on_first 'Commits'
-      wait_until(10){ all('.tree-commits .tree-commit').count > 0 }
+      wait_until(30){ all('.tree-commits .tree-commit').count > 0 }
       first('.tree-commits .tree-commit a.tree-id').click
       click_on_first 'Run'
       find(".runnable-job[data-name='#{job_name}']")

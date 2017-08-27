@@ -5,7 +5,7 @@ feature 'Aggregate State Feature for Validation typo', type: :feature do
     'Aggregate State with Typo'
   end
 
-  scenario 'It defects with an valiation error' do
+  scenario 'It defects with an validation error' do
     setup_signin_waitforcommits
     run_job_on_last_commit job_name
     wait_for_job_state job_name, 'defective'
