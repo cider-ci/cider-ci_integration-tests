@@ -14,12 +14,10 @@ module Helpers
     end
 
     def sign_in_as(login, password = 'secret')
-      visit '/'
-      sign_out if find('body')['data-user'].present?
-      click_on 'Sign in with password'
-      find("form#password-sign-in input[type='text']").set login
-      find("form#password-sign-in input[type='password']").set password
-      find("form#password-sign-in button[type='submit']").click
+      visit '/cider-ci/ui2/session/password/sign-in'
+      find("form input#login").set login
+      find("form input#password").set password
+      click_on "Sign me in"
     end
 
     def set_aggressive_reloading
