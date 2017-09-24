@@ -14,7 +14,7 @@ module Helpers
     end
 
     def sign_in_as(login, password = 'secret')
-      visit '/cider-ci/ui2/session/password/sign-in'
+      visit '/cider-ci/session/password/sign-in'
       find("form input#login").set login
       find("form input#password").set password
       click_on "Sign me in"
