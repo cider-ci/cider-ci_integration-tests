@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'prepare-and-create-working-dir with throwing exception', type: :feature do
 
-  before :all do
+  before :each do
     Helpers::Misc.reset_and_configure
   end
 

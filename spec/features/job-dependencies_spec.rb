@@ -9,7 +9,7 @@ describe 'Jobs - Dependencies and Triggers, ', type: :feature do
     'Jobs - Dependencies and Triggers - Dependent'
   end
 
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
 

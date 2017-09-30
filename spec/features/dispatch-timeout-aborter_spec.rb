@@ -29,7 +29,7 @@ describe 'A trial passing the trial_dispatch_timeout will be set to '\
     "Replaced by #{job_name}".truncate(20)
   end
 
-  before :all do
+  before :each do
     IO.write "../config/config.yml", {
       'trial_dispatch_timeout' => '10 Seconds',
     }.to_yaml

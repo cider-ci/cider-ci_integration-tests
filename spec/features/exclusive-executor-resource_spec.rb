@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'The Exclusive Executor Resource', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
   it 'passes when being run' do

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'The JSON Demo', type: :feature  do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
   it 'passes when being run' do

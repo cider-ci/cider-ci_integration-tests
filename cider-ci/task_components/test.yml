@@ -8,4 +8,4 @@ scripts:
       export PATH=~/.rubies/$RUBY/bin:$PATH
       cd integration-tests
       mkdir -p log
-      xvfb-run -a -e log/xvfb.log bundle exec rspec $CIDER_CI_TASK_FILE
+      xvfb-run -a -e log/xvfb.log --server-args='-screen 0 1920x1080x24' bundle exec rspec $CIDER_CI_TASK_FILE

@@ -3,7 +3,7 @@ require 'api/shared'
 require 'uri'
 
 describe 'When the "Dispatch-Storm Delay Demo" has passed', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
     run_job_on_last_commit 'Dispatch-Storm Delay Demo'
     wait_for_job_state 'Dispatch-Storm Delay Demo', 'passed'

@@ -2,7 +2,7 @@ require 'api/shared'
 require 'set'
 
 describe 'jobs, ' do
-  before :all do
+  before :each do
     Helpers::Misc.reset_and_configure
     wait_until do
       authenticated_json_roa_client.get \

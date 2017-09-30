@@ -4,7 +4,7 @@ require 'fileutils'
 describe 'After setting short retention times ',
   type: :feature  do
 
-  before :all do
+  before :each do
     IO.write "../config/config.yml", {
       'job_retention_duration' => '90 Seconds',
       'task_retention_duration' => '60 Seconds',

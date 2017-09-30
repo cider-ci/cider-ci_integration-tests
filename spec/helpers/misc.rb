@@ -38,7 +38,9 @@ module Helpers
     def setup_signin_waitforcommits
       reset_and_configure
       sign_in_as 'admin'
-      click_on 'Commits'
+      within '#nav' do
+        first("li.commits a").click
+      end
       wait_until(10){ all('.tree-commits .tree-commit').count > 0 }
     end
 

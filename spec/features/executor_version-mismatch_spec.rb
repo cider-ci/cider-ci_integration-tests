@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'The executor version diverges from the server version', type: :feature do
 
-  before :all do
+  before :each do
     Helpers::Misc.reset_and_configure
   end
 

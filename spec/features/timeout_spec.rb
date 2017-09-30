@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'the job "Timeout Demo"', type: :feature do
 
-  before :all do
+  before :each do
     setup_signin_waitforcommits
     run_job_on_last_commit 'Timeout Demo'
     wait_for_job_state 'Timeout Demo', 'defective'

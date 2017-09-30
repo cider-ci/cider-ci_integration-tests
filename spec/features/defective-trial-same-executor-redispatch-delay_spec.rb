@@ -5,7 +5,7 @@ require 'fileutils'
 
 describe 'The defective_trial_same_executor_redispatch_delay feature', type: :feature do
 
-  before :all do
+  before :each do
     File.open('../config/config.yml','w') { |file|
       file.write({'defective_trial_same_executor_redispatch_delay' => '15 Seconds'}.to_yaml)}
   end

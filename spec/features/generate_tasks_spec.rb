@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'the job "Generate Tasks Demo" ', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
 

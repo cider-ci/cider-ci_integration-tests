@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Read and Replace With Demo', type: :feature  do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
   it 'passes when being run' do

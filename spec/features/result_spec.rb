@@ -3,7 +3,7 @@ require 'json_roa/client'
 require 'uri'
 
 describe 'The Result', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
     run_job_on_last_commit 'Result Demo'
     wait_for_job_state 'Result Demo', 'passed'

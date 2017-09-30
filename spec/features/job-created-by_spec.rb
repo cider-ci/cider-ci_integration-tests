@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Showing the creator of a job', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
   it 'can be seen when the job has been triggered manually' do

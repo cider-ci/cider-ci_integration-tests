@@ -5,7 +5,7 @@ require 'uri'
 
 
 describe 'Project-Configuration', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
 

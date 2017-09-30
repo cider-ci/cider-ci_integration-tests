@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe 'the job "Ports Demo" ', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
   it 'passes' do

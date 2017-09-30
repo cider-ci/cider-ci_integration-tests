@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'the job "Templates Demo"', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
   it 'fails the "Test Missing Template" but passes all others' do

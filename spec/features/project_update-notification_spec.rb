@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 feature 'Repository / Project update notifications.', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
   end
 

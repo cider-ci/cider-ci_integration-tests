@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'the job "Script Dependencies" Demo ', type: :feature do
-  before :all do
+  before :each do
     setup_signin_waitforcommits
     run_job_on_last_commit 'Script Dependencies'
     wait_for_job_state 'Script Dependencies', 'defective'
