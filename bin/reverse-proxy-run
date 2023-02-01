@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+set -x
+
+PROJECT_DIR="$(cd -- "$(dirname "${BASH_SOURCE}")" ; cd .. > /dev/null 2>&1 && pwd -P)"
+cd $PROJECT_DIR/reverse-proxy
+
+#if [ -d '/usr/lib/apache2/modules/' ]; then
+#  export LD_LIBRARY_PATH='/usr/lib/apache2/modules/'
+#elif [ -d '/opt/local/lib/apache2/modules/' ]; then
+#  export LD_LIBRARY_PATH='/opt/local/lib/apache2/modules/'
+#fi
+ 
+# 
+
+LD_LIBRARY_PATH="/opt/local/lib/apache2/modules/" apachectl -d $PROJECT_DIR/reverse-proxy -f conf/httpd.conf -e info -DFOREGROUND
+
+#vi: ft=sh

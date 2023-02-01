@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+set -eux
+
+PROJECT_DIR="$(cd -- "$(dirname "${BASH_SOURCE}")" ; cd .. > /dev/null 2>&1 && pwd -P)"
+cd $PROJECT_DIR
+
+
+./bin/docker-build
+
+docker run \
+ --add-host=host.docker.internal:host-gateway \
+ --interactive \
+ --publish 8888:80 \
+ --tty \
+ --volume ${PROJECT_DIR}/../..:/cider-ci \
+ cider-ci-reverse-proxy \
+ /bin/bash -c "source /etc/apache2/envvars && /usr/sbin/apache2 -DFOREGROUND"
