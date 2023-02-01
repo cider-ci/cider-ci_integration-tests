@@ -1,55 +1,31 @@
 traits:
-  ruby-install: true
-  Bash: true
+  asdf-ruby: true
 
 scripts:
 
   ui-configure-database:
     body: |
-      #!/usr/bin/env ruby
-      require 'yaml'
-      config = \
-        { 'test' =>
-          { 'adapter' => 'postgresql',
-            'encoding' => 'unicode',
-            'host' => 'localhost',
-            'pool' => 3,
-            'port' => Integer(ENV['PGPORT']),
-            'username' => ENV['PGUSER'],
-            'password' =>  ENV['PGPASSWORD'],
-            'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
-      File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
+      #!/usr/bin/env bash
+      set -euo pipefail
+      cd integration-tests
+      ./bin/env/ruby-setup
+      ./cider-ci/bin/ui-configure-database.rb
 
   ui-bundle:
-    exclusive_executor_resource: ruby-install_{{$RUBY}}
+    exclusive_executor_resource: asdf-ruby
     timeout: 20 Minutes
     body: |
       #!/usr/bin/env bash
-      set -eux
-      export PATH=~/.rubies/$RUBY/bin:$PATH
-
-      if [ ! -d ~/.rubies/$RUBY ]; then
-        ruby-install --no-install-deps $RUBY_ENGINE $RUBY_VERSION
-      fi
-
+      set -euo pipefail
       cd user-interface
-      rm -f .bundle/config
-
-      if [ ! -f ~/.rubies/$RUBY/bin/bundle ]; then
-        gem install bundler
-      fi
-
-      bundle install
-
+      ./bin/env/ruby-setup
 
   ui-run:
     body: |
-      set -eux
-      #export PATH=$(pwd)/user-interface/vendor/jruby/bin/:$PATH
-      export PATH=~/.rubies/$RUBY/bin:$PATH
+      #!/usr/bin/env bash
+      set -euo pipefail
       cd user-interface
-      #jruby --dev -S bundle exec rails s -p  ${UI_HTTP_PORT}
-      bundle exec rails s -p  ${UI_HTTP_PORT}
+      ./bin/rails_wrapper server -p  ${UI_HTTP_PORT}
     start_when:
       ui ruby is bundled:
         script_key: ui-bundle

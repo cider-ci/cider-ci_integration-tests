@@ -11,4 +11,4 @@ start_when:
   database has been created:
     script_key: create-database
   server_has_been_configured:
-    script_key: configure-server
+    script_key: server-configure

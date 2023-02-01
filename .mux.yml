@@ -1,8 +1,10 @@
+name: CI/ZHdK/ci/integration
 windows:
   2:
     name: apache2
     command: |
       while true; do
+        rm -rf logs/*
         DYLD_LIBRARY_PATH=/opt/local/lib/apache2/modules/  \
           /opt/local/sbin/httpd -d reverse-proxy -f conf/httpd.conf -e info -DFOREGROUND
         sleep 1
@@ -11,7 +13,7 @@ windows:
     name: github api mock
     command: |
       export GITHUB_API_MOCK_PORT=8999
-      bundle exec ruby github_api_mock.rb -p ${GITHUB_API_MOCK_PORT}
+      ./bin/ruby github_api_mock.rb -p ${GITHUB_API_MOCK_PORT}
 
   7:
     name: test

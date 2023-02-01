@@ -1,6 +1,6 @@
 scripts:
 
-  run-server:
+  server-run:
     body: |
       set -eux
       cd server
@@ -11,7 +11,7 @@ scripts:
       cider-ci has been compiled:
         script_key: compile_cider-ci
       server_has_been_configured:
-        script_key: configure-server
+        script_key: server-configure
       database has been migrated:
         script_key: migrate-database
 
@@ -30,17 +30,17 @@ scripts:
         sleep 1;
       done
     start_when:
-      the server is executing: &EXECUTING {script_key: run-server, states: [executing]}
+      the server is executing: &EXECUTING {script_key: server-run, states: [executing]}
     terminate_when:
-      run-server is in terminal state: &TERMINAL
-        script_key: run-server
+      server-run is in terminal state: &TERMINAL
+        script_key: server-run
         states: [aborted, defective, passed, failed, skipped]
 
   test:
     start_when:
       server is running: {script_key: server-is-running}
 
-  shutdown-server:
+  server-shutdown:
     include: cider-ci/shared/lein_service_shutdown_script.yml
 
     timeout: 3 Seconds
@@ -63,5 +63,5 @@ scripts:
 
   delete-database: &START_WHEN_TERMINAL
     start_when:
-      the run-server is in terminal state: *TERMINAL
+      the server-run is in terminal state: *TERMINAL
 

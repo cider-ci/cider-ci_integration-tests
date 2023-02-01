@@ -55,7 +55,7 @@ module Helpers
         reset_branches
         Helpers::ConfigurationManagement.invoke_ruby \
           "Repository.find_or_initialize_by(name: 'Demo Project') " \
-          '.update_attributes! ' \
+          '.update! ' \
           "git_url: '#{git_url}', "\
           'remote_fetch_interval: "1 Second", ' \
           'branch_trigger_max_commit_age: "100 years", '\

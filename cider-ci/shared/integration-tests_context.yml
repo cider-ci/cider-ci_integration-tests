@@ -4,6 +4,7 @@ script_defaults:
 
 task_defaults:
   include:
+    - 'cider-ci/task_components/run-ready.yml'
     - 'cider-ci/task_components/compile_cider-ci.yml'
     - 'cider-ci/task_components/bundle_rspec_ruby.yml'
     - 'cider-ci/task_components/database.yml'
@@ -18,17 +19,15 @@ task_defaults:
 
   max_trials: 2
 
-  load: 2.5
-  dispatch_storm_delay_duration: 15 Seconds
+  load: 1.5
+  dispatch_storm_delay_duration: 3 Seconds
 
   git_options:
     submodules:
       include_match: ^.*$
 
   environment_variables:
-    RUBY_ENGINE: ruby
-    RUBY_VERSION: 2.2.5
-    RUBY: '{{RUBY_ENGINE}}-{{RUBY_VERSION}}'
+    PGVERSION: '10'
     RAILS_ENV: test
     SERVICES_SECRET: service-secret
     MASTER_SECRET: master-secret

@@ -3,12 +3,12 @@ module Helpers
     def self.create_users
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "admin", is_admin: true)' \
-        '.update_attributes!(password: "secret",' \
+        '.update!(password: "secret",' \
         ' name: "Adam Ambassador",' \
         ' reload_frequency: "aggressive")'
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "normin")' \
-        '.update_attributes!(password: "secret",' \
+        '.update!(password: "secret",' \
         ' name: "Normin Normalo",'\
         ' reload_frequency: "aggressive")'
     end

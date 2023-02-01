@@ -4,7 +4,7 @@ traits:
   Ruby: true
 
 scripts:
-  configure-server:
+  server-configure:
     body: |
       #!/usr/bin/ruby
       require 'yaml'
