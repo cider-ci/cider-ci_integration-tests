@@ -1,8 +1,10 @@
+name: CI/ZHdK/ci/integration
 windows:
   2:
     name: apache2
     command: |
       while true; do
+        rm -rf logs/*
         DYLD_LIBRARY_PATH=/opt/local/lib/apache2/modules/  \
           /opt/local/sbin/httpd -d reverse-proxy -f conf/httpd.conf -e info -DFOREGROUND
         sleep 1

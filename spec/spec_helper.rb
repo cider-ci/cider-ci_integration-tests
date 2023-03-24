@@ -1,7 +1,6 @@
 require 'capybara/rspec'
 require 'active_support/all'
 require 'selenium-webdriver'
-require 'capybara/poltergeist'
 require 'pry'
 require 'logger'
 require 'faker'
@@ -55,13 +54,10 @@ RSpec.configure do |config|
   Capybara.app_host = "http://localhost:#{port}"
   Capybara.server_port = port
 
-  if ENV['FIREFOX_ESR_45_PATH'].present?
-    Selenium::WebDriver::Firefox.path = ENV['FIREFOX_ESR_45_PATH']
-  end
 
-  Capybara.register_driver :poltergeist do |app|
-    Capybara::Poltergeist::Driver.new(app, js_errors: false)
-  end
+  firefox_bin_path =
+    Pathname.new(`asdf where firefox`.strip).join('bin/firefox').expand_path
+  Selenium::WebDriver::Firefox.path = firefox_bin_path.to_s
 
   config.before(:all) do |example|
     set_browser example
@@ -177,8 +173,6 @@ RSpec.configure do |config|
       case Capybara.current_driver
       when :selenium, :selenium_chrome
         page.driver.browser.save_screenshot(path) rescue nil
-      when :poltergeist
-        page.driver.render(path, full: true) rescue nil
       else
         Rails.logger.warn 'Taking screenshots is not implemented for ' \
         "#{Capybara.current_driver}."
