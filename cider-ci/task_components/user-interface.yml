@@ -7,8 +7,9 @@ scripts:
     body: |
       #!/usr/bin/env bash
       set -euo pipefail
-      user-interface/bin/env/ruby-setup
-      user-interface/bin/ui-configure-database.rb
+      cd integration-tests
+      ./bin/env/ruby-setup
+      ./cider-ci/bin/ui-configure-database.rb
 
   ui-bundle:
     exclusive_executor_resource: asdf-ruby
@@ -16,7 +17,8 @@ scripts:
     body: |
       #!/usr/bin/env bash
       set -euo pipefail
-      user-interface/bin/env/ruby-setup
+      cd user-interface
+      ./bin/env/ruby-setup
 
   ui-run:
     body: |
