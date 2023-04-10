@@ -1,5 +1,5 @@
 traits:
-  PostgreSQL 9.5: true
+  PostgreSQL 10: true
 scripts:
 
   create-database:

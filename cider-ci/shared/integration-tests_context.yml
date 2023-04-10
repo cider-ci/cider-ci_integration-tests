@@ -26,9 +26,7 @@ task_defaults:
       include_match: ^.*$
 
   environment_variables:
-    RUBY_ENGINE: ruby
-    RUBY_VERSION: 2.2.5
-    RUBY: '{{RUBY_ENGINE}}-{{RUBY_VERSION}}'
+    PGVERSION: 10
     RAILS_ENV: test
     SERVICES_SECRET: service-secret
     MASTER_SECRET: master-secret
