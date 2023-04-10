@@ -11,5 +11,5 @@ config = \
       'username' => ENV['PGUSER'],
       'password' =>  ENV['PGPASSWORD'],
       'database' => "cider-ci_test_#{ENV['CIDER_CI_TRIAL_ID']}"}}
-File.open('user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
+File.open('../user-interface/config/database.yml','w') { |file| file.write config.to_yaml }
 
