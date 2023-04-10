@@ -1,11 +1,13 @@
 traits:
   PostgreSQL 10: true
+
 scripts:
 
   create-database:
     body: |
       #!/usr/bin/env bash
-      set -eux
+      set -euo pipefail
+      source integration-tests/cider-ci/bin/pg_env_set
       createdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
 
   migrate-database:
@@ -16,7 +18,9 @@ scripts:
         script_key: compile_cider-ci
     body: |
       #!/usr/bin/env bash
-      set -eux
+      set -euo pipefail
+      source integration-tests/cider-ci/bin/pg_env_set
+      server/bin/env/java-setup
       java -jar server/target/cider-ci.jar \
         server migrate \
         -d "jdbc:postgresql://${PGUSER}:${PGPASSWORD}@localhost:${PGPORT}/cider-ci_test_${CIDER_CI_TRIAL_ID}"
@@ -24,7 +28,8 @@ scripts:
   delete-database:
     body: |
       #!/usr/bin/env bash
-      set -eux
+      set -euo pipefail
+      source integration-tests/cider-ci/bin/pg_env_set
       dropdb "cider-ci_test_${CIDER_CI_TRIAL_ID}"
     ignore_state: true
     start_when:
