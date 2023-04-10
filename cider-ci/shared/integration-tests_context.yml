@@ -26,7 +26,7 @@ task_defaults:
       include_match: ^.*$
 
   environment_variables:
-    PGVERSION: 10
+    PGVERSION: '10'
     RAILS_ENV: test
     SERVICES_SECRET: service-secret
     MASTER_SECRET: master-secret
