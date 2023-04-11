@@ -15,7 +15,7 @@ scripts:
   test:
     start_when:
       gems are bundled:
-        script_key: asdf-ruby
+        script_key: bundle-rspec-ruby
         states: [passed]
 
 
