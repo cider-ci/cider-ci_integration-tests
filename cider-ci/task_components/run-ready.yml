@@ -1,6 +1,6 @@
 scripts: 
   run-ready:
-    body: 
+    body: |
       #!/usr/bin/env bash
       set -euo pipefail
       # add some random sleep since likely on the
