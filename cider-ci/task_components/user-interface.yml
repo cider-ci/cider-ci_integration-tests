@@ -24,9 +24,8 @@ scripts:
     body: |
       #!/usr/bin/env bash
       set -euo pipefail
-      user-interface/bin/env/ruby-setup
       cd user-interface
-      bundle exec rails s -p  ${UI_HTTP_PORT}
+      ./bin/rails_wrapper serer -p  ${UI_HTTP_PORT}
     start_when:
       ui ruby is bundled:
         script_key: ui-bundle

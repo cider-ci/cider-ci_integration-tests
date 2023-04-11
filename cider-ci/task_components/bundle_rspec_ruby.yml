@@ -9,6 +9,7 @@ scripts:
     body: |
       #!/usr/bin/env bash
       set -euo pipefail
+      cd integration-tests
       ./bin/env/ruby-setup
 
   test:
