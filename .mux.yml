@@ -13,7 +13,7 @@ windows:
     name: github api mock
     command: |
       export GITHUB_API_MOCK_PORT=8999
-      bundle exec ruby github_api_mock.rb -p ${GITHUB_API_MOCK_PORT}
+      ./bin/ruby github_api_mock.rb -p ${GITHUB_API_MOCK_PORT}
 
   7:
     name: test
