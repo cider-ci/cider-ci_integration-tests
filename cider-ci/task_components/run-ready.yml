@@ -12,13 +12,13 @@ scripts:
       ruby is bundled: {script_key: 'bundle-rspec-ruby'}
       ui is bundled: {script_key: 'ui-bundle'}
   run-server:
-    start_when: {script_key: 'run-ready'}
+    start_when: {ready: {script_key: 'run-ready'}}
   run_github-api-mock:
-    start_when: {script_key: 'run-ready'}
+    start_when: {ready: {script_key: 'run-ready'}}
   run-reverse-proxy:
-    start_when: {script_key: 'run-ready'}
+    start_when: {ready: {script_key: 'run-ready'}}
   ui-run:
-    start_when: {script_key: 'run-ready'}
+    start_when: {ready: {script_key: 'run-ready'}}
   run-executor: 
-    start_when: {script_key: 'run-ready'}
+    start_when: {ready: {script_key: 'run-ready'}}
 
