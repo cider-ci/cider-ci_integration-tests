@@ -68,6 +68,7 @@ GEM
     mustermann (3.0.0)
       ruby2_keywords (~> 0.0.1)
     netrc (0.11.0)
+    nio4r (2.5.9)
     nokogiri (1.14.2-arm64-darwin)
       racc (~> 1.4)
     parallel (1.22.1)
@@ -77,6 +78,8 @@ GEM
       coderay (~> 1.1)
       method_source (~> 1.0)
     public_suffix (5.0.1)
+    puma (6.2.1)
+      nio4r (~> 2.0)
     racc (1.6.2)
     rack (2.2.6.4)
     rack-protection (3.0.5)
@@ -158,6 +161,7 @@ DEPENDENCIES
   json_roa-client (= 2.0.0.pre.beta.6)
   nrepl!
   pry
+  puma
   rb-readline
   rest-client
   rspec
