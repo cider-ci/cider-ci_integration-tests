@@ -11,7 +11,7 @@ scripts:
       db is migrated: {script_key: 'migrate-database'}
       ruby is bundled: {script_key: 'bundle-rspec-ruby'}
       ui is bundled: {script_key: 'ui-bundle'}
-  run-server:
+  server-run:
     start_when: {ready: {script_key: 'run-ready'}}
   run_github-api-mock:
     start_when: {ready: {script_key: 'run-ready'}}
