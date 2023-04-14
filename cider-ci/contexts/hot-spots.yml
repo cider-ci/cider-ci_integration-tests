@@ -5,6 +5,6 @@ task_defaults:
 
 
 generate_tasks:
-  include_match: spec\/contexts_spec\.rb
+  include_match: spec/.*contexts_spec.rb
   submodule: [integration-tests]
 
