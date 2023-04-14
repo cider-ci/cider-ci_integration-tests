@@ -8,3 +8,8 @@ tasks:
     priority: 1
     script_defaults:
       timeout: 8 Minutes
+
+generate_tasks:
+  include_match: spec/.*_spec.rb
+  submodule: [integration-tests]
+
