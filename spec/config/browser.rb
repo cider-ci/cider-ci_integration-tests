@@ -16,8 +16,8 @@ RSpec.configure do |config|
     Pathname.new(`asdf where firefox`.strip).join('bin/firefox').expand_path
   Selenium::WebDriver::Firefox.path = firefox_bin_path.to_s
 
-  port = Integer(ENV['REVERSE_PROXY_HTTP_PORT'].present? &&
-                 ENV['REVERSE_PROXY_HTTP_PORT'] || '8888')
+  port = Integer(ENV['CIDER_CI_TEST_RV_HTTP_PORT'].present? &&
+                 ENV['CIDER_CI_TEST_RV_HTTP_PORT'] || '3300')
 
   Capybara.current_driver = :selenium
   Capybara.app_host = "http://localhost:#{port}"

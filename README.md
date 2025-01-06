@@ -5,6 +5,10 @@ Part of [Cider-CI](https://github.com/cider-ci/cider-ci).
 Reverse Proxy
 -------------
 
+On MacOS:
+
+       ./bin/start-reverse-proxy
+
 ### Debian Ubuntu
 
 Install _Apache2_ and _X-Sendfile_ from the system repositories.

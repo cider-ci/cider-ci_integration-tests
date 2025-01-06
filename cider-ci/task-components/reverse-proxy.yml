@@ -13,28 +13,31 @@ templates:
 
 scripts:
 
-  run-reverse-proxy:
+  reverse-proxy-run:
     body: |
       #!/usr/bin/env bash
-      set -eux
-      cd integration-tests
+      set -euo pipefail
+      cd ${INTEGRATION_TESTS_DIR}
       LD_LIBRARY_PATH=/usr/lib/apache2/modules/ /usr/sbin/apache2 -d reverse-proxy/ -f conf/httpd.conf -e info -DFOREGROUND
 
   test:
     start_when:
       the reverse proxy is running:
-        script_key: run-reverse-proxy
+        script_key: reverse-proxy-run
         states: [executing]
 
 
-  shutdown-reverse-proxy:
+  reverse-proxy-shutdown:
     timeout: 3 Seconds
     body: |
-      set -eux
-      kill -INT $(lsof -t -wni tcp:${REVERSE_PROXY_HTTP_PORT})
+      #!/usr/bin/env bash
+      set -euo pipefail
+      kill -INT $(lsof -t -wni tcp:${CIDER_CI_TEST_RV_HTTP_PORT})
       sleep 1
     start_when:
-      include: cider-ci/shared/test_is_terminal.yml
+      'test is in terminal state':
+        script_key: test
+        states: [aborted, defective, passed, failed, skipped]
       'reverse proxy is running':
-        script_key: run-reverse-proxy
+        script_key: reverse-proxy-run
         states: [executing]

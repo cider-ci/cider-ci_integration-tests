@@ -1,4 +1,4 @@
-name: CI/ZHdK/ci/integration
+name: CIDER-CI/integration_master
 windows:
   2:
     name: apache2
