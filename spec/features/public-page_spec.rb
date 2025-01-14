@@ -5,8 +5,8 @@ feature 'The public page, sign in and sign out', type: :feature do
     db_clean
     Helpers::Users.create_users
   end
-  scenario "Visiting '/' redirects to the public page" do
-    visit '/cider-ci'
-    expect(current_path).to match(/.*\/public/)
+  scenario "Visiting '/cider-ci/ui/public' shows the public page" do
+    visit '/cider-ci/ui/public'
+    expect(page).to have_content 'Cider-CI'
   end
 end
