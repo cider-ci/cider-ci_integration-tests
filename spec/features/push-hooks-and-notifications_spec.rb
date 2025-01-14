@@ -2,6 +2,7 @@ require 'spec_helper'
 
 feature 'Admin manages Repositories', type: :feature do
   before :each do
+    raise 'TODO replace ConfigurationManagement'
     Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
     Helpers::Users.create_users
   end

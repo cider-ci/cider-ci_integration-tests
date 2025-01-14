@@ -53,6 +53,7 @@ module Helpers
 
       def setup_demo_repo
         reset_branches
+        raise 'TODO replace ConfigrationManagement'
         Helpers::ConfigurationManagement.invoke_ruby \
           "Repository.find_or_initialize_by(name: 'Demo Project') " \
           '.update! ' \

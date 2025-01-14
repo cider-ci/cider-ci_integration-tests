@@ -3,6 +3,7 @@ require 'logger'
 require 'faker'
 require 'pry'
 
+require 'config/database'
 require 'config/browser'
 require 'helpers/system'
 
@@ -52,7 +53,7 @@ RSpec.configure do |config|
         take_screenshot
         unless ENV['CI'].presence || ENV['CIDER_CI_TRIAL_ID'].presence
           $logger.warn(example.exception.message)
-          binding.pry 
+          binding.pry
         end
       end
     end
@@ -74,7 +75,7 @@ RSpec.configure do |config|
       when :selenium, :selenium_chrome
         page.driver.browser.save_screenshot(path) rescue nil
       else
-        Rails.logger.warn 'Taking screenshots is not implemented for ' \
+        $logger.warn 'Taking screenshots is not implemented for ' \
         "#{Capybara.current_driver}."
       end
     end

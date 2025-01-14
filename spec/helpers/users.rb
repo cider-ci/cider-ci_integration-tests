@@ -1,6 +1,7 @@
 module Helpers
   module Users
     def self.create_users
+      raise 'TODO replace ConfigurationManagement'
       Helpers::ConfigurationManagement.invoke_ruby \
         'User.find_or_create_by(login: "admin", is_admin: true)' \
         '.update!(password: "secret",' \
