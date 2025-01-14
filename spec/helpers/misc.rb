@@ -29,9 +29,9 @@ module Helpers
     end
 
     def reset_and_configure
+      db_clean()
       binding.pry
       raise 'TODO replace ConfigrationManagement'
-      Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
       Helpers::Users.create_users
       Helpers::DemoRepo.setup_demo_repo
       Helpers::DemoExecutor.define_executor

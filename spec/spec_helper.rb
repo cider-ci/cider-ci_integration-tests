@@ -5,6 +5,7 @@ require 'pry'
 
 require 'config/database'
 require 'config/browser'
+require 'config/factories'
 require 'helpers/system'
 
 TEST_BRANCH = 'v4'

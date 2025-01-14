@@ -94,3 +94,7 @@ def db_with_disabled_triggers
   database.run 'SET session_replication_role = DEFAULT;'
   result
 end
+
+
+# TODO move this into the schema
+database.run('CREATE EXTENSION IF NOT EXISTS pgcrypto;')

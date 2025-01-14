@@ -2,10 +2,7 @@ require 'spec_helper'
 
 feature 'The public page, sign in and sign out', type: :feature do
   before :each do
-    # TODO continue here
-    binding.pry
-    raise 'TODO replace ConfigurationManagement'
-    Helpers::ConfigurationManagement.invoke_ruby 'PgTasks.truncate_tables() && "OK"'
+    db_clean
     Helpers::Users.create_users
   end
   scenario "Visiting '/' redirects to the public page" do
