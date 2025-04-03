@@ -6,22 +6,20 @@ module Helpers
   module Misc
     extend self
 
-    def wait_until(wait_time = 60, &block)
-      begin
-        Timeout.timeout(wait_time) do
-          until value = block.call
-            sleep(1)
-          end
-          value
+    def wait_until(wait_time = 10, sleep_secs: 0.2, &block)
+      Timeout.timeout(wait_time) do
+        until (value = yield)
+          sleep(sleep_secs)
         end
-      rescue Timeout::Error => e
-        fail Timeout::Error.new(block.source)
+        value
       end
+    rescue Timeout::Error
+      raise Timeout::Error.new(block.source)
     end
 
     def click_on_first(locator, options = {})
-      wait_until(3){first(:link_or_button, locator, options)}
-      first(:link_or_button, locator, options).click
+      wait_until(3) { first(:link_or_button, locator, **options) }
+      first(:link_or_button, locator, **options).click
     end
 
     def path_to_job(id)
@@ -30,8 +28,6 @@ module Helpers
 
     def reset_and_configure
       db_clean()
-      binding.pry
-      raise 'TODO replace ConfigrationManagement'
       Helpers::Users.create_users
       Helpers::DemoRepo.setup_demo_repo
       Helpers::DemoExecutor.define_executor

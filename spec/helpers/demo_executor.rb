@@ -6,7 +6,7 @@ module Helpers
     class << self
 
 
-      CONFIG_FILE = '../executor/config.yml'
+      CONFIG_FILE = '../server/tmp/executor/config.yml'
 
       ID = '88438012-ee85-418e-8988-bbd3f5ca12d3'
       NAME= 'Test-Executor'

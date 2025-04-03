@@ -53,14 +53,7 @@ module Helpers
 
       def setup_demo_repo
         reset_branches
-        raise 'TODO replace ConfigrationManagement'
-        Helpers::ConfigurationManagement.invoke_ruby \
-          "Repository.find_or_initialize_by(name: 'Demo Project') " \
-          '.update! ' \
-          "git_url: '#{git_url}', "\
-          'remote_fetch_interval: "1 Second", ' \
-          'branch_trigger_max_commit_age: "100 years", '\
-          'public_view_permission: true'
+        FactoryBot.create(:demo_repository, git_url: git_url)
         git_update_server_info
       end
 

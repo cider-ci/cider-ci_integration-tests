@@ -1,0 +1,38 @@
+require "capybara/rspec"
+
+
+def doc_screenshot(name)
+  fail unless name.is_a?(String) && name.present?
+  take_screenshot("tmp/screenshots", name)
+end
+
+def spec_screenshot(example, step)
+  fail unless example.present?
+  dat = example.metadata
+  dir = "tmp/#{dat[:file_path]}"
+  stepname = step.text.gsub(/\W/, " ").gsub(/\s+/, " ").strip.tr(" ", "-")
+  name = "#{dat[:example_group][:scoped_id].tr(":", "_")}_#{step.location.line}_#{stepname}"
+  take_screenshot(dir, name)
+end
+
+def take_screenshot(screenshot_dir = nil, name = nil)
+  if !screenshot_dir.present?
+    fail "no `screenshot_dir` given!" unless defined?(Rails)
+    screenshot_dir = Rails.root.join("tmp")
+  end
+
+  name ||= "screenshot_#{DateTime.now.utc.iso8601.tr(":", "-")}"
+  name = "#{name}.png" unless name.ends_with?(".png")
+
+  path = File.join(Dir.pwd, screenshot_dir, name)
+  FileUtils.mkdir_p(File.dirname(path))
+
+  case Capybara.current_driver
+  when :firefox
+    page.driver.browser.save_screenshot(path)
+    $logger.warn "Screenshot saved to #{path}"
+  else
+    fail "Taking screenshots is not implemented for \
+              #{Capybara.current_driver}."
+  end
+end

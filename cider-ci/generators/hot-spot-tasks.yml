@@ -1,0 +1,5 @@
+"./spec/features/abort-and-retry-1_spec.rb[1:1]":
+  name: Abort and retry a job 01
+  environment_variables:
+    FEATURE_NAME: Abort and retry a job 01
+    FEATURE: "./spec/features/abort-and-retry-1_spec.rb[1:1]"

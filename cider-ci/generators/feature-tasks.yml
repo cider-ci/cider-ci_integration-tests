@@ -1,0 +1,597 @@
+---
+"./spec/features/result_spec.rb[1:3:1]":
+  name: The Result in the summary badge 01
+  environment_variables:
+    FEATURE_NAME: The Result in the summary badge 01
+    FEATURE: "./spec/features/result_spec.rb[1:3:1]"
+"./spec/features/result_spec.rb[1:2:1]":
+  name: The Result the result link 01
+  environment_variables:
+    FEATURE_NAME: The Result the result link 01
+    FEATURE: "./spec/features/result_spec.rb[1:2:1]"
+"./spec/features/result_spec.rb[1:4:1]":
+  name: The Result via the JSON-ROA API 01
+  environment_variables:
+    FEATURE_NAME: The Result via the JSON-ROA API 01
+    FEATURE: "./spec/features/result_spec.rb[1:4:1]"
+"./spec/features/result_spec.rb[1:5:1]":
+  name: The Result in the JSON-ROA API Browser 01
+  environment_variables:
+    FEATURE_NAME: The Result in the JSON-ROA API Browser 01
+    FEATURE: "./spec/features/result_spec.rb[1:5:1]"
+"./spec/features/result_spec.rb[1:1:1]":
+  name: The Result in the stats and progress bar 01
+  environment_variables:
+    FEATURE_NAME: The Result in the stats and progress bar 01
+    FEATURE: "./spec/features/result_spec.rb[1:1:1]"
+"./spec/features/branch-triggers_self-contained_spec.rb[1:1]":
+  name: |-
+    Given: job1 with run_when directive on brach matching ^test_.+$.
+              Facts: job1 will not be run as long there is a project configuration
+               preventing it. job1 will be run otherwise if a matching branch is
+               created. 01
+  environment_variables:
+    FEATURE_NAME: |-
+      Given: job1 with run_when directive on brach matching ^test_.+$.
+                Facts: job1 will not be run as long there is a project configuration
+                 preventing it. job1 will be run otherwise if a matching branch is
+                 created. 01
+    FEATURE: "./spec/features/branch-triggers_self-contained_spec.rb[1:1]"
+"./spec/features/workspace_filtering_spec.rb[1:1:1]":
+  name: The workspace page can be filtered 01
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered 01
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:1]"
+"./spec/features/workspace_filtering_spec.rb[1:1:4]":
+  name: The workspace page can be filtered 02
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered 02
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:4]"
+"./spec/features/workspace_filtering_spec.rb[1:1:3:2]":
+  name: The workspace page can be filtered by repositories 01
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered by repositories 01
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:3:2]"
+"./spec/features/workspace_filtering_spec.rb[1:1:3:1]":
+  name: The workspace page can be filtered by repositories 02
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered by repositories 02
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:3:1]"
+"./spec/features/workspace_filtering_spec.rb[1:1:3:3]":
+  name: The workspace page can be filtered by repositories 03
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered by repositories 03
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:3:3]"
+"./spec/features/workspace_filtering_spec.rb[1:1:2:1]":
+  name: The workspace page can be filtered by branches 01
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered by branches 01
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:2:1]"
+"./spec/features/workspace_filtering_spec.rb[1:1:2:3]":
+  name: The workspace page can be filtered by branches 02
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered by branches 02
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:2:3]"
+"./spec/features/workspace_filtering_spec.rb[1:1:2:2]":
+  name: The workspace page can be filtered by branches 03
+  environment_variables:
+    FEATURE_NAME: The workspace page can be filtered by branches 03
+    FEATURE: "./spec/features/workspace_filtering_spec.rb[1:1:2:2]"
+"./spec/features/dispatch-timeout-aborter_spec.rb[1:1]":
+  name: A trial passing the trial_dispatch_timeout will be set to aborted, no retry
+    will be performed and an trial issue will be set. 01
+  environment_variables:
+    FEATURE_NAME: A trial passing the trial_dispatch_timeout will be set to aborted,
+      no retry will be performed and an trial issue will be set. 01
+    FEATURE: "./spec/features/dispatch-timeout-aborter_spec.rb[1:1]"
+"./spec/features/executor_script-dependencies_spec.rb[1:2]":
+  name: the job "Script Dependencies" Demo 01
+  environment_variables:
+    FEATURE_NAME: the job "Script Dependencies" Demo 01
+    FEATURE: "./spec/features/executor_script-dependencies_spec.rb[1:2]"
+"./spec/features/executor_script-dependencies_spec.rb[1:1]":
+  name: the job "Script Dependencies" Demo 02
+  environment_variables:
+    FEATURE_NAME: the job "Script Dependencies" Demo 02
+    FEATURE: "./spec/features/executor_script-dependencies_spec.rb[1:1]"
+"./spec/features/executor_script-dependencies_spec.rb[1:3]":
+  name: the job "Script Dependencies" Demo 03
+  environment_variables:
+    FEATURE_NAME: the job "Script Dependencies" Demo 03
+    FEATURE: "./spec/features/executor_script-dependencies_spec.rb[1:3]"
+"./spec/features/push-hooks-and-notifications_spec.rb[1:1]":
+  name: Admin manages Repositories 01
+  environment_variables:
+    FEATURE_NAME: Admin manages Repositories 01
+    FEATURE: "./spec/features/push-hooks-and-notifications_spec.rb[1:1]"
+"./spec/features/job-spec_validation2_spec.rb[1:2:1:1]":
+  name: Validating task and task_defaults task_defaults with a bogus key  violates
+    the validation of the job-specification 01
+  environment_variables:
+    FEATURE_NAME: Validating task and task_defaults task_defaults with a bogus key  violates
+      the validation of the job-specification 01
+    FEATURE: "./spec/features/job-spec_validation2_spec.rb[1:2:1:1]"
+"./spec/features/job-spec_validation2_spec.rb[1:1:1:1]":
+  name: Validating task and task_defaults a task with a bogus key  violates the validation
+    of the job-specification 01
+  environment_variables:
+    FEATURE_NAME: Validating task and task_defaults a task with a bogus key  violates
+      the validation of the job-specification 01
+    FEATURE: "./spec/features/job-spec_validation2_spec.rb[1:1:1:1]"
+"./spec/features/retention-sweeper-2_spec.rb[1:1]":
+  name: After setting short retention times 01
+  environment_variables:
+    FEATURE_NAME: After setting short retention times 01
+    FEATURE: "./spec/features/retention-sweeper-2_spec.rb[1:1]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:2:1]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    there is neither of the initial configuration files 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      there is neither of the initial configuration files 01
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:2:1]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:2:4]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    there is neither of the initial configuration files 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      there is neither of the initial configuration files 02
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:2:4]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:2:3]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    there is neither of the initial configuration files 03
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      there is neither of the initial configuration files 03
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:2:3]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:2:2]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    there is neither of the initial configuration files 04
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      there is neither of the initial configuration files 04
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:2:2]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:1:3]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    a file from a not resolved submodule is included 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      a file from a not resolved submodule is included 01
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:1:3]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:1:1]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    a file from a not resolved submodule is included 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      a file from a not resolved submodule is included 02
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:1:1]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:1:2]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    a file from a not resolved submodule is included 03
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      a file from a not resolved submodule is included 03
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:1:2]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:3:3]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    a include is missing 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      a include is missing 01
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:3:3]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:3:1]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    a include is missing 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      a include is missing 02
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:3:1]"
+"./spec/features/project-configuration_includes_spec.rb[1:1:3:2]":
+  name: Project-Configuration the response of getting the project-configuration  when
+    a include is missing 03
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  when
+      a include is missing 03
+    FEATURE: "./spec/features/project-configuration_includes_spec.rb[1:1:3:2]"
+"./spec/features/exclusive-executor-resource_spec.rb[1:1]":
+  name: The Exclusive Executor Resource 01
+  environment_variables:
+    FEATURE_NAME: The Exclusive Executor Resource 01
+    FEATURE: "./spec/features/exclusive-executor-resource_spec.rb[1:1]"
+"./spec/features/job-dependencies_via-submodules_spec.rb[1:1:1]":
+  name: Jobs - Dependencies and Triggers,  the dependent job 01
+  environment_variables:
+    FEATURE_NAME: Jobs - Dependencies and Triggers,  the dependent job 01
+    FEATURE: "./spec/features/job-dependencies_via-submodules_spec.rb[1:1:1]"
+"./spec/features/continuous-update-demo_spec.rb[1:1]":
+  name: Continuous Output Update Demo 01
+  environment_variables:
+    FEATURE_NAME: Continuous Output Update Demo 01
+    FEATURE: "./spec/features/continuous-update-demo_spec.rb[1:1]"
+"./spec/features/aggregate-state_satisfy-last_spec.rb[1:1]":
+  name: Aggregate State Feature for satisfy-last 01
+  environment_variables:
+    FEATURE_NAME: Aggregate State Feature for satisfy-last 01
+    FEATURE: "./spec/features/aggregate-state_satisfy-last_spec.rb[1:1]"
+"./spec/features/generate_tasks_spec.rb[1:1:1]":
+  name: the job "Generate Tasks Demo"  Generate Tasks Demo 01
+  environment_variables:
+    FEATURE_NAME: the job "Generate Tasks Demo"  Generate Tasks Demo 01
+    FEATURE: "./spec/features/generate_tasks_spec.rb[1:1:1]"
+"./spec/features/generate_tasks_spec.rb[1:2:1]":
+  name: the job "Generate Tasks Demo"  Generate Tasks for Submodules Demo 01
+  environment_variables:
+    FEATURE_NAME: the job "Generate Tasks Demo"  Generate Tasks for Submodules Demo
+      01
+    FEATURE: "./spec/features/generate_tasks_spec.rb[1:2:1]"
+"./spec/features/workspace_watch-jobs_spec.rb[1:1]":
+  name: Watching jobs in the workspace 01
+  environment_variables:
+    FEATURE_NAME: Watching jobs in the workspace 01
+    FEATURE: "./spec/features/workspace_watch-jobs_spec.rb[1:1]"
+"./spec/features/compact_notation_spec.rb[1:1]":
+  name: the job "Introduction Demo and Example Job" 01
+  environment_variables:
+    FEATURE_NAME: the job "Introduction Demo and Example Job" 01
+    FEATURE: "./spec/features/compact_notation_spec.rb[1:1]"
+"./spec/features/include_spec.rb[1:1]":
+  name: the job "Include Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Include Demo" 01
+    FEATURE: "./spec/features/include_spec.rb[1:1]"
+"./spec/features/config-in-json_spec.rb[1:1]":
+  name: The JSON Demo 01
+  environment_variables:
+    FEATURE_NAME: The JSON Demo 01
+    FEATURE: "./spec/features/config-in-json_spec.rb[1:1]"
+"./spec/features/job-created-by_spec.rb[1:1]":
+  name: Showing the creator of a job 01
+  environment_variables:
+    FEATURE_NAME: Showing the creator of a job 01
+    FEATURE: "./spec/features/job-created-by_spec.rb[1:1]"
+"./spec/features/status-pushes_spec.rb[1:1]":
+  name: Sending job statuses to a GitHub compatible API endpoint. 01
+  environment_variables:
+    FEATURE_NAME: Sending job statuses to a GitHub compatible API endpoint. 01
+    FEATURE: "./spec/features/status-pushes_spec.rb[1:1]"
+"./spec/features/job-dependency-and-trigger_self-contained_spec.rb[1:1]":
+  name: |-
+    Given: job2 depends on job1 and is triggerd by job1.
+              Facts: Job2 can not be run if job1 has not passed.
+              Job2 will be automatically started when job1 has passed. 01
+  environment_variables:
+    FEATURE_NAME: |-
+      Given: job2 depends on job1 and is triggerd by job1.
+                Facts: Job2 can not be run if job1 has not passed.
+                Job2 will be automatically started when job1 has passed. 01
+    FEATURE: "./spec/features/job-dependency-and-trigger_self-contained_spec.rb[1:1]"
+"./spec/features/projects_management-via-api_spec.rb[1:1]":
+  name: Admin manages Repositories 02
+  environment_variables:
+    FEATURE_NAME: Admin manages Repositories 02
+    FEATURE: "./spec/features/projects_management-via-api_spec.rb[1:1]"
+"./spec/features/aggregate-state_validation_spec.rb[1:1]":
+  name: Aggregate State Feature for Validation typo 01
+  environment_variables:
+    FEATURE_NAME: Aggregate State Feature for Validation typo 01
+    FEATURE: "./spec/features/aggregate-state_validation_spec.rb[1:1]"
+"./spec/features/attachments_spec.rb[1:1:3]":
+  name: the job "Attachments Demo" creates  a tree-attachment which 01
+  environment_variables:
+    FEATURE_NAME: the job "Attachments Demo" creates  a tree-attachment which 01
+    FEATURE: "./spec/features/attachments_spec.rb[1:1:3]"
+"./spec/features/attachments_spec.rb[1:1:2]":
+  name: the job "Attachments Demo" creates  a tree-attachment which 02
+  environment_variables:
+    FEATURE_NAME: the job "Attachments Demo" creates  a tree-attachment which 02
+    FEATURE: "./spec/features/attachments_spec.rb[1:1:2]"
+"./spec/features/attachments_spec.rb[1:1:1]":
+  name: the job "Attachments Demo" creates  a tree-attachment which 03
+  environment_variables:
+    FEATURE_NAME: the job "Attachments Demo" creates  a tree-attachment which 03
+    FEATURE: "./spec/features/attachments_spec.rb[1:1:1]"
+"./spec/features/attachments_spec.rb[1:2:1]":
+  name: the job "Attachments Demo" creates  a trial-attachment which 01
+  environment_variables:
+    FEATURE_NAME: the job "Attachments Demo" creates  a trial-attachment which 01
+    FEATURE: "./spec/features/attachments_spec.rb[1:2:1]"
+"./spec/features/attachments_spec.rb[1:2:2]":
+  name: the job "Attachments Demo" creates  a trial-attachment which 02
+  environment_variables:
+    FEATURE_NAME: the job "Attachments Demo" creates  a trial-attachment which 02
+    FEATURE: "./spec/features/attachments_spec.rb[1:2:2]"
+"./spec/features/submodules_spec.rb[1:1]":
+  name: the job "Submodule Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Submodule Demo" 01
+    FEATURE: "./spec/features/submodules_spec.rb[1:1]"
+"./spec/features/job-without-tasks_spec.rb[1:1:1]":
+  name: Job without tasks  a job without tasks 01
+  environment_variables:
+    FEATURE_NAME: Job without tasks  a job without tasks 01
+    FEATURE: "./spec/features/job-without-tasks_spec.rb[1:1:1]"
+"./spec/features/aggregate-state_explicit-satisfy-any_spec.rb[1:1]":
+  name: Aggregate State Feature 01
+  environment_variables:
+    FEATURE_NAME: Aggregate State Feature 01
+    FEATURE: "./spec/features/aggregate-state_explicit-satisfy-any_spec.rb[1:1]"
+"./spec/features/abort-and-retry-1_spec.rb[1:1]":
+  name: Abort and retry a job 01
+  environment_variables:
+    FEATURE_NAME: Abort and retry a job 01
+    FEATURE: "./spec/features/abort-and-retry-1_spec.rb[1:1]"
+"./spec/features/load_spec.rb[1:1:1]":
+  name: Testing the load max_load = 3, three jobs each of load = 2 01
+  environment_variables:
+    FEATURE_NAME: Testing the load max_load = 3, three jobs each of load = 2 01
+    FEATURE: "./spec/features/load_spec.rb[1:1:1]"
+"./spec/features/accepted-repositories_spec.rb[1:1]":
+  name: Dispatching wrt accepted_repositories 01
+  environment_variables:
+    FEATURE_NAME: Dispatching wrt accepted_repositories 01
+    FEATURE: "./spec/features/accepted-repositories_spec.rb[1:1]"
+"./spec/features/exclusive-executor-resource-with-templating_spec.rb[1:1:1]":
+  name: When the Exclusive Executor Resource with Templated Port has passed 01
+  environment_variables:
+    FEATURE_NAME: When the Exclusive Executor Resource with Templated Port has passed
+      01
+    FEATURE: "./spec/features/exclusive-executor-resource-with-templating_spec.rb[1:1:1]"
+"./spec/features/timeout_spec.rb[1:2]":
+  name: the job "Timeout Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Timeout Demo" 01
+    FEATURE: "./spec/features/timeout_spec.rb[1:2]"
+"./spec/features/timeout_spec.rb[1:1]":
+  name: the job "Timeout Demo" 02
+  environment_variables:
+    FEATURE_NAME: the job "Timeout Demo" 02
+    FEATURE: "./spec/features/timeout_spec.rb[1:1]"
+"./spec/features/timeout_spec.rb[1:3]":
+  name: the job "Timeout Demo" 03
+  environment_variables:
+    FEATURE_NAME: the job "Timeout Demo" 03
+    FEATURE: "./spec/features/timeout_spec.rb[1:3]"
+"./spec/features/executor_env-vars_spec.rb[1:1]":
+  name: the job "Environment Variables Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Environment Variables Demo" 01
+    FEATURE: "./spec/features/executor_env-vars_spec.rb[1:1]"
+"./spec/features/project-configuration_parser_spec.rb[1:1:1:2:1]":
+  name: Project-Configuration the response of getting the project-configuration  parsing
+    error response for malformed yml 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  parsing
+      error response for malformed yml 01
+    FEATURE: "./spec/features/project-configuration_parser_spec.rb[1:1:1:2:1]"
+"./spec/features/project-configuration_parser_spec.rb[1:1:1:2:2]":
+  name: Project-Configuration the response of getting the project-configuration  parsing
+    error response for malformed yml 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  parsing
+      error response for malformed yml 02
+    FEATURE: "./spec/features/project-configuration_parser_spec.rb[1:1:1:2:2]"
+"./spec/features/project-configuration_parser_spec.rb[1:1:1:1:2]":
+  name: Project-Configuration the response of getting the project-configuration  parsing
+    error response for malformed json 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  parsing
+      error response for malformed json 01
+    FEATURE: "./spec/features/project-configuration_parser_spec.rb[1:1:1:1:2]"
+"./spec/features/project-configuration_parser_spec.rb[1:1:1:1:1]":
+  name: Project-Configuration the response of getting the project-configuration  parsing
+    error response for malformed json 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  parsing
+      error response for malformed json 02
+    FEATURE: "./spec/features/project-configuration_parser_spec.rb[1:1:1:1:1]"
+"./spec/features/project-configuration_normalization_spec.rb[1:1:1]":
+  name: Project configuration normalization A job with an illegal context 01
+  environment_variables:
+    FEATURE_NAME: Project configuration normalization A job with an illegal context
+      01
+    FEATURE: "./spec/features/project-configuration_normalization_spec.rb[1:1:1]"
+"./spec/features/project-configuration_general_spec.rb[1:1:1:2]":
+  name: Project-Configuration the response of getting the project-configuration  of
+    v4 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  of
+      v4 01
+    FEATURE: "./spec/features/project-configuration_general_spec.rb[1:1:1:2]"
+"./spec/features/project-configuration_general_spec.rb[1:1:1:1]":
+  name: Project-Configuration the response of getting the project-configuration  of
+    v4 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  of
+      v4 02
+    FEATURE: "./spec/features/project-configuration_general_spec.rb[1:1:1:1]"
+"./spec/features/project-configuration_general_spec.rb[1:1:2:4:1]":
+  name: Project-Configuration the response of getting the project-configuration  for
+    any of the four configuration options .cider-ci.json 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  for
+      any of the four configuration options .cider-ci.json 01
+    FEATURE: "./spec/features/project-configuration_general_spec.rb[1:1:2:4:1]"
+"./spec/features/project-configuration_general_spec.rb[1:1:2:3:1]":
+  name: Project-Configuration the response of getting the project-configuration  for
+    any of the four configuration options cider-ci.json 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  for
+      any of the four configuration options cider-ci.json 01
+    FEATURE: "./spec/features/project-configuration_general_spec.rb[1:1:2:3:1]"
+"./spec/features/project-configuration_general_spec.rb[1:1:2:1:1]":
+  name: Project-Configuration the response of getting the project-configuration  for
+    any of the four configuration options cider-ci.yml 01
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  for
+      any of the four configuration options cider-ci.yml 01
+    FEATURE: "./spec/features/project-configuration_general_spec.rb[1:1:2:1:1]"
+"./spec/features/project-configuration_general_spec.rb[1:1:2:2:1]":
+  name: Project-Configuration the response of getting the project-configuration  for
+    any of the four configuration options cider-ci.yml 02
+  environment_variables:
+    FEATURE_NAME: Project-Configuration the response of getting the project-configuration  for
+      any of the four configuration options cider-ci.yml 02
+    FEATURE: "./spec/features/project-configuration_general_spec.rb[1:1:2:2:1]"
+"./spec/features/script-dependency-visualization_and_gannt-charts_spec.rb[1:2]":
+  name: the job "Script Dependencies" Demo 04
+  environment_variables:
+    FEATURE_NAME: the job "Script Dependencies" Demo 04
+    FEATURE: "./spec/features/script-dependency-visualization_and_gannt-charts_spec.rb[1:2]"
+"./spec/features/script-dependency-visualization_and_gannt-charts_spec.rb[1:1]":
+  name: the job "Script Dependencies" Demo 05
+  environment_variables:
+    FEATURE_NAME: the job "Script Dependencies" Demo 05
+    FEATURE: "./spec/features/script-dependency-visualization_and_gannt-charts_spec.rb[1:1]"
+"./spec/features/script-dependency-visualization_and_gannt-charts_spec.rb[1:3]":
+  name: the job "Script Dependencies" Demo 06
+  environment_variables:
+    FEATURE_NAME: the job "Script Dependencies" Demo 06
+    FEATURE: "./spec/features/script-dependency-visualization_and_gannt-charts_spec.rb[1:3]"
+"./spec/features/projects_management-via-ui_spec.rb[1:1]":
+  name: Admin manages Repositories 03
+  environment_variables:
+    FEATURE_NAME: Admin manages Repositories 03
+    FEATURE: "./spec/features/projects_management-via-ui_spec.rb[1:1]"
+"./spec/features/dispatch-storm-delay_spec.rb[1:1]":
+  name: When the "Dispatch-Storm Delay Demo" has passed 01
+  environment_variables:
+    FEATURE_NAME: When the "Dispatch-Storm Delay Demo" has passed 01
+    FEATURE: "./spec/features/dispatch-storm-delay_spec.rb[1:1]"
+"./spec/features/defective-trial-same-executor-redispatch-delay_spec.rb[1:1:1:1]":
+  name: The defective_trial_same_executor_redispatch_delay feature A job with always
+    defecting trials Without defective_trial_same_executor_redispatch_delay 01
+  environment_variables:
+    FEATURE_NAME: The defective_trial_same_executor_redispatch_delay feature A job
+      with always defecting trials Without defective_trial_same_executor_redispatch_delay
+      01
+    FEATURE: "./spec/features/defective-trial-same-executor-redispatch-delay_spec.rb[1:1:1:1]"
+"./spec/features/defective-trial-same-executor-redispatch-delay_spec.rb[1:1:2:1]":
+  name: The defective_trial_same_executor_redispatch_delay feature A job with always
+    defecting trials With defective_trial_same_executor_redispatch_delay 01
+  environment_variables:
+    FEATURE_NAME: The defective_trial_same_executor_redispatch_delay feature A job
+      with always defecting trials With defective_trial_same_executor_redispatch_delay
+      01
+    FEATURE: "./spec/features/defective-trial-same-executor-redispatch-delay_spec.rb[1:1:2:1]"
+"./spec/features/public-page_spec.rb[1:1]":
+  name: The public page, sign in and sign out 01
+  environment_variables:
+    FEATURE_NAME: The public page, sign in and sign out 01
+    FEATURE: "./spec/features/public-page_spec.rb[1:1]"
+"./spec/features/aggregate-state_implicit-satisfy-any_spec.rb[1:1]":
+  name: Aggregate State Feature 02
+  environment_variables:
+    FEATURE_NAME: Aggregate State Feature 02
+    FEATURE: "./spec/features/aggregate-state_implicit-satisfy-any_spec.rb[1:1]"
+"./spec/features/project_update-notification_spec.rb[1:1:1]":
+  name: "Repository / Project update notifications. \nA project has been successfully
+    fetched.\nIts update interval is 1 hour, and it has not been updated\nin the last
+    few seconds. 01"
+  environment_variables:
+    FEATURE_NAME: "Repository / Project update notifications. \nA project has been
+      successfully fetched.\nIts update interval is 1 hour, and it has not been updated\nin
+      the last few seconds. 01"
+    FEATURE: "./spec/features/project_update-notification_spec.rb[1:1:1]"
+"./spec/features/abort-and-retry-2_spec.rb[1:1]":
+  name: Abort and retry a job 02
+  environment_variables:
+    FEATURE_NAME: Abort and retry a job 02
+    FEATURE: "./spec/features/abort-and-retry-2_spec.rb[1:1]"
+"./spec/features/retention-sweeper-1_spec.rb[1:1]":
+  name: After setting short retention times 02
+  environment_variables:
+    FEATURE_NAME: After setting short retention times 02
+    FEATURE: "./spec/features/retention-sweeper-1_spec.rb[1:1]"
+"./spec/features/project-conf_validation_spec.rb[1:1]":
+  name: Validating a project-configuration with a bogus key 01
+  environment_variables:
+    FEATURE_NAME: Validating a project-configuration with a bogus key 01
+    FEATURE: "./spec/features/project-conf_validation_spec.rb[1:1]"
+"./spec/features/executor_working-dir-error_spec.rb[1:1]":
+  name: prepare-and-create-working-dir with throwing exception 01
+  environment_variables:
+    FEATURE_NAME: prepare-and-create-working-dir with throwing exception 01
+    FEATURE: "./spec/features/executor_working-dir-error_spec.rb[1:1]"
+"./spec/features/exclusive_global_resources_spec.rb[1:1]":
+  name: The Exclusive Global Resources Demo 01
+  environment_variables:
+    FEATURE_NAME: The Exclusive Global Resources Demo 01
+    FEATURE: "./spec/features/exclusive_global_resources_spec.rb[1:1]"
+"./spec/features/executor_version-mismatch_spec.rb[1:1:1]":
+  name: The executor version diverges from the server version when setting a different
+    version 01
+  environment_variables:
+    FEATURE_NAME: The executor version diverges from the server version when setting
+      a different version 01
+    FEATURE: "./spec/features/executor_version-mismatch_spec.rb[1:1:1]"
+"./spec/features/executor_ports_spec.rb[1:1]":
+  name: the job "Ports Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Ports Demo" 01
+    FEATURE: "./spec/features/executor_ports_spec.rb[1:1]"
+"./spec/features/workspace-page_spec.rb[1:3]":
+  name: The workspace page 01
+  environment_variables:
+    FEATURE_NAME: The workspace page 01
+    FEATURE: "./spec/features/workspace-page_spec.rb[1:3]"
+"./spec/features/workspace-page_spec.rb[1:1]":
+  name: The workspace page 02
+  environment_variables:
+    FEATURE_NAME: The workspace page 02
+    FEATURE: "./spec/features/workspace-page_spec.rb[1:1]"
+"./spec/features/workspace-page_spec.rb[1:2]":
+  name: The workspace page 03
+  environment_variables:
+    FEATURE_NAME: The workspace page 03
+    FEATURE: "./spec/features/workspace-page_spec.rb[1:2]"
+"./spec/features/cron-trigger-rerun-demo_spec.rb[1:1:1]":
+  name: Cron demo from the demo repo Demo repository with cron_trigger_enabled 01
+  environment_variables:
+    FEATURE_NAME: Cron demo from the demo repo Demo repository with cron_trigger_enabled
+      01
+    FEATURE: "./spec/features/cron-trigger-rerun-demo_spec.rb[1:1:1]"
+"./spec/features/templates_spec.rb[1:1]":
+  name: the job "Templates Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Templates Demo" 01
+    FEATURE: "./spec/features/templates_spec.rb[1:1]"
+"./spec/features/job-dependencies_spec.rb[1:1:1]":
+  name: Jobs - Dependencies and Triggers,  the prerequisite job 01
+  environment_variables:
+    FEATURE_NAME: Jobs - Dependencies and Triggers,  the prerequisite job 01
+    FEATURE: "./spec/features/job-dependencies_spec.rb[1:1:1]"
+"./spec/features/job-dependencies_spec.rb[1:2:1]":
+  name: Jobs - Dependencies and Triggers,  the dependent job 02
+  environment_variables:
+    FEATURE_NAME: Jobs - Dependencies and Triggers,  the dependent job 02
+    FEATURE: "./spec/features/job-dependencies_spec.rb[1:2:1]"
+"./spec/features/cron-trigger-demo_spec.rb[1:1:1]":
+  name: Cron demo from the demo repo Demo repository with cron_trigger_enabled 02
+  environment_variables:
+    FEATURE_NAME: Cron demo from the demo repo Demo repository with cron_trigger_enabled
+      02
+    FEATURE: "./spec/features/cron-trigger-demo_spec.rb[1:1:1]"
+"./spec/features/contexts_spec.rb[1:1]":
+  name: the job "Contexts Demo" 01
+  environment_variables:
+    FEATURE_NAME: the job "Contexts Demo" 01
+    FEATURE: "./spec/features/contexts_spec.rb[1:1]"
+"./spec/features/read-and-replace-with_spec.rb[1:1]":
+  name: Read and Replace With Demo 01
+  environment_variables:
+    FEATURE_NAME: Read and Replace With Demo 01
+    FEATURE: "./spec/features/read-and-replace-with_spec.rb[1:1]"
+"./spec/features/job-spec_validation1_spec.rb[1:1:1:1]":
+  name: Validating contexts and contexts a main-context with a bogus key violates
+    the validation of the job-specification 01
+  environment_variables:
+    FEATURE_NAME: Validating contexts and contexts a main-context with a bogus key
+      violates the validation of the job-specification 01
+    FEATURE: "./spec/features/job-spec_validation1_spec.rb[1:1:1:1]"
+"./spec/features/job-spec_validation1_spec.rb[1:2:1:1]":
+  name: Validating contexts and contexts a subcontext with a bogus key violates the
+    validation of the job-specification 01
+  environment_variables:
+    FEATURE_NAME: Validating contexts and contexts a subcontext with a bogus key violates
+      the validation of the job-specification 01
+    FEATURE: "./spec/features/job-spec_validation1_spec.rb[1:2:1:1]"

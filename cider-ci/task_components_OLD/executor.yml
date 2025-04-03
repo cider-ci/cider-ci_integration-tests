@@ -34,7 +34,7 @@ scripts:
   run-executor:
     body: |
       #!/usr/bin/env bash
-      set -eux
+      set -euo pipefail
       cd executor
       java -jar ../server/target/cider-ci.jar executor --config-file config.yml run
     start_when:
@@ -45,7 +45,7 @@ scripts:
     timeout: 3 Minutes
     body: |
       #!/usr/bin/env bash
-      set -ux
+      set -euo pipefail
       until curl --silent --fail \
           -I http://localhost:${EXECUTOR_HTTP_PORT}/ping ; do
         sleep 1;
@@ -62,7 +62,7 @@ scripts:
 
   shutdown-executor:
     body: |
-      set -eux
+      set -euo pipefail
       curl -X POST --silent --user ${EXECUTOR_ID}:${EXECUTOR_PASSWORD} \
         -I http://localhost:${EXECUTOR_HTTP_PORT}/shutdown
 

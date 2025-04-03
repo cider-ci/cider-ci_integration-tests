@@ -5,7 +5,7 @@ require 'uri'
 describe "" do
 
 
-  describe 'When the "Exclusive Executor Resource with Templated Port" has passed',
+  describe 'When the Exclusive Executor Resource with Templated Port has passed',
     type: :feature do
 
     let :job_name do

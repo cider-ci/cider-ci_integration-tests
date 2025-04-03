@@ -7,6 +7,7 @@ require 'config/database'
 require 'config/browser'
 require 'config/factories'
 require 'helpers/system'
+require "config/screenshots"
 
 TEST_BRANCH = 'v4'
 TEST_COMMIT_ID = Helpers::System.exec!("
@@ -49,16 +50,6 @@ RSpec.configure do |config|
 
     Kernel.srand config.seed
 
-    config.after(:each) do |example|
-      unless example.exception.nil?
-        take_screenshot
-        unless ENV['CI'].presence || ENV['CIDER_CI_TRIAL_ID'].presence
-          $logger.warn(example.exception.message)
-          binding.pry
-        end
-      end
-    end
-
     config.before(:each) do |example|
       Helpers::DemoExecutor.reset_config
     end
@@ -67,19 +58,16 @@ RSpec.configure do |config|
       Helpers::DemoExecutor.reset_config
     end
 
-    def take_screenshot(screenshot_dir = nil, name = nil)
-      screenshot_dir ||= File.join(Dir.pwd, 'tmp')
-      Dir.mkdir screenshot_dir rescue nil
-      name ||= "screenshot_#{Time.now.iso8601.gsub(/:/, '-')}.png"
-      path = File.join(screenshot_dir, name)
-      case Capybara.current_driver
-      when :selenium, :selenium_chrome
-        page.driver.browser.save_screenshot(path) rescue nil
-      else
-        $logger.warn 'Taking screenshots is not implemented for ' \
-        "#{Capybara.current_driver}."
+    config.after(type: :feature) do |example|
+      if ENV["CIDER_CI_TRIAL_ID"].present?
+        unless example.exception.nil?
+          take_screenshot("tmp")
+        end
       end
+      page.driver.quit
+      Capybara.current_driver = Capybara.default_driver
     end
+
 
   end
 end

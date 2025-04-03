@@ -19,7 +19,7 @@ end
 def set_capybara_values
   Capybara.app_host = http_base_url
   Capybara.server_port = http_port
-  Capybara.test_id = 'data-test-id'
+  # Capybara.test_id = 'data-test-id'
 end
 
 
@@ -65,7 +65,6 @@ RSpec.configure do |config|
 
   # Capybara.run_server = false
   Capybara.default_driver = :firefox
-  Capybara.current_driver = :firefox
 
 
   config.before :all do
@@ -76,30 +75,4 @@ RSpec.configure do |config|
     set_capybara_values
   end
 
-  config.after(:each) do |example|
-    unless example.exception.nil?
-      take_screenshot screenshot_dir
-    end
-  end
-
-  config.before :all do
-    FileUtils.remove_dir(screenshot_dir, force: true)
-    FileUtils.mkdir_p(screenshot_dir)
-  end
-
-  def screenshot_dir
-    Pathname(BROWSER_DOWNLOAD_DIR).join('screenshots')
-  end
-
-  def take_screenshot(screenshot_dir = nil, name = nil)
-    name ||= "#{Time.now.iso8601.tr(':', '-')}.png"
-    path = screenshot_dir.join(name)
-    case Capybara.current_driver
-    when :firefox
-      page.driver.browser.save_screenshot(path) rescue nil
-    else
-      Logger.warn "Taking screenshots is not implemented for \
-              #{Capybara.current_driver}."
-    end
-  end
 end
